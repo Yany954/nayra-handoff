@@ -1,0 +1,77 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function isOptionalString(data, field, maxSize) {
+      return !(field in data) || (data[field] is string && data[field].size() <= maxSize);
+    }
+
+    function isRequiredString(data, field, maxSize) {
+      return field in data
+        && data[field] is string
+        && data[field].size() > 0
+        && data[field].size() <= maxSize;
+    }
+
+    function isValidBookingRequest(data) {
+      return data.keys().hasAll(['name', 'eventType', 'eventDate', 'municipality', 'message', 'createdAt'])
+        && data.keys().hasOnly(['name', 'eventType', 'eventDate', 'municipality', 'message', 'phone', 'email', 'createdAt'])
+        && isRequiredString(data, 'name', 120)
+        && isRequiredString(data, 'eventType', 60)
+        && isRequiredString(data, 'eventDate', 10)
+        && isRequiredString(data, 'municipality', 120)
+        && isRequiredString(data, 'message', 2000)
+        && isOptionalString(data, 'phone', 30)
+        && isOptionalString(data, 'email', 254)
+        && data.createdAt == request.time;
+    }
+
+    // Public content
+    match /profile/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /achievements/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /shows/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /formats/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /songs/{songId} {
+      allow read: if true;
+      allow write: if isAdmin();
+
+      // Musical keys live here because rules cannot hide individual fields.
+      match /private/{docId} {
+        allow read, write: if isAdmin();
+      }
+    }
+
+    // Manager only. Cloud Functions use the Admin SDK and bypass these rules.
+    match /pitch/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /promoters/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /discoveredEvents/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Public contact form: create only.
+    match /bookingRequests/{docId} {
+      allow create: if isValidBookingRequest(request.resource.data);
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}
