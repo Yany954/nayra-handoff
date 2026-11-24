@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { PlayIcon } from "@/presentation/ui/icons";
 
 type Props = {
@@ -18,6 +18,10 @@ type Props = {
  */
 export function YouTubeFacade({ videoId, title, context, posterSrc, posterAlt }: Props) {
   const [playing, setPlaying] = useState(false);
+
+  // Next keeps visited pages mounted but hidden (<Activity>). Hiding runs this
+  // cleanup, which unmounts the player so audio cannot keep playing elsewhere.
+  useLayoutEffect(() => () => setPlaying(false), []);
 
   if (playing) {
     return (
