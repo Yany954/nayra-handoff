@@ -47,6 +47,18 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    match /videos/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /gallery/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /epk/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
     match /songs/{songId} {
       allow read: if true;
       allow write: if isAdmin();
