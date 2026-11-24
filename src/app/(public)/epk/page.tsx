@@ -38,6 +38,7 @@ export default async function EpkPage() {
       <section className="mx-auto box-border max-w-[1360px] px-3.5 pt-4 lg:px-10 lg:pt-6">
         <div className="relative flex min-h-[460px] items-end overflow-hidden rounded-hero">
           <Image
+            quality={90}
             src="/images/nayra-singing.jpg"
             alt="Nayra Lancheros cantando en tarima"
             fill

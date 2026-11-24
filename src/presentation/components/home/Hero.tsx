@@ -12,6 +12,7 @@ function LatestShowCard({ show }: { show: NonNullable<HomePageData["latestShow"]
     <div className={`z-10 flex flex-col gap-3 rounded-[22px] bg-[rgba(20,16,18,0.62)] p-3.5 lg:absolute lg:right-5 lg:top-5 lg:w-[300px] ${glass}`}>
       <div className="flex items-center gap-3">
         <Image
+          quality={90}
           src="/images/nayra-singing.jpg"
           alt=""
           width={56}
@@ -142,6 +143,7 @@ export function Hero({ data }: { data: HomePageData }) {
         <div className="flex min-w-0 flex-col gap-4 px-5 pt-4 lg:relative lg:min-h-[760px] lg:flex-[1_1_520px] lg:overflow-hidden lg:rounded-hero lg:p-0">
           <div className="absolute inset-x-0 top-0 h-[var(--hero-h)] overflow-hidden lg:inset-0 lg:h-auto">
             <Image
+              quality={90}
               src="/images/nayra-stage.jpg"
               alt="Nayra Lancheros en tarima con micrófono, sonriendo"
               fill

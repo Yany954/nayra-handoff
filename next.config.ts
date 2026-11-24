@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  images: {
+    // 90 is reserved for photos of Nayra; 75 stays the default elsewhere.
+    qualities: [75, 90],
+  },
   turbopack: {
     rules: {
       "*.css": {

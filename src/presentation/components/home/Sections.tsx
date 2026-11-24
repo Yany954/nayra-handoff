@@ -91,6 +91,7 @@ export function LiveVideos({ data }: { data: HomePageData }) {
             ) : (
               <>
                 <Image
+                  quality={90}
                   src="/images/nayra-singing.jpg"
                   alt="Nayra cantando bajo luces de tarima"
                   fill
@@ -142,6 +143,7 @@ export function Gallery({ data }: { data: HomePageData }) {
             <figure className="m-0 flex flex-col gap-2">
               <div className="relative aspect-[4/5] overflow-hidden rounded-card">
                 <Image
+                  quality={90}
                   src={photo.src}
                   alt={photo.alt}
                   fill
@@ -172,6 +174,7 @@ export function History({ data }: { data: HomePageData }) {
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap items-center gap-10 px-5 py-20 lg:gap-16 lg:px-12 lg:py-[110px]">
         <div className="relative h-[440px] min-w-0 flex-[1_1_100%] overflow-hidden rounded-image lg:h-[640px] lg:flex-[1_1_420px]">
           <Image
+            quality={90}
             src="/images/nayra-singing.jpg"
             alt="Nayra Lancheros cantando con los ojos cerrados"
             fill

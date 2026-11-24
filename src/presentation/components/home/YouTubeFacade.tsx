@@ -35,6 +35,7 @@ export function YouTubeFacade({ videoId, title, context, posterSrc, posterAlt }:
   return (
     <>
       <Image
+        quality={90}
         src={posterSrc}
         alt={posterAlt}
         fill
