@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Panel de la manager — Base de datos de shows</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4EEE4}
+a{color:#1A1416}a:hover{color:#5A4A40}
+</style>
+</helmet>
+<div style="background: #F4EEE4; color: #1A1416; font-family: Inter, system-ui, sans-serif; min-height: 100vh; display: flex; flex-wrap: wrap">
+
+<!-- SIDEBAR -->
+<aside style="flex: 1 1 240px; max-width: 280px; background: #0F0C0E; color: #F6EFE6; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 0 8px">
+<span style="width: 32px; height: 32px; border-radius: 50%; background: {{accent}}; color: #0F0C0E; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700">N</span>
+<div style="display: flex; flex-direction: column"><span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px">Nayra Lancheros</span><span style="font-size: 12px; color: #C9BFB4">Panel de la manager</span></div>
+</div>
+<nav aria-label="Panel" style="display: flex; flex-direction: column; gap: 4px">
+<a href="#" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; background: rgba(255,255,255,0.10); color: #F6EFE6; text-decoration: none; font-size: 14px; font-weight: 500"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>Base de datos de shows</a>
+<a href="#" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; color: #D9D0C5; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>Logros</a>
+<a href="#" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; color: #D9D0C5; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Repertorio</a>
+<a href="#" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; color: #D9D0C5; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Shows y fechas</a>
+<a href="EPK.dc.html" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-radius: 12px; color: #D9D0C5; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 8l8 5 8-5"/></svg>Pitch / EPK</a>
+</nav>
+<div style="margin-top: auto; padding: 14px; border-radius: 14px; background: rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 12px; color: #C9BFB4">Correo de booking</span>
+<span style="font-size: 13px; font-weight: 500">booking@nayralancheros.com</span>
+</div>
+</aside>
+
+<!-- MAIN -->
+<main style="flex: 999 1 640px; min-width: 0; padding: 36px 40px 64px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; color: #6B5F57">Hola, mamá</span>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 48px; line-height: 1; letter-spacing: -0.03em">Base de datos de shows</h1>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #CDBFAE; background: #FFFFFF; color: #1A1416; font: 500 14px Inter, sans-serif; cursor: pointer">Exportar a Excel</button>
+<button type="button" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: #1A1416; color: #F6EFE6; font: 600 14px Inter, sans-serif; cursor: pointer">+ Agregar promotor</button>
+</div>
+</div>
+
+<!-- STAGE SUMMARY -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px">
+<sc-for list="{{ stages }}" as="st" hint-placeholder-count="5">
+<div style="padding: 18px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4DACB; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: {{ st.color }}"></span><span style="font-size: 13px; color: #3A302C; font-weight: 500">{{ st.label }}</span></div>
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 34px">{{ st.count }}</span>
+</div>
+</sc-for>
+</div>
+
+<!-- TABS -->
+<div role="tablist" aria-label="Vista" style="display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #EAE2D5; align-self: flex-start">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2">
+<sc-if value="{{ t.on }}" hint-placeholder-val="{{ false }}">
+<button type="button" role="tab" aria-selected="true" onClick="{{ t.pick }}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: #FFFFFF; color: #1A1416; font: 600 14px Inter, sans-serif; cursor: pointer; display: flex; align-items: center; gap: 8px">{{ t.label }}<span style="font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #F1EADF">{{ t.count }}</span></button>
+</sc-if>
+<sc-if value="{{ t.off }}" hint-placeholder-val="{{ true }}">
+<button type="button" role="tab" aria-selected="false" onClick="{{ t.pick }}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: transparent; color: #3A302C; font: 500 14px Inter, sans-serif; cursor: pointer; display: flex; align-items: center; gap: 8px">{{ t.label }}<span style="font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #F4EEE4">{{ t.count }}</span></button>
+</sc-if>
+</sc-for>
+</div>
+
+<!-- TAB: BASE DE DATOS -->
+<sc-if value="{{ showDb }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div role="group" aria-label="Filtrar por etapa" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ stageFilters }}" as="sf" hint-placeholder-count="6">
+<sc-if value="{{ sf.on }}" hint-placeholder-val="{{ false }}">
+<button type="button" aria-pressed="true" onClick="{{ sf.pick }}" style="min-height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: #1A1416; color: #F6EFE6; font: 600 13px Inter, sans-serif; cursor: pointer">{{ sf.label }}</button>
+</sc-if>
+<sc-if value="{{ sf.off }}" hint-placeholder-val="{{ true }}">
+<button type="button" aria-pressed="false" onClick="{{ sf.pick }}" style="min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid #E4DACB; background: #FFFFFF; color: #1A1416; font: 500 13px Inter, sans-serif; cursor: pointer">{{ sf.label }}</button>
+</sc-if>
+</sc-for>
+</div>
+<div style="overflow-x: auto; border-radius: 20px; background: #FFFFFF; border: 1px solid #E4DACB">
+<table style="width: 100%; min-width: 1040px; border-collapse: collapse; font-size: 14px">
+<thead>
+<tr style="background: #F8F4EC; text-align: left">
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Tipo</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Nombre del lugar / evento</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Ciudad</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Contacto</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Red social / web</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Etapa</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Próx. seguimiento</th>
+<th style="padding: 14px 16px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6B5F57">Fuente</th>
+</tr>
+</thead>
+<tbody>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+<tr style="border-top: 1px solid #EFE7DB">
+<td style="padding: 14px 16px"><span style="font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #F1EADF; color: #3A302C; white-space: nowrap">{{ r.tipo }}</span></td>
+<td style="padding: 14px 16px; font-weight: 600">{{ r.nombre }}</td>
+<td style="padding: 14px 16px; color: #3A302C">{{ r.ciudad }}</td>
+<td style="padding: 14px 16px; color: #3A302C">{{ r.contacto }}</td>
+<td style="padding: 14px 16px; color: #3A302C">{{ r.red }}</td>
+<td style="padding: 14px 16px"><span style="font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; white-space: nowrap; background: {{ r.bg }}; color: {{ r.fg }}">{{ r.etapa }}</span></td>
+<td style="padding: 14px 16px; color: #3A302C; white-space: nowrap">{{ r.seguimiento }}</td>
+<td style="padding: 14px 16px; color: #6B5F57; font-size: 13px">{{ r.fuente }}</td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<span style="font-size: 13px; color: #6B5F57">Los cambios aquí se guardan en Firestore. Lo marcado «Cerrado» puede publicarse como show en el sitio con un clic.</span>
+</div>
+</sc-if>
+
+<!-- TAB: ENCONTRADOS -->
+<sc-if value="{{ showFound }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; border-radius: 18px; background: #1A1416; color: #F6EFE6">
+<div style="display: flex; align-items: center; gap: 10px; font-size: 14px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+Búsqueda automática cada 3 días · última: ayer · próxima: en 2 días
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="font-size: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12)">Cesar + Caribe</span>
+<span style="font-size: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12)">Vallenato · Tambora · Ranchera</span>
+<span style="font-size: 12px; padding: 5px 10px; border-radius: 999px; background: rgba(255,255,255,0.12)">Próx. 2 semanas – 6 meses</span>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px">
+<sc-for list="{{ found }}" as="e" hint-placeholder-count="4">
+<div style="padding: 22px; border-radius: 20px; background: #FFFFFF; border: 1px solid #E4DACB; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; justify-content: space-between; gap: 12px; align-items: flex-start">
+<span style="font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #F1EADF; color: #3A302C">{{ e.tipo }}</span>
+<span style="font-size: 12px; font-weight: 600; color: #3A302C">Relevancia {{ e.score }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 21px; line-height: 1.15">{{ e.nombre }}</span>
+<span style="font-size: 14px; color: #3A302C">{{ e.lugar }} · {{ e.fechas }}</span>
+</div>
+<span style="font-size: 13px; line-height: 1.5; color: #6B5F57">{{ e.nota }}</span>
+<span style="font-size: 12px; color: #6B5F57">Fuente: {{ e.fuente }}</span>
+<sc-if value="{{ e.pending }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{ e.approve }}" style="flex: 1; min-height: 44px; border-radius: 999px; border: 0; background: #1A1416; color: #F6EFE6; font: 600 14px Inter, sans-serif; cursor: pointer">Agregar como Prospecto</button>
+<button type="button" onClick="{{ e.discard }}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #CDBFAE; background: transparent; color: #1A1416; font: 500 14px Inter, sans-serif; cursor: pointer">Descartar</button>
+</div>
+</sc-if>
+<sc-if value="{{ e.approved }}" hint-placeholder-val="{{ false }}">
+<div style="min-height: 44px; border-radius: 999px; background: #E3F0E6; color: #1F5130; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600">Agregado a Prospectos</div>
+</sc-if>
+<sc-if value="{{ e.discarded }}" hint-placeholder-val="{{ false }}">
+<div style="min-height: 44px; border-radius: 999px; background: #F1EADF; color: #6B5F57; display: flex; align-items: center; justify-content: center; font-size: 14px">Descartado</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F0B24A","options":["#F0B24A","#E8765A","#7FC8A9","#C9A7F5"]},"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'db', stage: 'Todas', decisions: {} };
+  }
+  renderVals() {
+    var self = this;
+    var STAGES = [
+      { label: 'Prospecto', color: '#7A6CD1', bg: '#ECE9FA', fg: '#3F338F' },
+      { label: 'Contactado', color: '#2E8C84', bg: '#E1F2F0', fg: '#1D5B55' },
+      { label: 'En negociación', color: '#C98A1A', bg: '#FBEFD8', fg: '#7A5108' },
+      { label: 'Cerrado', color: '#2F7A45', bg: '#E3F0E6', fg: '#1F5130' },
+      { label: 'Descartado', color: '#8E847B', bg: '#EFEAE3', fg: '#5A504A' }
+    ];
+    var rows = [
+      { tipo: 'Festival', nombre: 'Festival Nacional de la Tambora y la Guacherna', ciudad: 'Tamalameque', contacto: 'Casa de la Cultura', red: 'Alcaldía de Tamalameque', etapa: 'Contactado', seguimiento: '25 nov', fuente: 'Auto' },
+      { tipo: 'Festival', nombre: 'Festival Vallenato Nuevas Promesas', ciudad: 'Valledupar', contacto: 'Gobernación del Cesar', red: 'gobcesar.gov.co', etapa: 'En negociación', seguimiento: '22 nov', fuente: 'Auto' },
+      { tipo: 'Festival', nombre: 'Festival de la Música Vallenata en Guitarras', ciudad: 'Agustín Codazzi', contacto: 'Por buscar', red: '—', etapa: 'Prospecto', seguimiento: '—', fuente: 'Auto' },
+      { tipo: 'Festival', nombre: 'Festival Nacional de Danzas y Tamboras', ciudad: 'Chimichagua', contacto: 'Por buscar', red: '—', etapa: 'Prospecto', seguimiento: '—', fuente: 'Auto' },
+      { tipo: 'Festival', nombre: 'Festival Folclórico de Curumaní', ciudad: 'Curumaní', contacto: 'Alcaldía de Curumaní', red: '—', etapa: 'Cerrado', seguimiento: '—', fuente: 'Manual' },
+      { tipo: 'Hotel', nombre: 'Hotel [ejemplo]', ciudad: 'Valledupar', contacto: 'eventos@hotel-ejemplo.co', red: '@hotelejemplo', etapa: 'Contactado', seguimiento: '27 nov', fuente: 'Manual' },
+      { tipo: 'Evento privado', nombre: 'Boda [ejemplo]', ciudad: 'Pailitas', contacto: 'WhatsApp', red: '—', etapa: 'Cerrado', seguimiento: '—', fuente: 'Formulario web' },
+      { tipo: 'Corporativo', nombre: 'Fiesta de fin de año [empresa ejemplo]', ciudad: 'Aguachica', contacto: 'rrhh@empresa-ejemplo.co', red: '—', etapa: 'Descartado', seguimiento: '—', fuente: 'Manual' },
+      { tipo: 'Colegio', nombre: 'Aniversario institución [ejemplo]', ciudad: 'Pelaya', contacto: 'Rectoría', red: '—', etapa: 'Prospecto', seguimiento: '—', fuente: 'Manual' }
+    ];
+    var styleFor = {};
+    STAGES.forEach(function (s) { styleFor[s.label] = s; });
+    var stages = STAGES.map(function (s) {
+      return {
+        label: s.label,
+        count: rows.filter(function (r) { return r.etapa === s.label; }).length,
+        color: s.color
+      };
+    });
+    var cur = this.state.stage;
+    var shown = rows.filter(function (r) { return cur === 'Todas' || r.etapa === cur; })
+      .map(function (r) { return Object.assign({}, r, { bg: styleFor[r.etapa].bg, fg: styleFor[r.etapa].fg }); });
+    var stageFilters = ['Todas'].concat(STAGES.map(function (s) { return s.label; })).map(function (l) {
+      var on = l === cur;
+      return { label: l, on: on, off: !on, pick: function () { self.setState({ stage: l }); } };
+    });
+    var dec = this.state.decisions;
+    var foundRaw = [
+      { id: 'gamarra', tipo: 'Festival', score: '92%', nombre: 'Festival Nacional de la Tambora Tradicional', lugar: 'Gamarra, Cesar', fechas: 'Fecha por confirmar', nota: 'Festival de tambora con muestra de cantadoras. Encaja con su formato de tambora.', fuente: 'Prensa regional' },
+      { id: 'leyenda', tipo: 'Festival', score: '88%', nombre: 'Festival de la Leyenda Vallenata 2027', lugar: 'Valledupar, Cesar', fechas: 'Abr – may 2027', nota: 'Tarimas alternas y eventos paralelos para artistas emergentes. Revisar convocatoria.', fuente: 'Fundación Festival de la Leyenda Vallenata' },
+      { id: 'pelaya', tipo: 'Fiestas patronales', score: '74%', nombre: 'Fiestas patronales [ejemplo]', lugar: 'Pelaya, Cesar', fechas: 'Ene 2027', nota: 'Programación cultural con artistas locales. Contacto: Alcaldía.', fuente: 'Alcaldía municipal (.gov.co)' },
+      { id: 'elbanco', tipo: 'Feria', score: '61%', nombre: 'Feria ganadera [ejemplo]', lugar: 'El Banco, Magdalena', fechas: 'Feb 2027', nota: 'Fuera del Cesar pero dentro del segundo círculo. Tarima de vallenato.', fuente: 'Instagram del evento' }
+    ];
+    var found = foundRaw.map(function (e) {
+      var d = dec[e.id];
+      return Object.assign({}, e, {
+        pending: !d, approved: d === 'ok', discarded: d === 'no',
+        approve: function () { var n = Object.assign({}, self.state.decisions); n[e.id] = 'ok'; self.setState({ decisions: n }); },
+        discard: function () { var n = Object.assign({}, self.state.decisions); n[e.id] = 'no'; self.setState({ decisions: n }); }
+      });
+    });
+    var pendingCount = found.filter(function (e) { return e.pending; }).length;
+    var tab = this.state.tab;
+    var tabs = [
+      { id: 'db', label: 'Promotores', count: rows.length },
+      { id: 'found', label: 'Encontrados automáticamente', count: pendingCount }
+    ].map(function (t) {
+      var on = t.id === tab;
+      return Object.assign({}, t, { on: on, off: !on, pick: function () { self.setState({ tab: t.id }); } });
+    });
+    return {
+      accent: this.props.accent ?? '#F0B24A',
+      stages: stages,
+      rows: shown,
+      stageFilters: stageFilters,
+      tabs: tabs,
+      showDb: tab === 'db',
+      showFound: tab === 'found',
+      found: found
+    };
+  }
+}
+</script>
+</body>
+</html>

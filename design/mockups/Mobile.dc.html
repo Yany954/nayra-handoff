@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Nayra Lancheros — Inicio móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#F0B24A}a:hover{color:#F7CB7E}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0F0C0E; color: #F6EFE6; font-family: Inter, system-ui, sans-serif">
+<img src="../assets/nayra-stage.jpg" alt="Nayra Lancheros en tarima" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 15%">
+<div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(15,12,14,0.35) 0%, rgba(15,12,14,0) 22%, rgba(15,12,14,0) 38%, rgba(15,12,14,0.95) 72%)"></div>
+
+<nav aria-label="Principal" style="position: absolute; top: 16px; left: 14px; right: 14px; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 14px; border-radius: 999px; background: rgba(20,16,18,0.55); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(12px)">
+<a href="#" style="display: flex; align-items: center; gap: 8px; color: #F6EFE6; text-decoration: none; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 16px">
+<span style="width: 26px; height: 26px; border-radius: 50%; background: {{accent}}; color: #0F0C0E; display: flex; align-items: center; justify-content: center; font-size: 13px">N</span>
+Nayra Lancheros
+</a>
+<div style="display: flex; gap: 6px; align-items: center">
+<a href="#" style="display: flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #F6EFE6; color: #0F0C0E; text-decoration: none; font-size: 13px; font-weight: 600">Contrátala</a>
+<button type="button" aria-label="Abrir menú" style="width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,255,255,0.12); color: #F6EFE6; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+</div>
+</nav>
+
+<div style="position: absolute; left: 20px; right: 20px; bottom: 28px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; align-items: center; gap: 8px; align-self: flex-start; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(20,16,18,0.5); font-size: 12px; color: #E6DDD2">
+<span style="width: 7px; height: 7px; border-radius: 50%; background: {{accent}}"></span>
+Primer lugar · Caribe Canta
+</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 58px; line-height: 0.92; letter-spacing: -0.04em">Nayra<br>Lancheros</h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.5; color: #E6DDD2">Vallenato, rancheras, baladas y tambora — desde Curumaní hasta la tarima de tu evento.</p>
+<a href="#" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 6px 6px 20px; border-radius: 999px; background: #F6EFE6; color: #0F0C0E; text-decoration: none; font-weight: 600; font-size: 16px">Contrátala
+<span style="width: 44px; height: 44px; border-radius: 50%; background: #0F0C0E; color: #F6EFE6; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+</a>
+<a href="#" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.22); color: #F6EFE6; text-decoration: none; font-weight: 500; font-size: 16px">Ver repertorio</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F0B24A","options":["#F0B24A","#E8765A","#7FC8A9","#C9A7F5"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#F0B24A' };
+  }
+}
+</script>
+</body>
+</html>

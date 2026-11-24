@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Nayra Lancheros — Repertorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4EEE4}
+a{color:#1A1416}a:hover{color:#5A4A40}
+</style>
+</helmet>
+<div style="background: #F4EEE4; color: #1A1416; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
+
+<div style="background: #0F0C0E; color: #F6EFE6">
+<div style="max-width: 1360px; margin: 0 auto; padding: 20px 40px 0; box-sizing: border-box">
+<nav aria-label="Principal" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 10px 12px 10px 18px; border: 1px solid rgba(255,255,255,0.12); border-radius: 999px; background: rgba(255,255,255,0.05)">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; color: #F6EFE6; text-decoration: none; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 18px">
+<span style="width: 30px; height: 30px; border-radius: 50%; background: {{accent}}; color: #0F0C0E; display: flex; align-items: center; justify-content: center; font-size: 15px">N</span>
+Nayra Lancheros
+</a>
+<div style="display: flex; flex-wrap: wrap; gap: 4px">
+<a href="Main.dc.html" style="color: #D9D0C5; text-decoration: none; font-size: 14px; padding: 10px 14px">Inicio</a>
+<a href="Repertorio.dc.html" style="color: #F6EFE6; text-decoration: none; font-size: 14px; padding: 10px 14px; border-radius: 999px; background: rgba(255,255,255,0.10)">Repertorio</a>
+<a href="Main.dc.html" style="color: #D9D0C5; text-decoration: none; font-size: 14px; padding: 10px 14px">Shows</a>
+<a href="EPK.dc.html" style="color: #D9D0C5; text-decoration: none; font-size: 14px; padding: 10px 14px">EPK</a>
+<a href="Main.dc.html" style="color: #D9D0C5; text-decoration: none; font-size: 14px; padding: 10px 14px">Contacto</a>
+</div>
+<div style="display: flex; gap: 8px">
+<a href="EPK.dc.html" style="color: #F6EFE6; text-decoration: none; font-size: 14px; font-weight: 500; padding: 11px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18)">Descargar EPK</a>
+<a href="Main.dc.html" style="color: #0F0C0E; text-decoration: none; font-size: 14px; font-weight: 600; padding: 11px 18px; border-radius: 999px; background: #F6EFE6">Contrátala</a>
+</div>
+</nav>
+</div>
+<div style="max-width: 1360px; margin: 0 auto; padding: 80px 48px 72px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-end; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 16px; flex: 1 1 560px; min-width: 0">
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<span style="font-size: 13px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.08); color: #D9D0C5">{{total}} canciones</span>
+<span style="font-size: 13px; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,0.08); color: #D9D0C5">Show principal de 8 temas</span>
+</div>
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 112px; line-height: 0.95; letter-spacing: -0.04em">Repertorio</h1>
+<p style="margin: 0; max-width: 560px; font-size: 18px; line-height: 1.55; color: #D9D0C5">Del vallenato clásico a las rancheras de celebración. Si tu evento necesita una canción especial, pregúntala.</p>
+</div>
+<a href="Main.dc.html" style="display: flex; align-items: center; padding: 0 22px; min-height: 52px; border-radius: 999px; background: {{accent}}; color: #0F0C0E; text-decoration: none; font-weight: 600">Pedir una canción</a>
+</div>
+</div>
+
+<div style="max-width: 1360px; margin: 0 auto; padding: 48px 48px 120px; box-sizing: border-box; display: flex; flex-direction: column; gap: 28px">
+<div role="group" aria-label="Filtrar por categoría" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="7">
+<sc-if value="{{ f.on }}" hint-placeholder-val="{{ false }}">
+<button type="button" onClick="{{ f.pick }}" aria-pressed="true" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: #1A1416; color: #F6EFE6; font: 600 14px Inter, sans-serif; cursor: pointer">{{ f.label }}</button>
+</sc-if>
+<sc-if value="{{ f.off }}" hint-placeholder-val="{{ true }}">
+<button type="button" onClick="{{ f.pick }}" aria-pressed="false" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #E4DACB; background: #FFFFFF; color: #1A1416; font: 500 14px Inter, sans-serif; cursor: pointer">{{ f.label }}</button>
+</sc-if>
+</sc-for>
+</div>
+
+<sc-if value="{{ hasSongs }}" hint-placeholder-val="{{ true }}">
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 12px">
+<sc-for list="{{ songs }}" as="s" hint-placeholder-count="12">
+<div style="display: flex; align-items: center; gap: 18px; padding: 18px 22px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4DACB; min-height: 76px">
+<span style="font-family: ui-monospace, Menlo, monospace; font-size: 13px; color: #6B5F57; width: 24px">{{ s.num }}</span>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0">
+<span style="font-weight: 600; font-size: 16px">{{ s.title }}</span>
+<span style="font-size: 14px; color: #6B5F57">{{ s.artist }}</span>
+</div>
+<span style="font-size: 12px; padding: 6px 10px; border-radius: 999px; background: #F1EADF; color: #3A302C; white-space: nowrap">{{ s.genre }}</span>
+<sc-if value="{{ s.main }}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 12px; padding: 6px 10px; border-radius: 999px; background: #1A1416; color: #F6EFE6; white-space: nowrap">Show</span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 56px; border-radius: 24px; border: 1.5px dashed #CDBFAE; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+<span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 28px">Próximamente</span>
+<span style="font-size: 15px; color: #6B5F57; max-width: 420px">Las canciones de tambora se agregarán desde el panel de la manager y aparecerán aquí automáticamente.</span>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#F0B24A","options":["#F0B24A","#E8765A","#7FC8A9","#C9A7F5"]},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { filter: 'Todo' };
+  }
+  renderVals() {
+    var accent = this.props.accent ?? '#F0B24A';
+    var all = [
+      { title: 'Sigo esperando', artist: 'Fabián Corrales', genre: 'Vallenato', main: true },
+      { title: 'A tu lado', artist: 'Los Betos', genre: 'Vallenato', main: true },
+      { title: 'Culpa de los dos', artist: 'Silvestre Dangond', genre: 'Vallenato', main: true },
+      { title: 'Te amaría', artist: 'Adriana Lucía', genre: 'Vallenato', main: true },
+      { title: 'Mix: Mi compadre se cayó / Diciembre llegó', artist: 'Moisés Angulo', genre: 'Vallenato', main: true },
+      { title: 'Mañanitas de invierno', artist: 'Los Hermanos Zuleta', genre: 'Vallenato', main: true },
+      { title: 'Mix ranchenato: Como la flor / Bidi bidi bom bom', artist: 'Selena', genre: 'Rancheras', main: true },
+      { title: 'El vendaval', artist: 'Farid Ortiz', genre: 'Vallenato', main: true },
+      { title: 'Las mañanitas', artist: 'Tradicional', genre: 'Celebraciones', main: false },
+      { title: 'En tu día', artist: 'Pedro Infante', genre: 'Celebraciones', main: false },
+      { title: 'Tu fiesta', artist: 'Jessi Uribe', genre: 'Celebraciones', main: false },
+      { title: 'Es mi niña bonita', artist: 'Repertorio general', genre: 'Celebraciones', main: false },
+      { title: 'Quince primaveras', artist: 'Repertorio general', genre: 'Celebraciones', main: false },
+      { title: 'Te lo pido por favor', artist: 'Repertorio general', genre: 'Rancheras', main: false },
+      { title: 'El rey', artist: 'Repertorio general', genre: 'Rancheras', main: false },
+      { title: 'Cómo te pago', artist: 'Repertorio general', genre: 'Rancheras', main: false },
+      { title: 'Tu sangre en mi cuerpo', artist: 'Repertorio general', genre: 'Rancheras', main: false },
+      { title: 'Si nos dejan', artist: 'Repertorio general', genre: 'Rancheras', main: false },
+      { title: 'Viejo, mi querido viejo', artist: 'Repertorio general', genre: 'Baladas', main: false },
+      { title: 'Sabes una cosa', artist: 'Repertorio general', genre: 'Baladas', main: false },
+      { title: 'Solo para ti', artist: 'Rafael Orozco', genre: 'Vallenato', main: false },
+      { title: 'Negrita de mis amores', artist: 'Repertorio general', genre: 'Vallenato', main: false },
+      { title: 'Se me queman las manos', artist: 'Repertorio general', genre: 'Vallenato', main: false }
+    ];
+    var f = this.state.filter;
+    var shown = all.filter(function (s) {
+      if (f === 'Todo') return true;
+      if (f === 'Show principal') return s.main;
+      return s.genre === f;
+    }).map(function (s, i) {
+      return Object.assign({}, s, { num: String(i + 1).padStart(2, '0') });
+    });
+    var self = this;
+    var labels = ['Todo', 'Show principal', 'Vallenato', 'Rancheras', 'Baladas', 'Celebraciones', 'Tambora'];
+    var filters = labels.map(function (l) {
+      var on = l === f;
+      return {
+        label: l,
+        on: on,
+        off: !on,
+        pick: function () { self.setState({ filter: l }); }
+      };
+    });
+    return {
+      accent: accent,
+      total: all.length,
+      songs: shown,
+      filters: filters,
+      hasSongs: shown.length > 0,
+      isEmpty: shown.length === 0
+    };
+  }
+}
+</script>
+</body>
+</html>
