@@ -8,7 +8,7 @@ const byOrder = <T extends { order: number }>(items: readonly T[]): T[] =>
 
 export async function getSiteChrome(repos: ContentRepositories) {
   const profile = await repos.getProfile();
-  return { name: profile.name, base: profile.base, socials: profile.socials };
+  return { name: profile.name };
 }
 
 export async function getHomePage(repos: ContentRepositories, today: string) {
