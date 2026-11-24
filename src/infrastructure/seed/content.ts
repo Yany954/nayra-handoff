@@ -282,20 +282,27 @@ export const videosSeed = [
   },
 ];
 
-export const gallerySeed = [
-  {
-    id: "tarima-sonrisa",
-    src: "/images/nayra-stage.jpg",
-    alt: "Nayra Lancheros en tarima con micrófono, sonriendo",
-    order: 1,
-  },
-  {
-    id: "cantando-luces",
-    src: "/images/nayra-singing.jpg",
-    alt: "Nayra Lancheros cantando con los ojos cerrados bajo luces de tarima",
-    order: 2,
-  },
+const galleryRows: [string, string][] = [
+  ["01-acordeon", "Nayra Lancheros canta en tarima junto al acordeonero"],
+  ["22-gesto-de-paz", "Nayra sonríe y hace el gesto de paz con el micrófono en la mano"],
+  ["31-conjunto-azul", "Nayra canta con el conjunto vallenato bajo luces azules"],
+  ["11-blanco-y-negro", "Retrato en blanco y negro de Nayra cantando a contraluz"],
+  ["16-festival-publico", "Nayra canta frente al público en un festival al aire libre"],
+  ["26-corazon", "Nayra forma un corazón con las manos sobre la tarima"],
+  ["34-desfile-folclorico", "Nayra canta en un desfile folclórico con traje típico"],
+  ["09-brazo-en-alto", "Nayra canta con el brazo en alto frente al micrófono"],
+  ["03-sonrisa-luces", "Nayra sonríe en tarima bajo luces de colores"],
+  ["25-baile-tarima", "Nayra baila en tarima con vestido de lentejuelas"],
+  ["30-luz-calida", "Nayra canta junto a la banda bajo luz cálida"],
+  ["20-brazos-arriba", "Nayra levanta los brazos mientras canta bajo las luces"],
 ];
+
+export const gallerySeed = galleryRows.map(([file, alt], i) => ({
+  id: file.replace(/^\d+-/, ""),
+  src: `/images/gallery/${file}.jpg`,
+  alt,
+  order: i + 1,
+}));
 
 export const epkSeed = {
   eyebrow: "Kit de prensa · 2026",
