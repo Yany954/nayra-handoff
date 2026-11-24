@@ -7,6 +7,7 @@ import { Hero } from "@/presentation/components/home/Hero";
 import {
   Achievements,
   Formats,
+  Gallery,
   History,
   LiveVideos,
 } from "@/presentation/components/home/Sections";
@@ -28,6 +29,7 @@ export default async function HomePage() {
         <Achievements data={data} />
         <Formats data={data} />
         <LiveVideos data={data} />
+        <Gallery data={data} />
         <History data={data} />
         <Contact data={data} />
       </main>

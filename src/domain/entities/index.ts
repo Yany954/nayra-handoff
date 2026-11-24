@@ -1,7 +1,10 @@
-export type Socials = {
-  instagram: { handle: string; url: string };
-  tiktok: { handle: string; url: string };
-  youtube: { handle: string; url: string };
+export const SOCIAL_NETWORKS = ["instagram", "tiktok", "youtube", "facebook"] as const;
+export type SocialNetwork = (typeof SOCIAL_NETWORKS)[number];
+
+export type SocialLink = {
+  network: SocialNetwork;
+  handle: string;
+  url: string;
 };
 
 export type Profile = {
@@ -18,11 +21,18 @@ export type Profile = {
   base: string;
   coverage: string;
   genresSummary: string;
-  socials: Socials;
-  bookingEmail: string;
-  whatsapp: string;
-  /** Contact links stay inert until the manager confirms the real values. */
-  contactConfirmed: boolean;
+  socials: SocialLink[];
+  /** Null until the manager confirms one; the UI hides missing channels. */
+  bookingEmail: string | null;
+  whatsapp: string | null;
+};
+
+export type GalleryPhoto = {
+  id: string;
+  src: string;
+  alt: string;
+  caption?: string;
+  order: number;
 };
 
 export const ACHIEVEMENT_KINDS = [

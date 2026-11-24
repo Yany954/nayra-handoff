@@ -1,6 +1,8 @@
 import Image from "next/image";
 import type { HomePageData } from "@/application/public-site";
 import { formatDuration } from "@/domain/rules/formats";
+import { parseYouTubeId } from "@/domain/rules/media";
+import { YouTubeFacade } from "@/presentation/components/home/YouTubeFacade";
 import { MusicIcon, PlayIcon } from "@/presentation/ui/icons";
 import { Pill, Section, SectionHeading, cardDark, displayHeading } from "@/presentation/ui/primitives";
 
@@ -71,33 +73,46 @@ export function Formats({ data }: { data: HomePageData }) {
 
 export function LiveVideos({ data }: { data: HomePageData }) {
   const { featuredVideo, secondaryVideos } = data;
+  const featuredYouTubeId = featuredVideo ? parseYouTubeId(featuredVideo.url) : null;
   return (
     <Section className="flex flex-col gap-8">
       <SectionHeading>En vivo</SectionHeading>
       <div className="flex flex-wrap gap-4">
         {featuredVideo && (
-          <div className="relative min-h-[320px] flex-[2_1_100%] overflow-hidden rounded-image lg:min-h-[440px] lg:flex-[2_1_560px]">
-            <Image
-              src="/images/nayra-singing.jpg"
-              alt="Nayra cantando bajo luces de tarima"
-              fill
-              sizes="(min-width: 1024px) 66vw, 100vw"
-              className="object-cover object-[center_30%]"
-            />
-            <div className="absolute inset-0 bg-[rgba(15,12,14,0.35)]" />
-            <a
-              href={featuredVideo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Reproducir video: ${featuredVideo.title}`}
-              className="absolute left-1/2 top-1/2 flex size-[84px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-text-light text-ink"
-            >
-              <PlayIcon size={30} />
-            </a>
-            <div className="absolute bottom-[22px] left-6 right-6 flex flex-col gap-1">
-              <span className="font-display text-[22px] font-bold lg:text-[26px]">{featuredVideo.title}</span>
-              <span className="text-sm text-text-subtle">{featuredVideo.context}</span>
-            </div>
+          <div className="relative min-h-[320px] flex-[2_1_100%] overflow-hidden rounded-image bg-black lg:min-h-[440px] lg:flex-[2_1_560px]">
+            {featuredYouTubeId ? (
+              <YouTubeFacade
+                videoId={featuredYouTubeId}
+                title={featuredVideo.title}
+                context={featuredVideo.context}
+                posterSrc="/images/nayra-singing.jpg"
+                posterAlt="Nayra cantando bajo luces de tarima"
+              />
+            ) : (
+              <>
+                <Image
+                  src="/images/nayra-singing.jpg"
+                  alt="Nayra cantando bajo luces de tarima"
+                  fill
+                  sizes="(min-width: 1024px) 66vw, 100vw"
+                  className="object-cover object-[center_30%]"
+                />
+                <div className="absolute inset-0 bg-[rgba(15,12,14,0.35)]" />
+                <a
+                  href={featuredVideo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Reproducir video: ${featuredVideo.title}`}
+                  className="absolute left-1/2 top-1/2 flex size-[84px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-text-light text-ink"
+                >
+                  <PlayIcon size={30} />
+                </a>
+                <div className="absolute bottom-[22px] left-6 right-6 flex flex-col gap-1">
+                  <span className="font-display text-[22px] font-bold lg:text-[26px]">{featuredVideo.title}</span>
+                  <span className="text-sm text-text-subtle">{featuredVideo.context}</span>
+                </div>
+              </>
+            )}
           </div>
         )}
         <div className="flex flex-[1_1_300px] flex-col gap-4">
@@ -112,6 +127,35 @@ export function LiveVideos({ data }: { data: HomePageData }) {
           ))}
         </div>
       </div>
+    </Section>
+  );
+}
+
+export function Gallery({ data }: { data: HomePageData }) {
+  if (data.gallery.length === 0) return null;
+  return (
+    <Section className="flex flex-col gap-8">
+      <SectionHeading>Galería</SectionHeading>
+      <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 sm:gap-4 lg:grid-cols-4">
+        {data.gallery.map((photo) => (
+          <li key={photo.id} className="m-0">
+            <figure className="m-0 flex flex-col gap-2">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-card">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  className="object-cover object-[center_25%]"
+                />
+              </div>
+              {photo.caption && (
+                <figcaption className="text-sm text-muted-on-dark">{photo.caption}</figcaption>
+              )}
+            </figure>
+          </li>
+        ))}
+      </ul>
     </Section>
   );
 }

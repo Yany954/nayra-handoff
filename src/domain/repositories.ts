@@ -2,6 +2,7 @@ import type {
   Achievement,
   EpkPublic,
   Format,
+  GalleryPhoto,
   Profile,
   PublicSong,
   Show,
@@ -15,5 +16,6 @@ export interface ContentRepositories {
   listSongs(): Promise<PublicSong[]>;
   listFormats(): Promise<Format[]>;
   listVideos(): Promise<Video[]>;
+  listGallery(): Promise<GalleryPhoto[]>;
   getEpk(): Promise<EpkPublic>;
 }

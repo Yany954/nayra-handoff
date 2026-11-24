@@ -26,8 +26,12 @@ export default async function EpkPage() {
     { label: "Duración", value: formatsSummary.durations },
     { label: "Integrantes", value: formatsSummary.members },
     { label: "Tarifa", value: epk.rate },
-    { label: "Booking", value: profile.bookingEmail },
-  ];
+    profile.bookingEmail
+      ? { label: "Booking", value: profile.bookingEmail }
+      : profile.whatsapp
+        ? { label: "Booking", value: `WhatsApp ${profile.whatsapp}` }
+        : null,
+  ].filter((fact) => fact !== null);
 
   return (
     <main className="flex-1 pb-20 lg:pb-[120px]">

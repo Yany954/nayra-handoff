@@ -2,10 +2,12 @@ import { z } from "zod";
 import {
   ACHIEVEMENT_KINDS,
   SHOW_STATUSES,
+  SOCIAL_NETWORKS,
   SONG_GENRES,
   type Achievement,
   type EpkPublic,
   type Format,
+  type GalleryPhoto,
   type Profile,
   type PublicSong,
   type Show,
@@ -14,7 +16,12 @@ import {
 
 const text = z.string().min(1);
 const isoDate = z.iso.date();
-const socialLink = z.object({ handle: text, url: z.url() });
+const httpsUrl = z.url({ protocol: /^https$/ });
+const socialLink = z.object({
+  network: z.enum(SOCIAL_NETWORKS),
+  handle: text,
+  url: httpsUrl,
+});
 
 export const profileSchema = z.object({
   name: text,
@@ -30,15 +37,18 @@ export const profileSchema = z.object({
   base: text,
   coverage: text,
   genresSummary: text,
-  socials: z.object({
-    instagram: socialLink,
-    tiktok: socialLink,
-    youtube: socialLink,
-  }),
-  bookingEmail: z.email(),
-  whatsapp: text,
-  contactConfirmed: z.boolean(),
+  socials: z.array(socialLink),
+  bookingEmail: z.email().nullable(),
+  whatsapp: z.string().regex(/^\+\d[\d ]{6,20}$/).nullable(),
 }) satisfies z.ZodType<Profile>;
+
+export const galleryPhotoSchema = z.object({
+  id: text,
+  src: text,
+  alt: text,
+  caption: text.optional(),
+  order: z.number().int(),
+}) satisfies z.ZodType<GalleryPhoto>;
 
 export const achievementSchema = z.object({
   id: text,
@@ -58,7 +68,7 @@ export const showSchema = z.object({
   date: isoDate.nullable(),
   status: z.enum(SHOW_STATUSES),
   description: text.optional(),
-  videoUrl: z.url().optional(),
+  videoUrl: httpsUrl.optional(),
 }) satisfies z.ZodType<Show>;
 
 /** Unknown fields are stripped, so a stray `key` can never reach the public site. */
@@ -91,7 +101,7 @@ export const videoSchema = z.object({
   id: text,
   title: text,
   context: text,
-  url: z.url(),
+  url: httpsUrl,
   featured: z.boolean(),
   order: z.number().int(),
 }) satisfies z.ZodType<Video>;

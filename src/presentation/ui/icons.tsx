@@ -68,6 +68,14 @@ export function TikTokIcon({ size = 20 }: IconProps) {
   );
 }
 
+export function FacebookIcon({ size = 20 }: IconProps) {
+  return (
+    <svg {...base(size)} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 3.5h-2.5A3.5 3.5 0 0 0 9 7v3H6.5v3.5H9V21h3.5v-7.5H15l.5-3.5h-3V7.5a1 1 0 0 1 1-1H15z" />
+    </svg>
+  );
+}
+
 export function YouTubeIcon({ size = 20 }: IconProps) {
   return (
     <svg {...base(size)} fill="none" stroke="currentColor" strokeWidth={1.8}>

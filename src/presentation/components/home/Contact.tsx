@@ -1,5 +1,12 @@
 import type { HomePageData } from "@/application/public-site";
-import { InstagramIcon, TikTokIcon, YouTubeIcon } from "@/presentation/ui/icons";
+import type { SocialNetwork } from "@/domain/entities";
+import { toWhatsAppNumber } from "@/domain/rules/media";
+import {
+  FacebookIcon,
+  InstagramIcon,
+  TikTokIcon,
+  YouTubeIcon,
+} from "@/presentation/ui/icons";
 import { SectionHeading, cardDark } from "@/presentation/ui/primitives";
 
 const labelClass = "flex flex-col gap-2 text-[13px] text-muted-on-dark";
@@ -7,24 +14,31 @@ const fieldClass =
   "rounded-xl border border-white/16 bg-field text-base text-text-light [color-scheme:dark] placeholder:text-muted-on-dark lg:text-[15px]";
 const inputClass = `${fieldClass} min-h-12 px-3.5`;
 
-function ContactValue({ href, value, live }: { href: string; value: string; live: boolean }) {
-  const className = "text-lg text-text-light break-words";
-  return live ? (
-    <a href={href} className={`${className} underline`}>{value}</a>
-  ) : (
-    <span className={className}>{value}</span>
+export const SOCIAL_META: Record<SocialNetwork, { name: string; Icon: (props: { size?: number }) => React.JSX.Element }> = {
+  instagram: { name: "Instagram", Icon: InstagramIcon },
+  tiktok: { name: "TikTok", Icon: TikTokIcon },
+  youtube: { name: "YouTube", Icon: YouTubeIcon },
+  facebook: { name: "Facebook", Icon: FacebookIcon },
+};
+
+function ContactChannel({ label, href, value }: { label: string; href: string; value: string }) {
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="text-xs uppercase tracking-[0.08em] text-muted-on-dark">{label}</span>
+      <a
+        href={href}
+        target={href.startsWith("http") ? "_blank" : undefined}
+        rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+        className="hit-44 self-start break-words text-lg text-text-light underline"
+      >
+        {value}
+      </a>
+    </div>
   );
 }
 
 export function Contact({ data }: { data: HomePageData }) {
   const { profile } = data;
-  const { socials } = profile;
-  const socialLinks = [
-    { ...socials.instagram, name: "Instagram", Icon: InstagramIcon },
-    { ...socials.tiktok, name: "TikTok", Icon: TikTokIcon },
-    { ...socials.youtube, name: "YouTube", Icon: YouTubeIcon },
-  ];
-  const whatsappDigits = profile.whatsapp.replace(/\D/g, "");
 
   return (
     <section
@@ -37,28 +51,33 @@ export function Contact({ data }: { data: HomePageData }) {
           Cuéntanos la fecha y el lugar. La manager te responde con disponibilidad y formatos.
         </p>
         <div className="flex flex-col gap-3.5 pt-2">
-          <div className="flex flex-col gap-0.5">
-            <span className="text-xs uppercase tracking-[0.08em] text-muted-on-dark">Booking</span>
-            <ContactValue href={`mailto:${profile.bookingEmail}`} value={profile.bookingEmail} live={profile.contactConfirmed} />
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <span className="text-xs uppercase tracking-[0.08em] text-muted-on-dark">WhatsApp</span>
-            <ContactValue href={`https://wa.me/${whatsappDigits}`} value={profile.whatsapp} live={profile.contactConfirmed} />
-          </div>
+          {profile.bookingEmail && (
+            <ContactChannel label="Booking" href={`mailto:${profile.bookingEmail}`} value={profile.bookingEmail} />
+          )}
+          {profile.whatsapp && (
+            <ContactChannel
+              label="WhatsApp"
+              href={`https://wa.me/${toWhatsAppNumber(profile.whatsapp)}`}
+              value={profile.whatsapp}
+            />
+          )}
         </div>
-        <div className="flex gap-2.5 pt-2">
-          {socialLinks.map(({ name, handle, url, Icon }) => (
-            <a
-              key={name}
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${name} ${handle}`}
-              className="flex size-12 items-center justify-center rounded-full border border-white/18 text-text-light"
-            >
-              <Icon />
-            </a>
-          ))}
+        <div className="flex flex-wrap gap-2.5 pt-2">
+          {profile.socials.map(({ network, handle, url }) => {
+            const { name, Icon } = SOCIAL_META[network];
+            return (
+              <a
+                key={network}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${name} ${handle}`}
+                className="flex size-12 items-center justify-center rounded-full border border-white/18 text-text-light"
+              >
+                <Icon />
+              </a>
+            );
+          })}
         </div>
       </div>
 
@@ -103,21 +122,16 @@ export function Contact({ data }: { data: HomePageData }) {
 
 export function Footer({ data, year }: { data: HomePageData; year: string }) {
   const { profile } = data;
-  const links = [
-    { name: "Instagram", url: profile.socials.instagram.url },
-    { name: "TikTok", url: profile.socials.tiktok.url },
-    { name: "YouTube", url: profile.socials.youtube.url },
-  ];
   return (
     <footer className="border-t border-white/10">
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap justify-between gap-4 px-5 py-8 text-sm text-muted-on-dark lg:px-12">
         <span>© {year} {profile.name} · {profile.base}</span>
-        <span className="flex gap-1.5">
-          {links.map((link, index) => (
-            <span key={link.name} className="flex gap-1.5">
+        <span className="flex flex-wrap gap-1.5">
+          {profile.socials.map((link, index) => (
+            <span key={link.network} className="flex gap-1.5">
               {index > 0 && <span aria-hidden="true">·</span>}
               <a href={link.url} target="_blank" rel="noopener noreferrer" className="hit-44 no-underline hover:text-text-light">
-                {link.name}
+                {SOCIAL_META[link.network].name}
               </a>
             </span>
           ))}

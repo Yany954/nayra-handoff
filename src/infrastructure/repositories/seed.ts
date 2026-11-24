@@ -4,6 +4,7 @@ import {
   achievementSchema,
   epkSchema,
   formatSchema,
+  galleryPhotoSchema,
   profileSchema,
   publicSongSchema,
   showSchema,
@@ -13,6 +14,7 @@ import {
   achievementsSeed,
   epkSeed,
   formatsSeed,
+  gallerySeed,
   profileSeed,
   showsSeed,
   songsSeed,
@@ -27,6 +29,7 @@ export function createSeedRepositories(): ContentRepositories {
     listSongs: async () => z.array(publicSongSchema).parse(songsSeed),
     listFormats: async () => z.array(formatSchema).parse(formatsSeed),
     listVideos: async () => z.array(videoSchema).parse(videosSeed),
+    listGallery: async () => z.array(galleryPhotoSchema).parse(gallerySeed),
     getEpk: async () => epkSchema.parse(epkSeed),
   };
 }

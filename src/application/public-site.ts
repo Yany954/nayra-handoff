@@ -12,12 +12,13 @@ export async function getSiteChrome(repos: ContentRepositories) {
 }
 
 export async function getHomePage(repos: ContentRepositories, today: string) {
-  const [profile, achievements, shows, formats, videos] = await Promise.all([
+  const [profile, achievements, shows, formats, videos, gallery] = await Promise.all([
     repos.getProfile(),
     repos.listAchievements(),
     repos.listShows(),
     repos.listFormats(),
     repos.listVideos(),
+    repos.listGallery(),
   ]);
   const ordered = byOrder(achievements);
 
@@ -30,6 +31,7 @@ export async function getHomePage(repos: ContentRepositories, today: string) {
     formats: byOrder(formats),
     featuredVideo: byOrder(videos).find((v) => v.featured) ?? null,
     secondaryVideos: byOrder(videos).filter((v) => !v.featured),
+    gallery: byOrder(gallery),
   };
 }
 

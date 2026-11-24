@@ -13,15 +13,17 @@ describe("seed repositories", () => {
   it("builds the home page", async () => {
     const home = await getHomePage(repos, "2026-11-23");
     expect(home.featuredAchievements).toHaveLength(4);
-    expect(home.otherAchievements).toHaveLength(1);
+    expect(home.otherAchievements).toHaveLength(4);
     expect(home.upcomingShows.map((s) => s.date)).toEqual([
       "2026-12-07",
       "2026-12-20",
       "2027-01-11",
     ]);
-    expect(home.latestShow?.id).toBe("festival-curumani");
-    expect(home.featuredVideo?.id).toBe("el-me-mintio");
+    expect(home.latestShow?.id).toBe("rondas-infantiles-2026");
+    expect(home.featuredVideo?.id).toBe("si-no-te-tengo");
     expect(home.secondaryVideos).toHaveLength(2);
+    expect(home.gallery.length).toBeGreaterThan(0);
+    expect(home.profile.bookingEmail).toBeNull();
   });
 
   it("derives the repertoire totals", async () => {

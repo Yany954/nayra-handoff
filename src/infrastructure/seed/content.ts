@@ -1,13 +1,16 @@
 /**
- * Local seed for Phase 2, transcribed from design/mockups.
+ * Local seed until Phase 3 moves it to Firestore.
  *
- * PENDING REVIEW: the public mockups do not mark which values are real.
- * Confirm shows, contact details, video links and achievements with the
- * manager before any deploy. `contactConfirmed: false` keeps the phone and
- * email from becoming live links.
+ * Sources: bios, contact, Facebook, Caribe Canta, Mejor Voz, Tawanty and
+ * Rondas Infantiles come from the manager (2026-11-23); the repertoire is
+ * confirmed real. Everything else comes from the mockups.
+ *
+ * PENDING REVIEW before deploy: upcoming shows, the TikTok handle, the two
+ * secondary videos, and the V Latin Music, Natalia Curvelo, Rafael Orozco
+ * and COLCARMEN achievements.
  */
 
-const YOUTUBE_URL = "https://www.youtube.com/@nayra-w9z";
+const YOUTUBE_URL = "https://www.youtube.com/@NAYRA-Lan";
 const TIKTOK_URL = "https://www.tiktok.com/@nayra..lan";
 
 export const profileSeed = {
@@ -21,36 +24,42 @@ export const profileSeed = {
   heroGenres: ["Vallenato", "Rancheras", "Baladas", "Tambora · Cantadora"],
   historyHeading: "De Bogotá a Curumaní: ahí se enamoró del vallenato.",
   bioShort:
-    "Nacida en Bogotá y radicada en Curumaní, Cesar, desde los 13 años, donde se enamoró del folclor. Ganadora del concurso Caribe Canta y finalista de V Latin Music. Interpreta vallenato, rancheras, baladas y tambora con una voz potente y afinada.",
+    "Nayra Lancheros es cantante y estudiante de Música, nacida en Bogotá y radicada en Curumaní, Cesar. Desde los 6 años ha forjado una voz versátil y un estilo propio, con formación en técnica vocal vallenata, guitarra, danzas folclóricas y cantos de tambora. Ganadora del primer lugar en Caribe Canta y artista invitada local, también disfruta pintar en su tiempo libre.",
   bioLong: [
-    "Nayra Sofía Lancheros Yépez nació en Bogotá y a los 13 años se mudó a Curumaní, Cesar. Allí se enamoró del folclor y del vallenato. Hoy en la región la conocen por su voz potente, su afinación y la facilidad con la que pasa del vallenato a la música folclórica.",
-    "Ha ganado el concurso Caribe Canta, ha llegado a finales de voces en Bucaramanga y ha compartido tarima con artistas reconocidos del vallenato en los festivales de su tierra.",
+    "Nayra Lancheros (n. 2 de octubre de 2008, Bogotá) es cantante y estudiante de segundo semestre de Música, con una propuesta artística marcada por el cruce entre la capital y la tierra de su madre, el departamento del Cesar. Bachiller académica del Colegio Monterrosales de Bogotá (2025), inició su camino musical a los 6 años en la Escuela de Formación AMA, presentándose en escenarios como el Teatro Santafé y participando activamente en la escuela musical del Colegio Nuestra Señora del Pilar Chapinero.",
+    "En 2020 se radicó en Curumaní, Cesar, donde fortaleció su formación en guitarra y técnica vocal enfocada en la música vallenata en la Casa de la Cultura. Desde 2023 integra la Corporación Ballet Folclórico Tawanty, destacando tanto en danzas folclóricas como en el canto de tamboras tradicionales.",
+    "Reconocida por su voz versátil, carisma y estilo propio, ha participado en certámenes de \"Mejor Voz\" en festivales regionales (Rinconhondo, La Aurora, San Roque, Sabagrande, Santa Isabel, Chiriguaná y Becerril), en el concurso VLatin Music y obtuvo el primer lugar en el concurso Caribe Canta en Barranquilla. En 2025 y 2026 se desempeñó como cantante local en el Festival de Juegos y Rondas Infantiles de Curumaní. Fuera de los escenarios, explora distintas técnicas de pintura.",
   ],
   origin: "Bogotá",
   base: "Curumaní, Cesar",
   coverage: "Cesar y región Caribe",
   genresSummary: "Vallenato · Ranchera · Balada · Tambora",
-  socials: {
-    instagram: {
+  socials: [
+    {
+      network: "instagram",
       handle: "@nayralancheros",
       url: "https://www.instagram.com/nayralancheros",
     },
-    tiktok: { handle: "@nayra..lan", url: TIKTOK_URL },
-    youtube: { handle: "@nayra-w9z", url: YOUTUBE_URL },
-  },
-  bookingEmail: "booking@nayralancheros.com",
-  whatsapp: "+57 300 000 0000",
-  contactConfirmed: false,
+    { network: "tiktok", handle: "@nayra..lan", url: TIKTOK_URL },
+    { network: "youtube", handle: "@NAYRA-Lan", url: YOUTUBE_URL },
+    {
+      network: "facebook",
+      handle: "Nayra Lancheros",
+      url: "https://www.facebook.com/share/1PrAMnQBS4/",
+    },
+  ],
+  bookingEmail: null,
+  whatsapp: "+57 317 470 3402",
 };
 
 export const achievementsSeed = [
   {
     id: "caribe-canta",
     title: "1.er lugar",
-    subtitle: "Concurso Caribe Canta",
+    subtitle: "Concurso Caribe Canta · Barranquilla",
     kind: "ganadora",
     label: "Ganadora",
-    epkLine: "1.er lugar — Concurso Caribe Canta",
+    epkLine: "1.er lugar — Concurso Caribe Canta, Barranquilla",
     featured: true,
     order: 1,
   },
@@ -65,25 +74,58 @@ export const achievementsSeed = [
     order: 2,
   },
   {
-    id: "rafael-orozco",
-    title: "Voces Rafael Orozco Maestre",
-    subtitle: "Concurso de voces",
+    id: "mejor-voz-regional",
+    title: "Mejor Voz Vallenata",
+    subtitle: "7 festivales regionales · Becerril, Chiriguaná, San Roque y más",
     kind: "participante",
-    label: "Participante destacada",
-    epkLine: "Participante destacada — Concurso de Voces Rafael Orozco Maestre",
+    label: "Concursante",
+    epkLine:
+      "Concursante de Mejor Voz en festivales de Rinconhondo, La Aurora, San Roque, Sabagrande, Santa Isabel, Chiriguaná y Becerril",
     featured: true,
     order: 3,
   },
   {
+    id: "tawanty",
+    title: "Ballet Folclórico Tawanty",
+    subtitle: "Bailarina y cantante principal de tamboras",
+    kind: "reconocimiento",
+    label: "Desde 2023",
+    epkLine:
+      "Bailarina y cantante principal de tamboras en la Corporación Ballet Folclórico Tawanty (desde 2023)",
+    featured: true,
+    order: 4,
+  },
+  {
+    id: "rondas-infantiles",
+    title:
+      "Cantante local en el Festival de Juegos y Rondas Infantiles de Curumaní (2025 y 2026).",
+    subtitle: "Festival de Juegos y Rondas Infantiles",
+    kind: "tarima",
+    label: "Tarima",
+    epkLine: "Cantante local en el Festival de Juegos y Rondas Infantiles de Curumaní (2025 y 2026)",
+    featured: false,
+    order: 5,
+  },
+  {
     id: "natalia-curvelo",
-    title: "Natalia Curvelo",
+    title: "Artista local invitada en el Festival Folclórico de Curumaní, junto a Natalia Curvelo.",
     subtitle: "Festival Folclórico de Curumaní",
     kind: "tarima",
     label: "Tarima compartida",
     epkLine:
       "Artista local invitada en el Festival Folclórico de Curumaní, junto a Natalia Curvelo",
-    featured: true,
-    order: 4,
+    featured: false,
+    order: 6,
+  },
+  {
+    id: "rafael-orozco",
+    title: "Participante destacada en el Concurso de Voces Rafael Orozco Maestre.",
+    subtitle: "Concurso de voces",
+    kind: "participante",
+    label: "Participante destacada",
+    epkLine: "Participante destacada — Concurso de Voces Rafael Orozco Maestre",
+    featured: false,
+    order: 7,
   },
   {
     id: "himno-colcarmen",
@@ -94,19 +136,18 @@ export const achievementsSeed = [
     label: "Reconocimiento",
     epkLine: "Intérprete del himno de COLCARMEN, Pailitas",
     featured: false,
-    order: 5,
+    order: 8,
   },
 ];
 
 export const showsSeed = [
   {
-    id: "festival-curumani",
-    venue: "Festival Folclórico de Curumaní",
+    id: "rondas-infantiles-2026",
+    venue: "Festival de Juegos y Rondas Infantiles",
     city: "Curumaní, Cesar",
     date: null,
     status: "confirmado",
-    description: "Compartió tarima con Natalia Curvelo como artista local invitada.",
-    videoUrl: YOUTUBE_URL,
+    description: "Cantante local del festival en 2025 y 2026.",
   },
   {
     id: "fin-de-ano-curumani",
@@ -216,10 +257,10 @@ export const formatsSeed = [
 
 export const videosSeed = [
   {
-    id: "el-me-mintio",
-    title: "\"Él me mintió\" — Final V Latin Music",
-    context: "Bucaramanga · YouTube",
-    url: YOUTUBE_URL,
+    id: "si-no-te-tengo",
+    title: "\"Si no te tengo\"",
+    context: "YouTube · @NAYRA-Lan",
+    url: "https://youtu.be/A9vZxH2VM-g",
     featured: true,
     order: 1,
   },
@@ -234,10 +275,25 @@ export const videosSeed = [
   {
     id: "la-cigarra",
     title: "\"La cigarra\" — Presentación en vivo",
-    context: "YouTube · @nayra-w9z",
+    context: "YouTube · @NAYRA-Lan",
     url: YOUTUBE_URL,
     featured: false,
     order: 3,
+  },
+];
+
+export const gallerySeed = [
+  {
+    id: "tarima-sonrisa",
+    src: "/images/nayra-stage.jpg",
+    alt: "Nayra Lancheros en tarima con micrófono, sonriendo",
+    order: 1,
+  },
+  {
+    id: "cantando-luces",
+    src: "/images/nayra-singing.jpg",
+    alt: "Nayra Lancheros cantando con los ojos cerrados bajo luces de tarima",
+    order: 2,
   },
 ];
 
