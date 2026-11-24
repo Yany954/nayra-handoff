@@ -1,9 +1,37 @@
-export default function Home() {
+import { cacheLife } from "next/cache";
+import { getHomePage } from "@/application/public-site";
+import { toBogotaDateKey } from "@/domain/rules/shows";
+import { repositories } from "@/infrastructure/container";
+import { Contact, Footer } from "@/presentation/components/home/Contact";
+import { Hero } from "@/presentation/components/home/Hero";
+import {
+  Achievements,
+  Formats,
+  History,
+  LiveVideos,
+} from "@/presentation/components/home/Sections";
+
+async function loadHome() {
+  "use cache";
+  // Refreshed daily so past shows leave "Próximas fechas" on their own.
+  cacheLife("days");
+  const today = toBogotaDateKey(new Date());
+  return { data: await getHomePage(repositories, today), year: today.slice(0, 4) };
+}
+
+export default async function HomePage() {
+  const { data, year } = await loadHome();
   return (
-    <main className="flex flex-1 items-center justify-center bg-ink p-6">
-      <h1 className="font-display text-6xl font-bold tracking-tight text-text-light">
-        Nayra <span className="text-accent">Lancheros</span>
-      </h1>
-    </main>
+    <>
+      <main className="flex-1">
+        <Hero data={data} />
+        <Achievements data={data} />
+        <Formats data={data} />
+        <LiveVideos data={data} />
+        <History data={data} />
+        <Contact data={data} />
+      </main>
+      <Footer data={data} year={year} />
+    </>
   );
 }
