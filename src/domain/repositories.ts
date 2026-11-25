@@ -6,6 +6,7 @@ import type {
   EpkPublic,
   Format,
   GalleryPhoto,
+  PitchTemplates,
   Profile,
   PublicSong,
   Show,
@@ -76,6 +77,9 @@ export interface AdminRepositories {
   listSongs(): Promise<AdminSong[]>;
   saveSong(id: string | null, input: SongInput): Promise<void>;
   deleteSong(id: string): Promise<void>;
+
+  getPitch(): Promise<PitchTemplates>;
+  savePitch(templates: PitchTemplates): Promise<void>;
 
   getEpk(): Promise<EpkPublic>;
   getProfile(): Promise<Profile>;

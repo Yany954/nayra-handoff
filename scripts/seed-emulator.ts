@@ -10,7 +10,8 @@ import { z } from "zod";
 import { bucket, db } from "@/infrastructure/firebase/admin";
 import { addDays } from "@/domain/rules/promoters";
 import { toBogotaDateKey } from "@/domain/rules/shows";
-import { promoterSchema } from "@/infrastructure/schemas/panel";
+import { pitchSchema, promoterSchema } from "@/infrastructure/schemas/panel";
+import { pitchSeed } from "@/infrastructure/seed/pitch";
 import {
   achievementSchema,
   epkSchema,
@@ -82,7 +83,8 @@ function examplePromoters() {
 async function main() {
   await firestore.doc("profile/main").set(profileSchema.parse(profileSeed));
   await firestore.doc("epk/main").set(epkSchema.parse(epkSeed));
-  console.log("profile/main, epk/main");
+  await firestore.doc("pitch/main").set(pitchSchema.parse(pitchSeed));
+  console.log("profile/main, epk/main, pitch/main");
   await replaceCollection("achievements", achievementSchema, achievementsSeed);
   await replaceCollection("shows", showSchema, showsSeed);
   // Musical keys are not in the seed yet; the panel (phase 4) writes them to songs/{id}/private/meta.

@@ -14,6 +14,7 @@ import {
 import {
   bookingRequestSchema,
   discoveredEventSchema,
+  pitchSchema,
   promoterSchema,
 } from "@/infrastructure/schemas/panel";
 
@@ -143,6 +144,15 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
     },
     deleteSong: async (id) => {
       await db.recursiveDelete(db.collection("songs").doc(id));
+    },
+
+    getPitch: async () => {
+      const snapshot = await db.doc("pitch/main").get();
+      if (!snapshot.exists) throw new Error("Missing document pitch/main. Run `npm run seed`.");
+      return pitchSchema.parse(snapshot.data());
+    },
+    savePitch: async (templates) => {
+      await db.doc("pitch/main").set(pitchSchema.parse(templates));
     },
 
     getEpk: () => content.getEpk(),

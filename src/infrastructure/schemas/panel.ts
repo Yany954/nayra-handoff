@@ -3,8 +3,11 @@ import {
   ACHIEVEMENT_KINDS,
   PROMOTER_SOURCES,
   PROMOTER_STAGES,
+  RECIPIENT_KINDS,
   SHOW_STATUSES,
   SONG_GENRES,
+  type PitchTemplates,
+  type RecipientKind,
   type BookingRequest,
   type DiscoveredEvent,
   type Promoter,
@@ -181,4 +184,30 @@ export function fieldErrorsOf(error: z.ZodError): Record<string, string> {
     out[key] ??= issue.message;
   }
   return out;
+}
+
+// ---- Pitch ----
+
+const kindTemplate = z.object({
+  subject: z.string().trim().min(1, "Escribe el asunto.").max(160, "Máximo 160 caracteres."),
+  paragraph: z.string().trim().min(1, "Escribe el párrafo.").max(1500, "Máximo 1500 caracteres."),
+});
+
+export const pitchSchema = z.object({
+  body: z.string().trim().min(1, "Escribe el cuerpo del correo.").max(6000, "Máximo 6000 caracteres."),
+  signature: z.string().trim().min(1, "Escribe la firma.").max(1000, "Máximo 1000 caracteres."),
+  kinds: z.object(Object.fromEntries(RECIPIENT_KINDS.map((k) => [k, kindTemplate])) as Record<RecipientKind, typeof kindTemplate>),
+}) satisfies z.ZodType<PitchTemplates, unknown>;
+
+/** The templates form is flat (`festival_subject`, …); this rebuilds the nested shape. */
+export const pitchFormFields = ["body", "signature", ...RECIPIENT_KINDS.flatMap((k) => [`${k}_subject`, `${k}_paragraph`])] as const;
+
+export function pitchFromForm(values: Record<string, unknown>) {
+  return pitchSchema.safeParse({
+    body: values.body,
+    signature: values.signature,
+    kinds: Object.fromEntries(
+      RECIPIENT_KINDS.map((k) => [k, { subject: values[`${k}_subject`], paragraph: values[`${k}_paragraph`] }]),
+    ),
+  });
 }

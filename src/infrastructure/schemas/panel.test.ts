@@ -40,3 +40,19 @@ describe("panel form schemas", () => {
     expect(promoter).toMatchObject({ nextFollowUpAt: null, eventDate: "2027-02-14" });
   });
 });
+
+import { pitchFromForm, pitchSchema } from "@/infrastructure/schemas/panel";
+import { pitchSeed } from "@/infrastructure/seed/pitch";
+
+describe("pitch templates", () => {
+  it("the seed is valid and rebuilds from the flat form", () => {
+    expect(pitchSchema.safeParse(pitchSeed).success).toBe(true);
+    const flat: Record<string, string> = { body: pitchSeed.body, signature: pitchSeed.signature };
+    for (const [kind, t] of Object.entries(pitchSeed.kinds)) {
+      flat[`${kind}_subject`] = t.subject;
+      flat[`${kind}_paragraph`] = t.paragraph;
+    }
+    expect(pitchFromForm(flat)).toMatchObject({ success: true, data: pitchSeed });
+    expect(pitchFromForm({ ...flat, hotel_subject: "" }).success).toBe(false);
+  });
+});
