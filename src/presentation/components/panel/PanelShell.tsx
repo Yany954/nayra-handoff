@@ -89,8 +89,17 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    href: "/panel/pitch",
+    label: "Pitch",
+    icon: (
+      <svg {...iconProps} strokeLinejoin="round" strokeLinecap="round">
+        <path d="M22 2 11 13M22 2l-7 20-4-9-9-4z" />
+      </svg>
+    ),
+  },
+  {
     href: "/panel/epk",
-    label: "Pitch / EPK",
+    label: "EPK",
     icon: (
       <svg {...iconProps} strokeLinejoin="round">
         <path d="M4 4h16v16H4z" />

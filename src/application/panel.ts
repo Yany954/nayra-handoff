@@ -132,3 +132,12 @@ export function sortPromoters(promoters: readonly Promoter[]): Promoter[] {
 export function nextOrder(items: readonly { order: number }[]): number {
   return items.reduce((max, item) => Math.max(max, item.order), 0) + 1;
 }
+
+/** After the manager sends a pitch: «Contactado» and a follow-up in 7 days (SPEC §4). */
+export async function markPitchSent(repos: AdminRepositories, id: string, today: string): Promise<Promoter | null> {
+  const promoter = await repos.getPromoter(id);
+  if (!promoter) return null;
+  const contacted = changeStage(promoter, "contactado", today);
+  await repos.updatePromoter(contacted);
+  return contacted;
+}

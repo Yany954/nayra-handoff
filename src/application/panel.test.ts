@@ -106,3 +106,18 @@ describe("promoter use cases", () => {
     expect(nextOrder([])).toBe(1);
   });
 });
+
+import { markPitchSent } from "@/application/panel";
+
+describe("markPitchSent", () => {
+  it("moves the promoter to contactado with a follow-up in 7 days", async () => {
+    const saved: Promoter[] = [];
+    const repos = fakeRepos({
+      getPromoter: async () => ({ ...promoter, stage: "en_negociacion" }),
+      updatePromoter: async (p) => { saved.push(p); },
+    });
+    const result = await markPitchSent(repos, "p1", "2026-11-25");
+    expect(result).toMatchObject({ stage: "contactado", lastContactAt: "2026-11-25", nextFollowUpAt: "2026-12-02" });
+    expect(saved).toHaveLength(1);
+  });
+});

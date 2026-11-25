@@ -114,6 +114,11 @@ export function PromotersBoard({
       <button type="button" onClick={() => edit(p)} aria-label={`Editar ${p.name}`} className={secondaryButton}>
         Editar
       </button>
+      {p.stage !== "descartado" && (
+        <Link href={`/panel/pitch?promotor=${encodeURIComponent(p.id)}`} aria-label={`Pitch para ${p.name}`} className={secondaryButton}>
+          Pitch
+        </Link>
+      )}
       {p.stage === "cerrado" && (
         <button
           type="button"
