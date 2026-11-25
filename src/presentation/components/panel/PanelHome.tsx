@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import type { PanelSummary } from "@/domain/rules/promoters";
 import { STAGE_LABELS } from "@/domain/rules/promoters";
@@ -6,7 +7,7 @@ import { STAGE_STYLES, daysBetween, shortDate } from "@/presentation/components/
 
 const card = "flex flex-col gap-4 rounded-[20px] border border-line-light bg-white p-5 sm:p-6";
 
-function Card({ title, count, children }: { title: string; count: number; children: ReactNode }) {
+function Card({ title, count, href, linkLabel, children }: { title: string; count: number; href?: string; linkLabel?: string; children: ReactNode }) {
   return (
     <section aria-label={title} className={card}>
       <div className="flex items-center justify-between gap-3">
@@ -14,6 +15,11 @@ function Card({ title, count, children }: { title: string; count: number; childr
         <span className="rounded-full bg-cream-soft px-2.5 py-1 text-xs font-semibold tabular-nums text-text-body">{count}</span>
       </div>
       {children}
+      {href && (
+        <Link href={href} className="hit-44 mt-auto self-start text-sm font-medium text-text-dark underline underline-offset-4 hover:text-text-body">
+          {linkLabel}
+        </Link>
+      )}
     </section>
   );
 }
@@ -48,7 +54,7 @@ export function PanelHome({ summary, adminName, today }: { summary: PanelSummary
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-4">
-        <Card title="Pendientes" count={summary.dueFollowUps.length}>
+        <Card title="Pendientes" count={summary.dueFollowUps.length} href="/panel/promotores" linkLabel="Ver promotores">
           {summary.dueFollowUps.length === 0 ? (
             <Empty>No hay seguimientos para hoy. Cuando marques un promotor como «Contactado», el recordatorio aparece aquí a los 7 días.</Empty>
           ) : (
@@ -93,7 +99,7 @@ export function PanelHome({ summary, adminName, today }: { summary: PanelSummary
           )}
         </Card>
 
-        <Card title="Eventos encontrados" count={summary.pendingEvents.length}>
+        <Card title="Eventos encontrados" count={summary.pendingEvents.length} href="/panel/promotores?vista=encontrados" linkLabel="Ver encontrados">
           {summary.pendingEvents.length === 0 ? (
             <Empty>Nada por revisar. La búsqueda automática de festivales y ferias dejará aquí lo que encuentre para que lo apruebes.</Empty>
           ) : (
