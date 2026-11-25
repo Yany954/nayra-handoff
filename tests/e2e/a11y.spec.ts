@@ -21,6 +21,8 @@ const PANEL_PAGES = [
   "/panel/galeria",
   "/panel/epk",
   "/panel/epk/editar",
+  "/panel/pitch",
+  "/panel/pitch?vista=plantillas",
 ];
 
 async function audit(page: Page, path: string) {
