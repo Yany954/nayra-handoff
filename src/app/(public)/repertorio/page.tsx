@@ -14,7 +14,7 @@ export default async function RepertoirePage() {
   const { songs, total, mainShowCount } = await getRepertoirePage(repositories);
 
   return (
-    <main className="flex-1">
+    <main id="contenido" tabIndex={-1} className="flex-1">
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap items-end justify-between gap-10 px-5 pb-14 pt-12 lg:px-12 lg:pb-[72px] lg:pt-20">
         <div className="flex min-w-0 flex-[1_1_100%] flex-col gap-4 lg:flex-[1_1_560px]">
           <div className="flex flex-wrap gap-2">
@@ -35,7 +35,7 @@ export default async function RepertoirePage() {
           Pedir una canción
         </Link>
       </div>
-      <div className="bg-cream text-text-dark">
+      <div data-theme="light" className="bg-cream text-text-dark">
         <RepertoireBrowser songs={songs} />
       </div>
     </main>

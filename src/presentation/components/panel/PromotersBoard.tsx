@@ -103,6 +103,8 @@ export function PromotersBoard({
     p.nextFollowUpAt ? (
       <span className={p.nextFollowUpAt <= today && (p.stage === "contactado" || p.stage === "en_negociacion") ? "font-semibold text-[#8F2D1F]" : ""}>
         {shortDate(p.nextFollowUpAt)}
+        {(p.stage === "contactado" || p.stage === "en_negociacion") &&
+          (p.nextFollowUpAt < today ? " · vencido" : p.nextFollowUpAt === today ? " · hoy" : "")}
       </span>
     ) : (
       "—"
@@ -152,11 +154,11 @@ export function PromotersBoard({
         ))}
       </div>
 
-      <nav aria-label="Vista" className="flex gap-1 self-start rounded-full bg-cream-deep p-1">
+      <nav aria-label="Vista" className="flex max-w-full gap-1 self-start rounded-full bg-cream-deep p-1">
         {(
           [
             ["promotores", "Promotores", promoters.length],
-            ["encontrados", "Encontrados automáticamente", pendingFound],
+            ["encontrados", "Encontrados", pendingFound],
           ] as const
         ).map(([id, label, count]) => (
           <Link
@@ -167,7 +169,10 @@ export function PromotersBoard({
               view === id ? "bg-white font-semibold text-text-dark" : "font-medium text-text-body hover:bg-white/60"
             }`}
           >
-            {label}
+            <span>
+              {label}
+              {id === "encontrados" && <span className="hidden sm:inline"> automáticamente</span>}
+            </span>
             <span className={`rounded-full px-2 py-0.5 text-xs tabular-nums ${view === id ? "bg-cream-soft" : "bg-cream"}`}>{count}</span>
           </Link>
         ))}

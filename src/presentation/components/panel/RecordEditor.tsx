@@ -71,6 +71,7 @@ export function RecordForm({
   submitLabel = "Guardar",
   onSaved,
   onCancel,
+  warnOnUnsaved = false,
 }: {
   fields: readonly FieldDef[];
   values: RecordValues;
@@ -79,10 +80,24 @@ export function RecordForm({
   submitLabel?: string;
   onSaved?: (state: FormState) => void;
   onCancel?: () => void;
+  /** Asks before leaving the page with unsaved edits (ISO 9241-110 error tolerance). */
+  warnOnUnsaved?: boolean;
 }) {
-  const [state, action, pending] = useActionState(save, initialFormState);
+  const [dirty, setDirty] = useState(false);
+  const [state, action, pending] = useActionState(async (prev: FormState, formData: FormData) => {
+    const result = await save(prev, formData);
+    if (result.status === "ok") setDirty(false);
+    return result;
+  }, initialFormState);
   const formRef = useRef<HTMLFormElement>(null);
   const errors = state.fieldErrors ?? {};
+
+  useEffect(() => {
+    if (!warnOnUnsaved || !dirty) return;
+    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [warnOnUnsaved, dirty]);
 
   useEffect(() => {
     if (state.status === "ok") onSaved?.(state);
@@ -91,7 +106,13 @@ export function RecordForm({
   }, [state, onSaved]);
 
   return (
-    <form ref={formRef} action={action} noValidate className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <form
+      ref={formRef}
+      action={action}
+      noValidate
+      onInput={() => setDirty(true)}
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+    >
       {id && <input type="hidden" name="id" value={id} />}
       {fields.map((field) =>
         field.kind === "checkbox" ? (
@@ -113,7 +134,8 @@ export function RecordForm({
       <div className="sm:col-span-2">
         <FormMessage state={state} />
       </div>
-      <div className="flex flex-wrap justify-end gap-2 sm:col-span-2">
+      <div className="flex flex-wrap items-center justify-end gap-2 sm:col-span-2">
+        {warnOnUnsaved && dirty && !pending && <span className="mr-auto text-sm text-text-body">Tienes cambios sin guardar.</span>}
         {onCancel && (
           <button type="button" onClick={onCancel} className={secondaryButton}>
             Cancelar

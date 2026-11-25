@@ -162,7 +162,7 @@ export function History({ data }: { data: HomePageData }) {
     { label: "Géneros", value: profile.genresSummary },
   ];
   return (
-    <section className="mt-20 bg-cream text-text-dark lg:mt-[120px]">
+    <section data-theme="light" className="mt-20 bg-cream text-text-dark lg:mt-[120px]">
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap items-center gap-10 px-5 py-20 lg:gap-16 lg:px-12 lg:py-[110px]">
         <div className="relative h-[440px] min-w-0 flex-[1_1_100%] overflow-hidden rounded-image lg:h-[640px] lg:flex-[1_1_420px]">
           <Image

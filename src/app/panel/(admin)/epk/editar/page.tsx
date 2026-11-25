@@ -46,6 +46,7 @@ export default async function EditEpkPage() {
           id={null}
           save={saveEpkAction}
           submitLabel="Guardar EPK"
+          warnOnUnsaved
           values={{ ...epk, bioShort: profile.bioShort, base: profile.base, genresSummary: profile.genresSummary }}
         />
       </div>

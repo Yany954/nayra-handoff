@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Entrar" };
 
 export default function LoginPage() {
   return (
-    <main className="flex flex-1 items-center justify-center px-5 py-16">
+    <main id="contenido" tabIndex={-1} className="flex flex-1 items-center justify-center px-5 py-16">
       <div className="flex w-full max-w-[420px] flex-col gap-8 rounded-card border border-line-light bg-white p-8 sm:p-10">
         <div className="flex items-center gap-2.5">
           <span className="flex size-8 items-center justify-center rounded-full bg-accent font-display font-bold text-ink">

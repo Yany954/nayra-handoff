@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function PanelRootLayout({ children }: LayoutProps<"/panel">) {
-  return <div className="flex min-h-full flex-1 flex-col bg-cream text-text-dark">{children}</div>;
+  return <div data-theme="light" data-panel className="flex min-h-full flex-1 flex-col bg-cream text-text-dark">{children}</div>;
 }

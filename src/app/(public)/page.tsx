@@ -24,7 +24,7 @@ export default async function HomePage() {
   const { data, year } = await loadHome();
   return (
     <>
-      <main className="flex-1">
+      <main id="contenido" tabIndex={-1} className="flex-1">
         <Hero data={data} />
         <Achievements data={data} />
         <Formats data={data} />

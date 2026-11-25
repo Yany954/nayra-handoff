@@ -11,7 +11,7 @@ export const initialFormState: FormState = { status: "idle" };
 
 /** 16px text so iOS does not zoom into fields. */
 export const fieldClass =
-  "box-border w-full rounded-xl border border-line-strong bg-white px-3.5 text-base text-text-dark placeholder:text-muted-heading focus-visible:border-text-dark";
+  "box-border w-full rounded-xl border border-muted-heading bg-white px-3.5 text-base text-text-dark placeholder:text-muted-on-light focus-visible:border-text-dark";
 export const inputClass = `${fieldClass} min-h-12`;
 
 export const primaryButton =

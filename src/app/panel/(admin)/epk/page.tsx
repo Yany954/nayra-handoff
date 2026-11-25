@@ -38,7 +38,7 @@ export default async function EpkPage() {
 
   return (
     // Full-bleed dark preview inside the cream panel, as the EPK looks when sent.
-    <div className="-mx-5 -mb-16 -mt-7 flex-1 bg-ink pb-20 text-text-light lg:-mx-10 lg:-mt-9 lg:pb-[120px]">
+    <div data-theme="dark" className="-mx-5 -mb-16 -mt-7 flex-1 bg-ink pb-20 text-text-light lg:-mx-10 lg:-mt-9 lg:pb-[120px]">
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap items-center justify-between gap-3 px-3.5 pt-4 lg:px-10 lg:pt-6">
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Vista previa del EPK · privado</span>
         <div className="flex flex-wrap gap-2">

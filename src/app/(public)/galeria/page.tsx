@@ -13,7 +13,7 @@ export default async function GalleryPage() {
   const { photos } = await getGalleryPage(repositories);
 
   return (
-    <main className="mx-auto box-border flex w-full max-w-[1360px] flex-1 flex-col gap-10 px-5 pb-20 pt-12 lg:px-12 lg:pb-[120px] lg:pt-20">
+    <main id="contenido" tabIndex={-1} className="mx-auto box-border flex w-full max-w-[1360px] flex-1 flex-col gap-10 px-5 pb-20 pt-12 lg:px-12 lg:pb-[120px] lg:pt-20">
       <div className="flex flex-col gap-4">
         <div className="flex">
           <Pill className="bg-white/8 text-text-subtle">{photos.length} fotos</Pill>

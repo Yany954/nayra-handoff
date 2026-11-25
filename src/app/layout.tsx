@@ -29,7 +29,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <a
+          href="#contenido"
+          className="sr-only z-50 rounded-full bg-text-light px-5 py-3 font-semibold text-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Saltar al contenido
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

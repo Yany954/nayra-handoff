@@ -182,13 +182,13 @@ export function PanelShell({
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col lg:flex-row">
-      <aside className="sticky top-0 hidden h-dvh w-[260px] shrink-0 flex-col gap-7 bg-ink px-4 py-6 text-text-light lg:flex">
+      <aside data-theme="dark" className="sticky top-0 hidden h-dvh w-[260px] shrink-0 flex-col gap-7 bg-ink px-4 py-6 text-text-light lg:flex">
         <Brand />
         <NavLinks pathname={pathname} />
         <Footer bookingEmail={bookingEmail} signOut={signOut} />
       </aside>
 
-      <header className="sticky top-0 z-20 flex items-center justify-between bg-ink px-3 py-2.5 pt-[max(10px,env(safe-area-inset-top))] text-text-light lg:hidden">
+      <header data-theme="dark" className="sticky top-0 z-20 flex items-center justify-between bg-ink px-3 py-2.5 pt-[max(10px,env(safe-area-inset-top))] text-text-light lg:hidden">
         <Brand />
         <button
           type="button"
@@ -203,6 +203,7 @@ export function PanelShell({
 
       <dialog
         ref={menuRef}
+        data-theme="dark"
         aria-label="Menú del panel"
         className="m-0 h-dvh max-h-none w-full max-w-none overscroll-contain border-0 bg-ink p-0 text-text-light backdrop:bg-ink open:flex open:flex-col lg:hidden"
       >
@@ -223,7 +224,7 @@ export function PanelShell({
         </div>
       </dialog>
 
-      <main className="box-border flex min-w-0 flex-1 flex-col gap-7 px-5 pb-16 pt-7 lg:px-10 lg:pb-16 lg:pt-9">
+      <main id="contenido" tabIndex={-1} className="box-border flex min-w-0 flex-1 flex-col gap-7 px-5 pb-16 pt-7 lg:px-10 lg:pb-16 lg:pt-9">
         {children}
       </main>
     </div>

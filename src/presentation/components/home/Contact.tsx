@@ -12,7 +12,7 @@ import { SectionHeading, cardDark } from "@/presentation/ui/primitives";
 
 const labelClass = "flex flex-col gap-2 text-[13px] text-muted-on-dark";
 const fieldClass =
-  "rounded-xl border border-white/16 bg-field text-base text-text-light [color-scheme:dark] placeholder:text-muted-on-dark lg:text-[15px]";
+  "rounded-xl border border-white/45 bg-field text-base text-text-light [color-scheme:dark] placeholder:text-muted-on-dark lg:text-[15px]";
 const inputClass = `${fieldClass} min-h-12 px-3.5`;
 
 export const SOCIAL_META: Record<SocialNetwork, { name: string; Icon: (props: { size?: number }) => React.JSX.Element }> = {
@@ -30,7 +30,7 @@ function ContactChannel({ label, href, value }: { label: string; href: string; v
         href={href}
         target={href.startsWith("http") ? "_blank" : undefined}
         rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="hit-44 self-start break-words text-lg text-text-light underline"
+        className="hit-44 max-w-full self-start text-lg text-text-light underline [overflow-wrap:anywhere]"
       >
         {value}
       </a>

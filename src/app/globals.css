@@ -69,6 +69,24 @@ body {
   outline-offset: 2px;
 }
 
+/* Gold is 1.6:1 on cream; light surfaces use ink (15.7:1). Dark islands inside light pages switch back. */
+[data-theme="light"] :focus-visible {
+  outline-color: var(--color-text-dark);
+}
+[data-theme="dark"] :focus-visible {
+  outline-color: var(--color-accent);
+}
+main:focus {
+  outline: none;
+}
+
+/* The panel's sticky mobile bar must never cover the focused field (WCAG 2.4.11). */
+@media (max-width: 1023px) {
+  html:has([data-panel]) {
+    scroll-padding-top: 88px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
