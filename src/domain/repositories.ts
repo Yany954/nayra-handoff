@@ -23,6 +23,16 @@ export interface ContentRepositories {
   getEpk(): Promise<EpkPublic>;
 }
 
+export type AchievementInput = Omit<Achievement, "id">;
+export type FormatInput = Omit<Format, "id">;
+/** The key is optional: the manager only shares it when someone asks. */
+export type AdminSong = PublicSong & { key: string | null };
+export type SongInput = Omit<AdminSong, "id">;
+/** What the manager edits; source, createdAt and contact dates are managed by the app. */
+export type PromoterInput = Omit<Promoter, "id" | "source" | "createdAt" | "lastContactAt">;
+/** Profile fields the EPK shows and the panel can edit. */
+export type EpkProfileFields = Pick<Profile, "bioShort" | "base" | "genresSummary">;
+
 /** Everything a show form can set; the id is assigned on creation. */
 export type ShowInput = Omit<Show, "id">;
 
@@ -49,4 +59,25 @@ export interface AdminRepositories {
   deleteGalleryPhoto(id: string): Promise<void>;
   /** Persists a new order; ids not listed keep their relative order at the end. */
   reorderGallery(ids: string[]): Promise<void>;
+
+  getPromoter(id: string): Promise<Promoter | null>;
+  createPromoter(promoter: Omit<Promoter, "id">): Promise<string>;
+  updatePromoter(promoter: Promoter): Promise<void>;
+  deletePromoter(id: string): Promise<void>;
+
+  listAchievements(): Promise<Achievement[]>;
+  saveAchievement(id: string | null, input: AchievementInput): Promise<void>;
+  deleteAchievement(id: string): Promise<void>;
+
+  listFormats(): Promise<Format[]>;
+  saveFormat(id: string | null, input: FormatInput): Promise<void>;
+  deleteFormat(id: string): Promise<void>;
+
+  listSongs(): Promise<AdminSong[]>;
+  saveSong(id: string | null, input: SongInput): Promise<void>;
+  deleteSong(id: string): Promise<void>;
+
+  getEpk(): Promise<EpkPublic>;
+  getProfile(): Promise<Profile>;
+  saveEpk(epk: EpkPublic, profile: EpkProfileFields): Promise<void>;
 }

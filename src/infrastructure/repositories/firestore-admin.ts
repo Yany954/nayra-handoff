@@ -2,10 +2,15 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Firestore, QuerySnapshot } from "firebase-admin/firestore";
 import { z } from "zod";
-import type { AdminRepositories, NewGalleryPhoto, ShowInput } from "@/domain/repositories";
+import type { AdminRepositories, AdminSong, NewGalleryPhoto, ShowInput } from "@/domain/repositories";
 import type { bucket as storageBucket } from "@/infrastructure/firebase/admin";
 import { createFirestoreRepositories } from "@/infrastructure/repositories/firestore";
-import { galleryDocSchema } from "@/infrastructure/schemas/content";
+import {
+  achievementSchema,
+  epkSchema,
+  galleryDocSchema,
+  publicSongSchema,
+} from "@/infrastructure/schemas/content";
 import {
   bookingRequestSchema,
   discoveredEventSchema,
@@ -33,6 +38,13 @@ type Bucket = ReturnType<typeof storageBucket>;
 export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRepositories {
   const content = createFirestoreRepositories(db);
   const gallery = db.collection("gallery");
+
+  /** Create with an auto id, or replace an existing document (cleared optional fields disappear). */
+  async function saveDoc(name: string, id: string | null, data: object) {
+    const clean = withoutUndefined(data);
+    if (id) await db.collection(name).doc(id).set(clean);
+    else await db.collection(name).add(clean);
+  }
 
   async function galleryDocs() {
     return parseAll(galleryDocSchema, await gallery.orderBy("order").get());
@@ -84,6 +96,61 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
       const ordered = [...ids.filter((id) => known.has(id)), ...current.filter((id) => !ids.includes(id))];
       const batch = db.batch();
       ordered.forEach((id, index) => batch.update(gallery.doc(id), { order: index + 1 }));
+      await batch.commit();
+    },
+
+    getPromoter: async (id) => {
+      const snapshot = await db.collection("promoters").doc(id).get();
+      return snapshot.exists ? promoterSchema.parse({ ...snapshot.data(), id }) : null;
+    },
+    createPromoter: async (promoter) => (await db.collection("promoters").add(promoter)).id,
+    updatePromoter: async ({ id, ...promoter }) => {
+      await db.collection("promoters").doc(id).set(promoter);
+    },
+    deletePromoter: async (id) => {
+      await db.collection("promoters").doc(id).delete();
+    },
+
+    listAchievements: () => content.listAchievements(),
+    saveAchievement: (id, input) => saveDoc("achievements", id, achievementSchema.omit({ id: true }).parse(input)),
+    deleteAchievement: async (id) => {
+      await db.collection("achievements").doc(id).delete();
+    },
+
+    listFormats: () => content.listFormats(),
+    saveFormat: (id, input) => saveDoc("formats", id, input),
+    deleteFormat: async (id) => {
+      await db.collection("formats").doc(id).delete();
+    },
+
+    listSongs: async () => {
+      const songs = await content.listSongs();
+      if (songs.length === 0) return [];
+      const metas = await db.getAll(...songs.map((s) => db.doc(`songs/${s.id}/private/meta`)));
+      return songs.map((song, i): AdminSong => {
+        const key = metas[i]?.get("key");
+        return { ...song, key: typeof key === "string" && key ? key : null };
+      });
+    },
+    // The public document and the private key are written together; the key never lands in songs/{id}.
+    saveSong: async (id, { key, ...song }) => {
+      const ref = id ? db.collection("songs").doc(id) : db.collection("songs").doc();
+      const batch = db.batch();
+      batch.set(ref, publicSongSchema.omit({ id: true }).parse(song));
+      if (key) batch.set(ref.collection("private").doc("meta"), { key });
+      else batch.delete(ref.collection("private").doc("meta"));
+      await batch.commit();
+    },
+    deleteSong: async (id) => {
+      await db.recursiveDelete(db.collection("songs").doc(id));
+    },
+
+    getEpk: () => content.getEpk(),
+    getProfile: () => content.getProfile(),
+    saveEpk: async (epk, profile) => {
+      const batch = db.batch();
+      batch.set(db.doc("epk/main"), epkSchema.parse(epk));
+      batch.update(db.doc("profile/main"), profile);
       await batch.commit();
     },
   };

@@ -93,6 +93,12 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   ...layerBoundaries,
+  {
+    // `const { id: _id, ...rest } = x` is the idiomatic way to drop a field.
+    rules: {
+      "@typescript-eslint/no-unused-vars": ["warn", { varsIgnorePattern: "^_", argsIgnorePattern: "^_", ignoreRestSiblings: true }],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

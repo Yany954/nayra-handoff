@@ -1,13 +1,21 @@
 import { z } from "zod";
 import {
+  ACHIEVEMENT_KINDS,
   PROMOTER_SOURCES,
   PROMOTER_STAGES,
   SHOW_STATUSES,
+  SONG_GENRES,
   type BookingRequest,
   type DiscoveredEvent,
   type Promoter,
 } from "@/domain/entities";
-import type { ShowInput } from "@/domain/repositories";
+import type {
+  AchievementInput,
+  FormatInput,
+  PromoterInput,
+  ShowInput,
+  SongInput,
+} from "@/domain/repositories";
 
 const text = z.string().min(1);
 const isoDate = z.iso.date();
@@ -84,3 +92,93 @@ export const galleryAltSchema = z
 
 export const GALLERY_MAX_BYTES = 10 * 1024 * 1024;
 export const GALLERY_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+
+// ---- 4b forms ----
+
+const required = (label: string, max = 120) =>
+  z.string().trim().min(1, `Escribe ${label}.`).max(max, `Máximo ${max} caracteres.`);
+const plain = (max: number) => z.string().trim().max(max, `Máximo ${max} caracteres.`);
+/** Unchecked checkboxes are absent from FormData. */
+const checkbox = z.preprocess((v) => v === "on" || v === "true" || v === true, z.boolean());
+const position = z.coerce.number({ error: "Escribe un número." }).int("Usa un número entero.").min(0).max(999);
+const optionalDate = z
+  .string()
+  .trim()
+  .refine((v) => v === "" || isoDate.safeParse(v).success, "Fecha inválida.")
+  .transform((v) => (v === "" ? null : v));
+/** One item per line, blank lines ignored. */
+const lines = (label: string) =>
+  z
+    .string()
+    .transform((v) => v.split("\n").map((line) => line.trim()).filter(Boolean))
+    .pipe(z.array(z.string().max(200, "Cada línea: máximo 200 caracteres.")).min(1, `Agrega al menos un punto en ${label}.`));
+
+export const achievementFormSchema = z.object({
+  title: required("el logro", 80),
+  subtitle: required("el detalle", 160),
+  kind: z.enum(ACHIEVEMENT_KINDS, { error: "Elige un tipo." }),
+  label: required("la etiqueta", 40),
+  epkLine: required("la línea del EPK", 200),
+  featured: checkbox,
+  order: position,
+}) satisfies z.ZodType<AchievementInput, unknown>;
+
+export const formatFormSchema = z
+  .object({
+    name: required("el nombre", 80),
+    shortName: required("el nombre corto", 40),
+    durationMin: z.coerce.number().int().min(5, "Mínimo 5 minutos.").max(600),
+    durationMax: z.coerce.number().int().min(5, "Mínimo 5 minutos.").max(600),
+    membersLabel: required("quiénes van", 80),
+    membersCount: z.coerce.number().int().min(1, "Al menos 1.").max(50),
+    idealFor: required("para qué eventos sirve", 160),
+    order: position,
+  })
+  .refine((f) => f.durationMax >= f.durationMin, {
+    message: "Debe ser mayor o igual a la duración mínima.",
+    path: ["durationMax"],
+  }) satisfies z.ZodType<FormatInput, unknown>;
+
+export const songFormSchema = z.object({
+  title: required("el título", 120),
+  artist: required("el artista", 120),
+  genre: z.enum(SONG_GENRES, { error: "Elige un género." }),
+  inMainShow: checkbox,
+  order: position,
+  key: plain(20).transform((v) => (v === "" ? null : v)),
+}) satisfies z.ZodType<SongInput, unknown>;
+
+export const promoterFormSchema = z.object({
+  type: required("el tipo", 40),
+  name: required("el nombre", 160),
+  city: plain(80),
+  contact: plain(160),
+  socialOrWeb: plain(200),
+  stage: z.enum(PROMOTER_STAGES, { error: "Elige una etapa." }),
+  nextFollowUpAt: optionalDate,
+  eventDate: optionalDate,
+  notes: plain(2000),
+}) satisfies z.ZodType<PromoterInput, unknown>;
+
+export const epkFormSchema = z.object({
+  eyebrow: required("el encabezado", 80),
+  intro: required("la introducción", 400),
+  rate: required("la tarifa", 120),
+  coverageStat: required("la cifra de cobertura", 20),
+  coverageStatLabel: required("qué significa la cifra", 40),
+  technicalRider: lines("el rider técnico"),
+  hospitalityRider: lines("el rider de hospitalidad"),
+  bioShort: required("la bio corta", 500),
+  base: required("la ciudad base", 80),
+  genresSummary: required("los géneros", 120),
+});
+
+/** First message per field, keyed by field name, for inline errors. */
+export function fieldErrorsOf(error: z.ZodError): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const issue of error.issues) {
+    const key = String(issue.path[0] ?? "form");
+    out[key] ??= issue.message;
+  }
+  return out;
+}

@@ -58,3 +58,51 @@ describe("panel use cases", () => {
     expect(saved).toEqual([["b", "a", "c"]]);
   });
 });
+
+import { mergePromoter, nextOrder, publishShowFromPromoter, savePromoter } from "@/application/panel";
+import type { Promoter } from "@/domain/entities";
+
+const promoter: Promoter = {
+  id: "p1", type: "Festival", name: "Festival de la Tambora", city: "Tamalameque", contact: "", socialOrWeb: "",
+  stage: "prospecto", lastContactAt: null, nextFollowUpAt: null, eventDate: "2027-02-14", notes: "",
+  source: "manual", createdAt: "2026-11-01T00:00:00.000Z",
+};
+const { id: _id, source: _s, createdAt: _c, lastContactAt: _l, ...input } = promoter;
+
+describe("promoter use cases", () => {
+  it("schedules the follow-up when moved to contactado", () => {
+    const next = mergePromoter(promoter, { ...input, stage: "contactado" }, "2026-11-25");
+    expect(next).toMatchObject({ stage: "contactado", lastContactAt: "2026-11-25", nextFollowUpAt: "2026-12-02" });
+  });
+
+  it("keeps a follow-up date the manager typed", () => {
+    const next = mergePromoter(promoter, { ...input, stage: "contactado", nextFollowUpAt: "2026-11-28" }, "2026-11-25");
+    expect(next.nextFollowUpAt).toBe("2026-11-28");
+  });
+
+  it("creates new promoters as manual and applies the stage rules", async () => {
+    const created: unknown[] = [];
+    const repos = fakeRepos({ createPromoter: async (p) => { created.push(p); return "new"; } });
+    await savePromoter(repos, null, { ...input, stage: "contactado" }, "2026-11-25", new Date("2026-11-25T15:00:00Z"));
+    expect(created[0]).toMatchObject({ source: "manual", stage: "contactado", nextFollowUpAt: "2026-12-02", createdAt: "2026-11-25T15:00:00.000Z" });
+    expect(created[0]).not.toHaveProperty("id");
+  });
+
+  it("publishes only closed promoters as confirmed shows", async () => {
+    const shows: unknown[] = [];
+    const repos = fakeRepos({
+      getPromoter: async (id) => (id === "closed" ? { ...promoter, stage: "cerrado" } : promoter),
+      createShow: async (s) => { shows.push(s); return "s1"; },
+      listShows: async () => shows.map((s, i) => ({ ...(s as Show), id: `s${i}` })),
+    });
+    expect(await publishShowFromPromoter(repos, "open")).toBe("not_closed");
+    expect(await publishShowFromPromoter(repos, "closed")).toBe("ok");
+    expect(await publishShowFromPromoter(repos, "closed")).toBe("already_published");
+    expect(shows).toEqual([{ venue: "Festival de la Tambora", city: "Tamalameque", date: "2027-02-14", status: "confirmado" }]);
+  });
+
+  it("puts new items after the last position", () => {
+    expect(nextOrder([{ order: 3 }, { order: 7 }])).toBe(8);
+    expect(nextOrder([])).toBe(1);
+  });
+});
