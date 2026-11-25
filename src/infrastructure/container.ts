@@ -1,5 +1,74 @@
+import { cacheLife, cacheTag } from "next/cache";
 import type { ContentRepositories } from "@/domain/repositories";
-import { createSeedRepositories } from "@/infrastructure/repositories/seed";
+import { db } from "@/infrastructure/firebase/admin";
+import { createFirestoreRepositories } from "@/infrastructure/repositories/firestore";
 
-/** Composition root: Phase 3 swaps this line for the Firestore implementation. */
-export const repositories: ContentRepositories = createSeedRepositories();
+/**
+ * Tag shared by every cached content read. Panel Server Actions (phase 4) call
+ * `updateTag(CONTENT_TAG)` after a write so the public site shows it on the next load.
+ */
+export const CONTENT_TAG = "content";
+
+const firestore = () => createFirestoreRepositories(db());
+
+// Each read is cached across requests; module-level functions keep the cache key to the arguments.
+async function getProfile() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().getProfile();
+}
+async function getEpk() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().getEpk();
+}
+async function listAchievements() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().listAchievements();
+}
+async function listShows() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().listShows();
+}
+async function listSongs() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().listSongs();
+}
+async function listFormats() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().listFormats();
+}
+async function listVideos() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().listVideos();
+}
+async function listGallery() {
+  "use cache";
+  cacheTag(CONTENT_TAG);
+  cacheLife("days");
+  return firestore().listGallery();
+}
+
+/** Composition root: the only place that decides where content comes from. */
+export const repositories: ContentRepositories = {
+  getProfile,
+  getEpk,
+  listAchievements,
+  listShows,
+  listSongs,
+  listFormats,
+  listVideos,
+  listGallery,
+};
