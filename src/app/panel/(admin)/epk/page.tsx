@@ -48,14 +48,13 @@ export default async function EpkPage() {
           >
             Editar datos del EPK
           </Link>
-          <button
-            type="button"
-            disabled
-            title="Disponible en la fase de pitch"
-            className="hit-44 cursor-not-allowed rounded-full border-0 bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink opacity-60"
+          <a
+            href="/panel/epk/pdf"
+            download
+            className="hit-44 rounded-full bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink no-underline hover:bg-text-soft"
           >
             Descargar PDF
-          </button>
+          </a>
         </div>
       </div>
       <section className="mx-auto box-border max-w-[1360px] px-3.5 pt-4 lg:px-10 lg:pt-6">

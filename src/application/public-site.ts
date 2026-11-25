@@ -71,3 +71,20 @@ export type RepertoirePageData = Awaited<ReturnType<typeof getRepertoirePage>>;
 export type EpkPageData = Awaited<ReturnType<typeof getEpkPage>>;
 export type GalleryPageData = Awaited<ReturnType<typeof getGalleryPage>>;
 export type SiteChrome = Awaited<ReturnType<typeof getSiteChrome>>;
+
+/** Everything the downloadable EPK (PDF) shows: the web EPK plus formats, videos and press photos. */
+export async function getEpkDocument(repos: ContentRepositories) {
+  const [page, formats, videos, gallery] = await Promise.all([
+    getEpkPage(repos),
+    repos.listFormats(),
+    repos.listVideos(),
+    repos.listGallery(),
+  ]);
+  return {
+    ...page,
+    formats: byOrder(formats),
+    videos: byOrder(videos),
+    photos: byOrder(gallery).slice(0, 2),
+  };
+}
+export type EpkDocumentData = Awaited<ReturnType<typeof getEpkDocument>>;

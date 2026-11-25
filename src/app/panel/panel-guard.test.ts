@@ -31,6 +31,16 @@ describe("panel access guard", () => {
     },
   );
 
+  it.each(all.filter((f) => f.endsWith("route.ts")).map((f) => [f.replace(ADMIN_DIR, "")]))(
+    "every handler in %s calls requireAdmin() first",
+    (relative) => {
+      const source = readFileSync(join(ADMIN_DIR, relative), "utf8");
+      const handlers = [...source.matchAll(/export async function (GET|POST|PUT|PATCH|DELETE)\([^)]*\)[^{]*\{\s*([^\n]*)/g)];
+      expect(handlers.length).toBeGreaterThan(0);
+      for (const [, name, firstLine] of handlers) expect(firstLine, name).toBe("await requireAdmin();");
+    },
+  );
+
   it.each(all.filter((f) => f.endsWith("actions.ts")).map((f) => [f.replace(ADMIN_DIR, "")]))(
     "every exported action in %s calls requireAdmin() first",
     (relative) => {
