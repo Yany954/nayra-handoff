@@ -1,3 +1,4 @@
+import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
 import type { AdminRepositories, ContentRepositories } from "@/domain/repositories";
 import { bucket, db } from "@/infrastructure/firebase/admin";
