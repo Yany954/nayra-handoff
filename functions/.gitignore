@@ -1,2 +1,5 @@
 lib/
 node_modules/
+
+# Local-only secrets for the Functions emulator (never commit)
+.secret.local

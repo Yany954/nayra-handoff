@@ -29,3 +29,5 @@ export const onlyAdminsCanSignIn = beforeUserSignedIn((event) => {
   }
   return { customClaims: { admin: true } };
 });
+
+export { onScanRequested, scanEvents } from "./scan";
