@@ -49,7 +49,7 @@ nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa ·
 
 ## 5. Búsqueda automática de eventos (`functions/scanEvents`)
 **Hecho en Fase 6** (`functions/src/scan/`). Decidido con Yany (2026-11-25): **Tavily** (1.000 créditos gratis/mes) para buscar + **OpenAI** (`OPENAI_MODEL`, por defecto `gpt-5-mini`) para extraer, en lugar de Gemini. Costo estimado < USD 1/mes. Guía para activarlo: `docs/scan-setup.md`.
-- `scanEvents`: `onSchedule("every 72 hours")`, `us-east1`, 9 min, 512 MiB. `onScanRequested`: trigger de `scanRequests/{id}` (el botón «Buscar ahora» del panel crea el doc; límite 1 cada 30 min y 4 cada 24 h, en el panel y en la función).
+- `scanEvents`: `onSchedule("every 72 hours")`, `us-east4` (misma región que Firestore), 9 min, 512 MiB. `onScanRequested`: trigger de `scanRequests/{id}` (el botón «Buscar ahora» del panel crea el doc; límite 1 cada 30 min y 4 cada 24 h, en el panel y en la función).
 - Proveedores detrás de `SearchProvider` / `EventExtractor`. Sin llaves: *fixtures* **solo en el emulador**; en producción, sin llaves se registra el error en `scans/state` (nunca datos falsos).
 - Flujo `runScan`: 15 queries rotando (todas en ~2 semanas) → Tavily (5 resultados c/u, solo `https`) → dedupe por URL → OpenAI con Structured Outputs (JSON schema estricto) en grupos de 10 → Zod por evento (lo inválido se descarta) → solo URLs que estaban en los resultados → ventana de fechas → relevancia → `hash = sha256(normalize(nombre sin año ni edición) + año)` como id del doc → solo nuevos (`create`) → `scans/state`.
 - **Topes por ejecución:** 15 búsquedas, 60k tokens de entrada, 25 eventos nuevos. Más el tope de la cuenta de OpenAI.

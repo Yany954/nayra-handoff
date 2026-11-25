@@ -12,8 +12,8 @@ const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
 const TAVILY_API_KEY = defineSecret("TAVILY_API_KEY");
 const OPENAI_MODEL = defineString("OPENAI_MODEL", { default: "gpt-5-mini", description: "Cheap model for event extraction" });
 
-/** Keep it next to the Firestore location when the real project is created (SPEC §5). */
-const REGION = "us-east1";
+/** Must match the Firestore location (us-east4) for the document trigger to work. */
+const REGION = "us-east4";
 /** "Buscar ahora" at most once every 30 minutes, whatever the panel sends. */
 const MANUAL_COOLDOWN_MS = 30 * 60 * 1000;
 
