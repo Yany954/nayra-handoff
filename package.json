@@ -9,7 +9,9 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run --passWithNoTests",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "emulators": "firebase emulators:start --import ./emulator-data --export-on-exit",
+    "seed": "tsx --env-file=.env.local scripts/seed-emulator.ts"
   },
   "dependencies": {
     "firebase-admin": "^14.5.1",
