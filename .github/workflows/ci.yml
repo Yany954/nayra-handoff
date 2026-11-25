@@ -30,6 +30,9 @@ jobs:
           distribution: temurin
           java-version: 21
       - run: npm ci
+      - run: npm --prefix functions ci
+      # Type-checks and compiles the blocking functions (they have their own tsconfig).
+      - run: npm --prefix functions run build
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
