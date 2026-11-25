@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getEpkPage,
+  getGalleryPage,
   getHomePage,
   getRepertoirePage,
 } from "@/application/public-site";
@@ -14,16 +15,20 @@ describe("seed repositories", () => {
     const home = await getHomePage(repos, "2026-11-23");
     expect(home.featuredAchievements).toHaveLength(4);
     expect(home.otherAchievements).toHaveLength(4);
-    expect(home.upcomingShows.map((s) => s.date)).toEqual([
-      "2026-12-07",
-      "2026-12-20",
-      "2027-01-11",
-    ]);
-    expect(home.latestShow?.id).toBe("rondas-infantiles-2026");
+    expect(home.upcomingShows.map((s) => s.date)).toEqual(["2026-12-07", "2026-12-20"]);
+    expect(home.upcomingShows.every((s) => s.status === "confirmado")).toBe(true);
+    expect(home.latestShow?.id).toBe("festival-curumani");
     expect(home.featuredVideo?.id).toBe("si-no-te-tengo");
     expect(home.secondaryVideos).toHaveLength(2);
-    expect(home.gallery.length).toBeGreaterThan(0);
+    expect(home.galleryPreview).toHaveLength(8);
+    expect(home.galleryTotal).toBe(37);
     expect(home.profile.bookingEmail).toBeNull();
+  });
+
+  it("lists every gallery photo with unique ids and alt text", async () => {
+    const { photos } = await getGalleryPage(repos);
+    expect(new Set(photos.map((p) => p.id)).size).toBe(photos.length);
+    expect(photos.every((p) => p.alt.length > 10)).toBe(true);
   });
 
   it("derives the repertoire totals", async () => {

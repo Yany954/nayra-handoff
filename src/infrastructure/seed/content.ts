@@ -5,6 +5,8 @@
  * Rondas Infantiles come from the manager (2026-11-23); the repertoire is
  * confirmed real. Everything else comes from the mockups.
  *
+ * The latest show (Festival Folclórico de Curumaní, local artist) is confirmed.
+ *
  * PENDING REVIEW before deploy: upcoming shows, the TikTok handle, the two
  * secondary videos, and the V Latin Music, Natalia Curvelo, Rafael Orozco
  * and COLCARMEN achievements.
@@ -142,12 +144,12 @@ export const achievementsSeed = [
 
 export const showsSeed = [
   {
-    id: "rondas-infantiles-2026",
-    venue: "Festival de Juegos y Rondas Infantiles",
+    id: "festival-curumani",
+    venue: "Festival Folclórico de Curumaní",
     city: "Curumaní, Cesar",
     date: null,
     status: "confirmado",
-    description: "Cantante local del festival en 2025 y 2026.",
+    description: "Se presentó como artista local del festival.",
   },
   {
     id: "fin-de-ano-curumani",
@@ -295,10 +297,35 @@ const galleryRows: [string, string][] = [
   ["25-baile-tarima", "Nayra baila en tarima con vestido de lentejuelas"],
   ["30-luz-calida", "Nayra canta junto a la banda bajo luz cálida"],
   ["20-brazos-arriba", "Nayra levanta los brazos mientras canta bajo las luces"],
+  ["29-foto", "Foto de prensa de Nayra cantando con vestido azul sobre fondo blanco"],
+  ["32-foto", "Foto de prensa de Nayra de cuerpo entero con enterizo azul"],
+  ["33-foto", "Foto de prensa de Nayra posando con el micrófono"],
+  ["02-foto", "Nayra canta junto al acordeonero con el escenario iluminado en verde"],
+  ["04-foto", "Nayra canta de perfil frente al micrófono de pedestal"],
+  ["05-foto", "Nayra canta con los ojos cerrados bajo luces moradas"],
+  ["06-foto", "Nayra sonríe junto al micrófono con un músico al fondo"],
+  ["07-foto", "Nayra canta frente a una pantalla de colores con la banda detrás"],
+  ["08-foto", "Nayra se toca el cabello mientras sonríe bajo luces azules"],
+  ["10-foto", "Nayra canta sosteniendo el micrófono bajo luces azules"],
+  ["12-foto", "Nayra canta con el micrófono en ambas manos bajo luces verdes"],
+  ["13-foto", "Nayra sonríe y extiende la mano hacia el público"],
+  ["14-foto", "Nayra canta con los brazos abiertos hacia el público"],
+  ["15-foto", "Un asistente graba a Nayra con su celular durante el show"],
+  ["17-foto", "Retrato en blanco y negro de Nayra cantando bajo los reflectores"],
+  ["18-foto", "Nayra canta con intensidad bajo una luz blanca"],
+  ["19-foto", "Nayra canta con el micrófono en alto bajo luces de colores"],
+  ["21-foto", "Nayra canta mirando al público bajo luces verdes"],
+  ["23-foto", "Nayra canta frente al micrófono de pedestal bajo luces azules"],
+  ["24-foto", "Nayra canta con la mano en el pecho"],
+  ["27-foto", "Nayra hace el gesto de paz mientras sonríe en tarima"],
+  ["28-foto", "Nayra canta con el brazo en alto frente a luces azules"],
+  ["35-foto", "Nayra lanza un beso en un lugar con luces moradas"],
+  ["36-foto", "Retrato de Nayra con blusa plateada al aire libre"],
+  ["37-foto", "Nayra posa con gafas de sol frente a palmeras"],
 ];
 
 export const gallerySeed = galleryRows.map(([file, alt], i) => ({
-  id: file.replace(/^\d+-/, ""),
+  id: file,
   src: `/images/gallery/${file}.jpg`,
   alt,
   order: i + 1,

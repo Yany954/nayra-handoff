@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import type { HomePageData } from "@/application/public-site";
 import { formatDuration } from "@/domain/rules/formats";
 import { parseYouTubeId } from "@/domain/rules/media";
+import { GalleryGrid } from "@/presentation/components/gallery/GalleryGrid";
 import { YouTubeFacade } from "@/presentation/components/home/YouTubeFacade";
 import { MusicIcon, PlayIcon } from "@/presentation/ui/icons";
 import { Pill, Section, SectionHeading, cardDark, displayHeading } from "@/presentation/ui/primitives";
@@ -133,31 +135,21 @@ export function LiveVideos({ data }: { data: HomePageData }) {
 }
 
 export function Gallery({ data }: { data: HomePageData }) {
-  if (data.gallery.length === 0) return null;
+  if (data.galleryPreview.length === 0) return null;
   return (
     <Section className="flex flex-col gap-8">
-      <SectionHeading>Galería</SectionHeading>
-      <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 sm:gap-4 lg:grid-cols-4">
-        {data.gallery.map((photo) => (
-          <li key={photo.id} className="m-0">
-            <figure className="m-0 flex flex-col gap-2">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-card">
-                <Image
-                  quality={90}
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="object-cover object-[center_25%]"
-                />
-              </div>
-              {photo.caption && (
-                <figcaption className="text-sm text-muted-on-dark">{photo.caption}</figcaption>
-              )}
-            </figure>
-          </li>
-        ))}
-      </ul>
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading>Galería</SectionHeading>
+        {data.galleryTotal > data.galleryPreview.length && (
+          <Link
+            href="/galeria"
+            className="flex min-h-11 items-center rounded-full border border-white/20 px-5 text-sm font-medium text-text-light no-underline"
+          >
+            Ver galería completa ({data.galleryTotal})
+          </Link>
+        )}
+      </div>
+      <GalleryGrid photos={data.galleryPreview} />
     </Section>
   );
 }

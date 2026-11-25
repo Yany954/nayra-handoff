@@ -31,6 +31,11 @@ export function upcomingShows(shows: readonly Show[], today: string): Show[] {
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
+/** What the public sees: only upcoming dates the manager has confirmed. */
+export function publicUpcomingShows(shows: readonly Show[], today: string): Show[] {
+  return upcomingShows(shows, today).filter((s) => s.status === "confirmado");
+}
+
 /** Most recent dated past show; undated shows are treated as past, last resort. */
 export function latestPastShow(
   shows: readonly Show[],

@@ -4,6 +4,7 @@ import { formatDuration, summarizeFormats } from "@/domain/rules/formats";
 import {
   formatShowDate,
   latestPastShow,
+  publicUpcomingShows,
   toBogotaDateKey,
   upcomingShows,
 } from "@/domain/rules/shows";
@@ -69,6 +70,13 @@ describe("shows", () => {
 
   it("keeps a show upcoming on its own date, sorted ascending", () => {
     expect(upcomingShows(shows, "2026-12-07").map((s) => s.id)).toEqual([
+      "today",
+      "later",
+    ]);
+  });
+  it("hides unconfirmed dates from the public", () => {
+    const withPending = [...shows, { ...show("pending", "2027-02-01"), status: "por_confirmar" as const }];
+    expect(publicUpcomingShows(withPending, "2026-12-07").map((s) => s.id)).toEqual([
       "today",
       "later",
     ]);

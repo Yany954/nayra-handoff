@@ -1,7 +1,9 @@
 import type { ContentRepositories } from "@/domain/repositories";
 import { summarizeFormats } from "@/domain/rules/formats";
-import { latestPastShow, upcomingShows } from "@/domain/rules/shows";
+import { latestPastShow, publicUpcomingShows } from "@/domain/rules/shows";
 import { countMainShowSongs } from "@/domain/rules/songs";
+
+export const HOME_GALLERY_SIZE = 8;
 
 const byOrder = <T extends { order: number }>(items: readonly T[]): T[] =>
   [...items].sort((a, b) => a.order - b.order);
@@ -26,13 +28,18 @@ export async function getHomePage(repos: ContentRepositories, today: string) {
     profile,
     featuredAchievements: ordered.filter((a) => a.featured),
     otherAchievements: ordered.filter((a) => !a.featured),
-    upcomingShows: upcomingShows(shows, today).slice(0, 3),
+    upcomingShows: publicUpcomingShows(shows, today).slice(0, 3),
     latestShow: latestPastShow(shows, today),
     formats: byOrder(formats),
     featuredVideo: byOrder(videos).find((v) => v.featured) ?? null,
     secondaryVideos: byOrder(videos).filter((v) => !v.featured),
-    gallery: byOrder(gallery),
+    galleryPreview: byOrder(gallery).slice(0, HOME_GALLERY_SIZE),
+    galleryTotal: gallery.length,
   };
+}
+
+export async function getGalleryPage(repos: ContentRepositories) {
+  return { photos: byOrder(await repos.listGallery()) };
 }
 
 export async function getRepertoirePage(repos: ContentRepositories) {
@@ -62,4 +69,5 @@ export async function getEpkPage(repos: ContentRepositories) {
 export type HomePageData = Awaited<ReturnType<typeof getHomePage>>;
 export type RepertoirePageData = Awaited<ReturnType<typeof getRepertoirePage>>;
 export type EpkPageData = Awaited<ReturnType<typeof getEpkPage>>;
+export type GalleryPageData = Awaited<ReturnType<typeof getGalleryPage>>;
 export type SiteChrome = Awaited<ReturnType<typeof getSiteChrome>>;
