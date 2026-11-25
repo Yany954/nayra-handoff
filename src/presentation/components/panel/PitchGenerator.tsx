@@ -15,6 +15,19 @@ import { STAGE_LABELS } from "@/domain/rules/promoters";
 import { Field, fieldClass, inputClass, primaryButton, type FormState } from "@/presentation/components/panel/form";
 
 const OTHER = "otro";
+
+export type AdaptResponse = { status: "ok"; text: string; fake: boolean } | { status: "error"; message: string };
+
+export type AdaptRequest = {
+  kindLabel: string;
+  paragraph: string;
+  recipientName: string;
+  event: string;
+  city: string;
+  date: string;
+  notes: string;
+  formats: string;
+};
 const emptyRecipient: PitchRecipient = { name: "", email: "", event: "", city: "", date: null };
 
 const lightButton =
@@ -27,6 +40,7 @@ export function PitchGenerator({
   promoters,
   initialPromoterId,
   markSent,
+  adapt,
 }: {
   templates: PitchTemplates;
   profile: Profile;
@@ -34,6 +48,7 @@ export function PitchGenerator({
   promoters: Promoter[];
   initialPromoterId: string | null;
   markSent: (promoterId: string) => Promise<FormState>;
+  adapt: (input: AdaptRequest) => Promise<AdaptResponse>;
 }) {
   const initial = promoters.find((p) => p.id === initialPromoterId) ?? null;
   const [promoterId, setPromoterId] = useState<string>(initial?.id ?? OTHER);
@@ -42,6 +57,8 @@ export function PitchGenerator({
   const [draft, setDraft] = useState(() => buildPitch(templates, kind, { profile, formats, recipient }));
   const [notice, setNotice] = useState("");
   const [sending, startSending] = useTransition();
+  const [adapting, startAdapting] = useTransition();
+  const [suggestion, setSuggestion] = useState<AdaptResponse | null>(null);
   const selected = promoters.find((p) => p.id === promoterId) ?? null;
 
   // The draft is regenerated only on these explicit changes, so manual edits survive everything else.
@@ -50,6 +67,32 @@ export function PitchGenerator({
     setRecipient(nextRecipient);
     setDraft(buildPitch(templates, nextKind, { profile, formats, recipient: nextRecipient }));
     setNotice("");
+    setSuggestion(null);
+  }
+
+  function askAi() {
+    startAdapting(async () => {
+      setSuggestion(
+        await adapt({
+          kindLabel: RECIPIENT_LABELS[kind],
+          paragraph: templates.kinds[kind].paragraph,
+          recipientName: recipient.name,
+          event: recipient.event,
+          city: recipient.city,
+          date: recipient.date ?? "",
+          notes: selected?.notes ?? "",
+          formats: formats.map((f) => `${f.name} (${f.membersLabel})`).join(", "),
+        }),
+      );
+    });
+  }
+
+  /** Rebuilds the email with the suggested paragraph in place of the template's. */
+  function applySuggestion(text: string) {
+    const custom = { ...templates, kinds: { ...templates.kinds, [kind]: { ...templates.kinds[kind], paragraph: text } } };
+    setDraft(buildPitch(custom, kind, { profile, formats, recipient }));
+    setSuggestion(null);
+    setNotice("Párrafo de la IA aplicado. Revísalo antes de enviar.");
   }
 
   function pickPromoter(id: string) {
@@ -185,6 +228,35 @@ export function PitchGenerator({
           rows={18}
           className={`${fieldClass} block resize-y rounded-none border-0 bg-transparent px-5 py-5 text-[15px] leading-[1.7] sm:px-6`}
         />
+        <div className="flex flex-col gap-3 border-t border-line-light px-5 py-4 sm:px-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <button type="button" onClick={askAi} disabled={adapting} className={lightButton}>
+              {adapting ? "Pensando…" : "Adaptar párrafo con IA"}
+            </button>
+            <span className="text-[13px] text-muted-on-light">Reescribe solo el párrafo del evento para este destinatario.</span>
+          </div>
+          {suggestion?.status === "error" && (
+            <p role="alert" className="m-0 text-sm font-medium text-[#8F2D1F]">
+              {suggestion.message}
+            </p>
+          )}
+          {suggestion?.status === "ok" && (
+            <div role="status" className="flex flex-col gap-3 rounded-card-sm border border-line-strong bg-white p-4">
+              <span className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-on-light">
+                Sugerencia{suggestion.fake ? " (de prueba: falta la llave de OpenAI)" : ""}
+              </span>
+              <p className="m-0 text-[15px] leading-[1.6]">{suggestion.text}</p>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => applySuggestion(suggestion.text)} className={primaryButton}>
+                  Usar este párrafo
+                </button>
+                <button type="button" onClick={() => setSuggestion(null)} className={lightButton}>
+                  Descartar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         {missing.length > 0 && (
           <p className="m-0 border-t border-line-light bg-[#FBEFD8] px-5 py-3 text-sm text-[#7A5108] sm:px-6">
             Faltan datos: {missing.join(", ")}. Complétalos en el texto o en el perfil antes de enviar.

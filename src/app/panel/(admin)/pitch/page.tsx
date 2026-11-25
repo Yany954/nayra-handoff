@@ -9,7 +9,7 @@ import { adminRepositories } from "@/infrastructure/container";
 import { PanelHeading } from "@/presentation/components/panel/PanelShell";
 import { PitchGenerator } from "@/presentation/components/panel/PitchGenerator";
 import { RecordForm, type FieldDef } from "@/presentation/components/panel/RecordEditor";
-import { markPitchSentAction, savePitchTemplatesAction } from "./actions";
+import { adaptParagraphAction, markPitchSentAction, savePitchTemplatesAction } from "./actions";
 
 export const metadata: Metadata = { title: "Pitch" };
 
@@ -70,6 +70,7 @@ export default async function PitchPage({ searchParams }: PageProps<"/panel/pitc
           promoters={sortPromoters(promoters.filter((p) => p.stage !== "descartado"))}
           initialPromoterId={typeof params.promotor === "string" ? params.promotor : null}
           markSent={markPitchSentAction}
+          adapt={adaptParagraphAction}
         />
       ) : (
         <div className="flex flex-col gap-5">

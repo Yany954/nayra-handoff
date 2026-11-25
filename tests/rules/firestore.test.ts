@@ -87,6 +87,8 @@ describe("event scan", () => {
     await assertFails(stranger().doc("scans/state").get());
     await assertSucceeds(admin().doc("scans/state").get());
     await assertFails(admin().doc("scans/state").set({ added: 99 }));
+    await assertFails(admin().doc("aiUsage/2026-11-25T15").set({ calls: 0 }));
+    await assertFails(stranger().doc("aiUsage/2026-11-25T15").get());
   });
 });
 

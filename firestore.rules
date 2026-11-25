@@ -85,6 +85,10 @@ service cloud.firestore {
     match /scans/{docId} {
       allow read: if isAdmin();
     }
+    // AI rate-limit counters: server only (Admin SDK).
+    match /aiUsage/{docId} {
+      allow read: if isAdmin();
+    }
 
     // Public contact form: create only.
     match /bookingRequests/{docId} {

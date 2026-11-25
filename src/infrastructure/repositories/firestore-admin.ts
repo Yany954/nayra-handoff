@@ -78,6 +78,14 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
     getScanStatus: async () => scanStatusSchema.parse((await db.doc("scans/state").get()).data() ?? {}),
     countScanRequestsSince: async (sinceIso) =>
       (await db.collection("scanRequests").where("requestedAt", ">=", sinceIso).count().get()).data().count,
+    countAiCallThisHour: async (now) => {
+      const ref = db.doc(`aiUsage/${now.toISOString().slice(0, 13)}`);
+      return db.runTransaction(async (tx) => {
+        const calls = ((await tx.get(ref)).get("calls") as number | undefined) ?? 0;
+        tx.set(ref, { calls: calls + 1 }, { merge: true });
+        return calls + 1;
+      });
+    },
     requestScan: async (requestedBy) => {
       await db.collection("scanRequests").add({ requestedAt: new Date().toISOString(), requestedBy, status: "queued" });
     },

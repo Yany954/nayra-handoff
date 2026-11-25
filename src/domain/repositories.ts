@@ -59,6 +59,8 @@ export interface AdminRepositories {
   /** Manual scan requests since `sinceIso` (for the daily limit). */
   countScanRequestsSince(sinceIso: string): Promise<number>;
   requestScan(requestedBy: string): Promise<void>;
+  /** Counts one AI call in the current hour and returns the new total (rate limit). */
+  countAiCallThisHour(now: Date): Promise<number>;
 
   listShows(): Promise<Show[]>;
   createShow(input: ShowInput): Promise<string>;

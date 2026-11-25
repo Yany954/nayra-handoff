@@ -49,3 +49,18 @@ test.describe("without a session", () => {
     expect(response.headers().location).toContain("/panel/login");
   });
 });
+
+test("«Adaptar con IA» shows a suggestion that is only applied on request", async ({ page }) => {
+  await page.goto("/panel/pitch");
+  await page.getByLabel("¿A quién le escribes?").selectOption({ label: "Festival [ejemplo] · En negociación" });
+  const body = page.getByLabel("Cuerpo del correo");
+  const before = await body.inputValue();
+  await page.getByRole("button", { name: "Adaptar párrafo con IA" }).click();
+  // Without OPENAI_API_KEY the emulator answers with a labelled test suggestion.
+  const suggestion = page.getByRole("status").filter({ hasText: "Sugerencia" });
+  await expect(suggestion).toContainText("Festival [ejemplo]");
+  await expect(body).toHaveValue(before);
+  await suggestion.getByRole("button", { name: "Usar este párrafo" }).click();
+  await expect(body).toHaveValue(/Me encantaría ser parte de Festival \[ejemplo\] en Tamalameque/);
+  await expect(body).toHaveValue(/^Estimado\/a Casa de la Cultura:/);
+});
