@@ -43,14 +43,19 @@ nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa ·
 - `pitch/main` = `{ body, signature, kinds: { <tipo>: { subject, paragraph } } }`. Cuerpo y firma comunes (texto de la manager); cada tipo aporta asunto y párrafo. Variables `{saludo} {nombre} {evento} {ciudad} {fecha} {formatos} {parrafo_evento} {firma} {whatsapp} {correo} {instagram} {tiktok} {facebook} {youtube}`; una variable sin dato queda visible como aviso. Editables en la pestaña «Plantillas».
 - El borrador es editable. Botones: copiar, abrir en Gmail web (`authuser` = correo de booking), abrir en la app de correo (`mailto:`), descargar el EPK en PDF.
 - «Ya lo envié: marcar «Contactado»» → `stage = contactado`, `lastContactAt = hoy`, `nextFollowUpAt = hoy + 7` (es explícito porque la app no ve el envío).
-- La IA (Gemini, «Adaptar con IA») queda para la Fase 6, junto con la búsqueda de eventos.
+- **«Adaptar párrafo con IA»** (Fase 6): Server Action con `requireAdmin()` que reescribe solo el párrafo del evento con OpenAI (≤90 palabras, sin inventar datos, notas tratadas como texto no confiable). Se muestra como sugerencia; solo se aplica con «Usar este párrafo». Límite 10/hora (`aiUsage/{hora}`). Sin `OPENAI_API_KEY`, el emulador devuelve una sugerencia de prueba rotulada.
 
 **EPK privado** (`/panel/epk`) + **PDF** (`GET /panel/epk/pdf`, `@react-pdf/renderer`, solo admin) generado desde los mismos datos: portada; bio y logros; formatos y rider; contacto, videos y fotos. Texto real con metadatos (título, idioma `es`); no es PDF etiquetado (ver `docs/accessibility/AUDIT.md`). El sitio público no enlaza al EPK.
 
 ## 5. Búsqueda automática de eventos (`functions/scanEvents`)
-- `onSchedule("every 72 hours")`, región cercana (ej. `us-east1`), timeout generoso.
-- **No usar Google Custom Search JSON API** (cerrada a clientes nuevos). Opciones: Gemini con grounding en Google Search, o una API de búsqueda (Brave/Tavily) + Gemini para extraer.
-- Flujo: queries → resultados → Gemini extrae JSON (validado con Zod) → dedupe por `hash(normalize(name)+year)` → guarda en `discoveredEvents` con `status: pending`.
+**Hecho en Fase 6** (`functions/src/scan/`). Decidido con Yany (2026-11-25): **Tavily** (1.000 créditos gratis/mes) para buscar + **OpenAI** (`OPENAI_MODEL`, por defecto `gpt-5-mini`) para extraer, en lugar de Gemini. Costo estimado < USD 1/mes. Guía para activarlo: `docs/scan-setup.md`.
+- `scanEvents`: `onSchedule("every 72 hours")`, `us-east1`, 9 min, 512 MiB. `onScanRequested`: trigger de `scanRequests/{id}` (el botón «Buscar ahora» del panel crea el doc; límite 1 cada 30 min y 4 cada 24 h, en el panel y en la función).
+- Proveedores detrás de `SearchProvider` / `EventExtractor`. Sin llaves: *fixtures* **solo en el emulador**; en producción, sin llaves se registra el error en `scans/state` (nunca datos falsos).
+- Flujo `runScan`: 15 queries rotando (todas en ~2 semanas) → Tavily (5 resultados c/u, solo `https`) → dedupe por URL → OpenAI con Structured Outputs (JSON schema estricto) en grupos de 10 → Zod por evento (lo inválido se descarta) → solo URLs que estaban en los resultados → ventana de fechas → relevancia → `hash = sha256(normalize(nombre sin año ni edición) + año)` como id del doc → solo nuevos (`create`) → `scans/state`.
+- **Topes por ejecución:** 15 búsquedas, 60k tokens de entrada, 25 eventos nuevos. Más el tope de la cuenta de OpenAI.
+- **Seguridad:** los resultados web son texto no confiable; el modelo solo extrae datos y nada se aprueba solo (regla de `CLAUDE.md`).
+- **Relevancia (código, no IA):** `0,5·cercanía + 0,25·género + 0,25·tipo (+0,1 si hay convocatoria)`; cercanía Cesar 1 · segundo círculo 0,7 · resto del Caribe 0,4 · otro 0,1.
+- `discoveredEvents/{hash}`: `name, municipality, department, startDate?, endDate?, dates, type, genres[], contact?, url, sourceName, openCall, deadline?, note, relevance, status, hash, foundAt` (+ `promoterId`, `reviewedAt` al revisar). `scans/state`: última ejecución (búsquedas, resultados, nuevos, descartados, tokens, errores).
 - **Filtros / queries**:
   - Geografía 1: municipios del Cesar (Curumaní, Chimichagua, Tamalameque, Pailitas, Pelaya, Chiriguaná, La Jagua de Ibirico, Agustín Codazzi, Valledupar, Aguachica, Gamarra, El Paso, Bosconia…). Geografía 2: sur de La Guajira, El Banco (Magdalena), sur de Bolívar.
   - Géneros: vallenato, ranchera, balada, tambora, guacherna, cantadora.
@@ -59,7 +64,7 @@ nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa ·
   - Señales: convocatoria abierta, fecha límite de inscripción.
   - Fuentes preferidas: `.gov.co`, gobernación, casas de cultura, calendario de ferias y fiestas de Fontur, redes oficiales de festivales.
 - `relevance` = puntuación por cercanía, género y tipo. Mostrar ordenado.
-- Misma función (o otra diaria): marca promotores en `contactado` con `nextFollowUpAt` vencido para que el panel los resalte.
+- ~~Función que marca seguimientos vencidos~~: no hace falta. El panel los **deriva al leer** (`dueFollowUps`), igual que show pasado/próximo.
 
 ## 6. Formulario de contratación
 Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). Crea `bookingRequests` y un `promoter` con `source: web_form`, `stage: prospecto`. Anti-spam: App Check o honeypot.
@@ -70,5 +75,5 @@ Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). C
 3. **Firestore**: modelo, seed, repos, rules + tests; el sitio lee de Firestore.
 4. **Panel** (hecho): login con Google solo para cuentas en `ADMIN_EMAILS` (blocking functions + session cookie + `requireAdmin()` + rules); `/panel` = inicio con resumen (pendientes, solicitudes, encontrados, analytics en Fase 7); CRUD de shows (incluye el último show), galería (subir/borrar/ordenar), logros, repertorio (tonalidad opcional), formatos, datos del EPK (`/panel/epk/editar`); promotores como `Panel.dc.html` en `/panel/promotores` (filtro en la URL, exportar CSV para Excel, publicar «Cerrado» como show). Todo el panel funciona en celular.
 5. **Pitch** (hecho): editor de `pitch/main`, generador, PDF del EPK; auditoría de accesibilidad WCAG 2.2 AA + ISO 9241-110 con tests e2e en CI.
-6. **scanEvents** + pestaña "Encontrados automáticamente" + aprobación.
+6. **scanEvents** (hecho) + pestaña "Encontrados automáticamente" + aprobación + «Adaptar con IA» en el pitch.
 7. **Formulario de contratación**, SEO (metadata, OG image), analítica, deploy, dominio.

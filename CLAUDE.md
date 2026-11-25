@@ -16,7 +16,7 @@ Spec completo (modelo de datos, reglas, funciones, fases): **`docs/SPEC.md`**. L
 ## Stack
 - **Next.js (App Router) + TypeScript** estricto. Tailwind para estilos.
 - **Firebase**: App Hosting (o Hosting), Firestore, Auth (Google + email), Storage (fotos), Cloud Functions v2 (Node/TS).
-- **Gemini** (Vertex AI / Firebase AI Logic) para: extraer eventos de resultados de búsqueda y adaptar el texto del pitch.
+- **OpenAI** (API key propia, tope USD 5) para extraer eventos de resultados de búsqueda y adaptar el párrafo del pitch; **Tavily** como buscador. Decidido en Fase 6 en lugar de Gemini (ver SPEC §5). Proveedores detrás de interfaces: cambiar es un archivo.
 - Plan **Blaze** (necesario para funciones programadas). Configurar alerta de presupuesto.
 
 ## Arquitectura (clean architecture)
@@ -24,13 +24,13 @@ Spec completo (modelo de datos, reglas, funciones, fases): **`docs/SPEC.md`**. L
 src/
   domain/          # entidades y reglas puras: Promoter, Stage, Achievement, Song, Show, PitchProfile
   application/     # casos de uso: approveDiscoveredEvent, moveStage, generatePitch, publishShow
-  infrastructure/  # Firestore repos, Storage, Gemini client, search provider
+  infrastructure/  # Firestore repos, Storage, auth, PDF, cliente OpenAI
   presentation/    # app/ (rutas Next), components/, ui/
-functions/         # Cloud Functions (scanEvents programada, triggers)
+functions/         # Cloud Functions: blocking auth, scanEvents (programada) y onScanRequested
 ```
 - `domain` no importa nada de Firebase ni de React.
 - Repositorios detrás de interfaces en `domain`; implementaciones en `infrastructure`.
-- Validación con Zod en los bordes (formularios, datos de Firestore, salida de Gemini).
+- Validación con Zod en los bordes (formularios, datos de Firestore, salida de la IA).
 
 ## Diseño: la fuente de verdad son los mockups
 - `design/mockups/*.dc.html` = mockups exportados del canvas. Lee `design/README.md` para entender su formato.
@@ -86,6 +86,6 @@ npm run seed           # carga el contenido de src/infrastructure/seed (solo emu
 npm run dev            # terminal 2: Next en local, lee de Firestore
 npm run lint && npm run typecheck && npm test
 npm run test:rules     # tests de rules (con los emuladores corriendo)
-npm run test:e2e       # accesibilidad (axe, WCAG 2.2 AA) + teclado + pitch; emuladores + seed + dev corriendo
+npm run seed && npm run test:e2e   # e2e: accesibilidad (axe, WCAG 2.2 AA) + teclado + pitch; emuladores + seed + dev corriendo
 npm run test:rules:ci  # igual, pero levanta sus propios emuladores
 ```

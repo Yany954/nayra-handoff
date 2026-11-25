@@ -32,6 +32,8 @@
 
 **Resultado actual:** 48/48 escaneos sin violaciones A/AA · 7/7 pruebas de teclado y foco · 4/4 pruebas del pitch y el PDF · 0 hallazgos *best-practice*.
 
+**Encontrados y «Adaptar con IA» (Fase 6):** tarjetas con `<h3>`, relevancia en texto, «Convocatoria abierta» como texto y no solo como color, enlaces de fuente que anuncian que abren otra pestaña, avisos de la búsqueda en `<details>` y mensajes de estado y error en regiones vivas. La sugerencia de IA nunca reemplaza el texto sin una acción explícita (controlabilidad, ISO 9241-110).
+
 **Pitch (Fase 5):** controles con etiqueta visible (De, Para, Asunto, Cuerpo); tipo de destinatario con `aria-pressed`; «Abrir en Gmail» anuncia que abre otra pestaña; la confirmación de copiar y de «Contactado» va en `role="status"`; el botón para marcar está deshabilitado con explicación visible si no hay promotor; aviso visible de variables sin dato antes de enviar (robustez ante errores, ISO 9241-110).
 
 ## 4. Criterios WCAG 2.2 A/AA
