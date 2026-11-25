@@ -8,6 +8,9 @@
 import { join } from "node:path";
 import { z } from "zod";
 import { bucket, db } from "@/infrastructure/firebase/admin";
+import { addDays } from "@/domain/rules/promoters";
+import { toBogotaDateKey } from "@/domain/rules/shows";
+import { promoterSchema } from "@/infrastructure/schemas/panel";
 import {
   achievementSchema,
   epkSchema,
@@ -62,6 +65,20 @@ async function seedGallery() {
   await replaceCollection("gallery", galleryDocSchema, docs);
 }
 
+/** Development-only examples so the panel home is not empty; clearly marked as fake. */
+function examplePromoters() {
+  const today = toBogotaDateKey(new Date());
+  const base = { socialOrWeb: "", eventDate: null, notes: "", createdAt: new Date().toISOString() };
+  return [
+    { ...base, id: "ejemplo-hotel", type: "Hotel", name: "Hotel [ejemplo]", city: "Valledupar", contact: "eventos@hotel-ejemplo.co",
+      stage: "contactado", lastContactAt: addDays(today, -9), nextFollowUpAt: addDays(today, -2), source: "manual" },
+    { ...base, id: "ejemplo-festival", type: "Festival", name: "Festival [ejemplo]", city: "Tamalameque", contact: "Casa de la Cultura",
+      stage: "en_negociacion", lastContactAt: addDays(today, -7), nextFollowUpAt: today, source: "auto" },
+    { ...base, id: "ejemplo-boda", type: "Evento privado", name: "Boda [ejemplo]", city: "Pailitas", contact: "WhatsApp",
+      stage: "prospecto", lastContactAt: null, nextFollowUpAt: null, source: "web_form" },
+  ];
+}
+
 async function main() {
   await firestore.doc("profile/main").set(profileSchema.parse(profileSeed));
   await firestore.doc("epk/main").set(epkSchema.parse(epkSeed));
@@ -73,6 +90,7 @@ async function main() {
   await replaceCollection("formats", formatSchema, formatsSeed);
   await replaceCollection("videos", videoSchema, videosSeed);
   await seedGallery();
+  await replaceCollection("promoters", promoterSchema, examplePromoters());
 }
 
 main().catch((error: unknown) => {
