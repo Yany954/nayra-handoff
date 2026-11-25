@@ -11,14 +11,29 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      # Same values as .env.example: everything runs against the local emulators.
+      GCLOUD_PROJECT: demo-nayra
+      FIRESTORE_EMULATOR_HOST: 127.0.0.1:8080
+      FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+      FIREBASE_STORAGE_EMULATOR_HOST: 127.0.0.1:9199
+      FIREBASE_STORAGE_BUCKET: demo-nayra.appspot.com
+      METADATA_SERVER_DETECTION: none
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
-      - run: npm run build
+      # Rules tests, then seed + build: the build prerenders pages from Firestore.
+      - run: >-
+          npx firebase emulators:exec --only firestore,storage
+          "npm run test:rules && npm run seed && npm run build"

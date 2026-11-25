@@ -11,7 +11,9 @@
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
     "emulators": "firebase emulators:start --import ./emulator-data --export-on-exit",
-    "seed": "tsx --env-file=.env.local scripts/seed-emulator.ts"
+    "seed": "tsx --env-file-if-exists=.env.local scripts/seed-emulator.ts",
+    "test:rules": "vitest run -c vitest.rules.config.mts",
+    "test:rules:ci": "firebase emulators:exec --only firestore,storage \"npm run test:rules\""
   },
   "dependencies": {
     "firebase-admin": "^14.5.1",
@@ -29,6 +31,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "firebase": "^13.4.0",
+    "firebase-tools": "^15.37.0",
     "tailwindcss": "4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^5",
