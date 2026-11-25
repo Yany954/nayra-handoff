@@ -1,0 +1,31 @@
+# Firebase App Hosting (backend in us-east4, live branch: main).
+# Server code uses the backend's default service account: no keys in this file or the repo.
+runConfig:
+  minInstances: 0 # scales to zero: no traffic, no cost
+  maxInstances: 2 # cost ceiling
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 1024 # the EPK PDF renders on the server
+
+env:
+  # Browser Firebase config: public by design (it identifies the project, it grants nothing).
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: REPLACE_WITH_WEB_API_KEY
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: nayra-lancheros.firebaseapp.com
+    availability: [BUILD, RUNTIME]
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: nayra-lancheros
+    availability: [BUILD, RUNTIME]
+
+  # Google accounts allowed into /panel. Secret so the emails never land in the public repo:
+  #   firebase apphosting:secrets:set ADMIN_EMAILS
+  - variable: ADMIN_EMAILS
+    secret: ADMIN_EMAILS
+    availability: [RUNTIME]
+
+  # «Adaptar párrafo con IA». Uncomment after: firebase apphosting:secrets:set OPENAI_API_KEY
+  # - variable: OPENAI_API_KEY
+  #   secret: OPENAI_API_KEY
+  #   availability: [RUNTIME]
