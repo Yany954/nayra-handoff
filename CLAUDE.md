@@ -61,7 +61,10 @@ functions/         # Cloud Functions (scanEvents programada, triggers)
 | `/repertorio` | `Repertorio.dc.html` | público |
 | `/galeria` | sin mockup (mismos tokens que `Main.dc.html`) | público |
 | `/panel/epk` | `EPK.dc.html` (sin la sección "Generador de pitch") | solo admin |
-| `/panel` | `Panel.dc.html` | solo admin |
+| `/panel/login` | — (mismo estilo del panel) | público (solo cuentas en `ADMIN_EMAILS` pasan) |
+| `/panel` | inicio con resumen (tarjetas de etapa de `Panel.dc.html`) | solo admin |
+| `/panel/shows`, `/panel/galeria` | estilo de `Panel.dc.html` | solo admin |
+| `/panel/promotores` | `Panel.dc.html` | solo admin |
 | `/panel/pitch` | sección "Generador de pitch" de `EPK.dc.html` | solo admin |
 
 ## Reglas que no se rompen
@@ -69,12 +72,14 @@ functions/         # Cloud Functions (scanEvents programada, triggers)
 - Los datos marcados `[ejemplo]` en los mockups son falsos: en producción sale de Firestore, nunca hardcodeado.
 - Nada que encuentre la búsqueda automática entra a `promoters` sin aprobación manual en el panel.
 - Escritura en Firestore solo para el admin (custom claim `admin: true`). Lectura pública solo en colecciones públicas.
+- Toda página y Server Action bajo `src/app/panel/(admin)` llama `await requireAdmin()` primero y tiene su `loading.tsx` (lo verifica `panel-guard.test.ts`). Los datos privados nunca van en `"use cache"`.
 - Nunca commitear `.env*`, service accounts ni API keys.
 
 ## Comandos
 ```
-cp .env.example .env.local   # una vez: apunta Next y los scripts a los emuladores
-npm run emulators      # terminal 1: Auth/Firestore/Storage locales (datos en ./emulator-data)
+cp .env.example .env.local   # una vez: apunta Next y los scripts a los emuladores (+ ADMIN_EMAILS)
+cp functions/.env.example functions/.env.local   # una vez: ADMIN_EMAILS para las blocking functions
+npm run emulators      # terminal 1: Auth/Firestore/Storage/Functions locales (datos en ./emulator-data)
 npm run seed           # carga el contenido de src/infrastructure/seed (solo emuladores)
 npm run dev            # terminal 2: Next en local, lee de Firestore
 npm run lint && npm run typecheck && npm test
