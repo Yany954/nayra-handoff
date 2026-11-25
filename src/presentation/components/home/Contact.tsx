@@ -7,6 +7,7 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/presentation/ui/icons";
+import { EventDateInput } from "@/presentation/components/home/EventDateInput";
 import { SectionHeading, cardDark } from "@/presentation/ui/primitives";
 
 const labelClass = "flex flex-col gap-2 text-[13px] text-muted-on-dark";
@@ -97,7 +98,7 @@ export function Contact({ data }: { data: HomePageData }) {
         </label>
         <label className={labelClass}>
           Fecha
-          <input type="date" name="eventDate" className={`${inputClass} min-w-0`} />
+          <EventDateInput className={`${inputClass} min-w-0`} />
         </label>
         <label className={labelClass}>
           Municipio
