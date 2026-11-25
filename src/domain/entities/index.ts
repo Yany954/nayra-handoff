@@ -173,3 +173,15 @@ export type DiscoveredEvent = {
   relevance: number;
   status: "pending" | "approved" | "discarded";
 };
+
+// ---- Pitch (manager only) ----
+
+export const RECIPIENT_KINDS = ["festival", "corporativo", "hotel", "privado"] as const;
+export type RecipientKind = (typeof RECIPIENT_KINDS)[number];
+
+/** Editable templates. `body` and `signature` are shared; each recipient kind adds its subject and paragraph. */
+export type PitchTemplates = {
+  body: string;
+  signature: string;
+  kinds: Record<RecipientKind, { subject: string; paragraph: string }>;
+};
