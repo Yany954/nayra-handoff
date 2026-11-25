@@ -50,6 +50,11 @@ export const galleryPhotoSchema = z.object({
   order: z.number().int(),
 }) satisfies z.ZodType<GalleryPhoto>;
 
+/** How a gallery photo is stored: the file lives in Storage under `public/gallery/`. */
+export const galleryDocSchema = galleryPhotoSchema.omit({ src: true }).extend({
+  storagePath: z.string().regex(/^public\/gallery\/[\w.-]+$/),
+});
+
 export const achievementSchema = z.object({
   id: text,
   title: text,
