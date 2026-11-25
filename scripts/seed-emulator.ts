@@ -11,6 +11,9 @@ import { bucket, db } from "@/infrastructure/firebase/admin";
 import { addDays } from "@/domain/rules/promoters";
 import { toBogotaDateKey } from "@/domain/rules/shows";
 import { pitchSchema, promoterSchema } from "@/infrastructure/schemas/panel";
+// The real scan pipeline with its offline fixtures (same code the Cloud Function runs in the emulator).
+import { FixtureExtractor, FixtureSearch } from "../functions/src/scan/providers";
+import { EMPTY_STATE, runScan, type ScanState } from "../functions/src/scan/runScan";
 import { pitchSeed } from "@/infrastructure/seed/pitch";
 import {
   achievementSchema,
@@ -80,6 +83,33 @@ function examplePromoters() {
   ];
 }
 
+/** Found events come from runScan + fixtures, dated "yesterday" like the mockup banner. */
+async function seedFoundEvents() {
+  for (const name of ["discoveredEvents", "scanRequests", "scans"]) await firestore.recursiveDelete(firestore.collection(name));
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const state = await runScan(
+    {
+      search: new FixtureSearch(),
+      extractor: new FixtureExtractor(),
+      store: {
+        getState: async () => EMPTY_STATE,
+        saveState: async (s: ScanState) => {
+          await firestore.doc("scans/state").set(s);
+        },
+        existingHashes: async () => new Set<string>(),
+        saveEvents: async (events) => {
+          const batch = firestore.batch();
+          for (const e of events) batch.set(firestore.collection("discoveredEvents").doc(e.hash), e);
+          await batch.commit();
+        },
+      },
+    },
+    yesterday,
+    "schedule",
+  );
+  console.log(`discoveredEvents: ${state.added}`);
+}
+
 async function main() {
   await firestore.doc("profile/main").set(profileSchema.parse(profileSeed));
   await firestore.doc("epk/main").set(epkSchema.parse(epkSeed));
@@ -93,6 +123,7 @@ async function main() {
   await replaceCollection("videos", videoSchema, videosSeed);
   await seedGallery();
   await replaceCollection("promoters", promoterSchema, examplePromoters());
+  await seedFoundEvents();
 }
 
 main().catch((error: unknown) => {

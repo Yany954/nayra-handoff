@@ -10,6 +10,7 @@ import {
   type RecipientKind,
   type BookingRequest,
   type DiscoveredEvent,
+  type ScanStatus,
   type Promoter,
 } from "@/domain/entities";
 import type {
@@ -54,10 +55,28 @@ export const discoveredEventSchema = z.object({
   id: text,
   name: text,
   municipality: z.string(),
+  department: z.string().default(""),
   dates: z.string(),
+  startDate: isoDate.nullable().default(null),
+  type: z.string().default("otro"),
+  contact: z.string().nullable().default(null),
+  // Shown as a link: only https, anything else is dropped to an empty string.
+  url: z.string().default("").transform((v) => (z.url({ protocol: /^https$/ }).safeParse(v).success ? v : "")),
+  sourceName: z.string().default(""),
+  openCall: z.boolean().default(false),
+  deadline: isoDate.nullable().default(null),
+  note: z.string().default(""),
   relevance: z.number().min(0).max(1),
   status: z.enum(["pending", "approved", "discarded"]),
+  foundAt: z.string().default(""),
 }) satisfies z.ZodType<DiscoveredEvent, unknown>;
+
+export const scanStatusSchema = z.object({
+  lastRunAt: z.string().nullable().default(null),
+  added: z.number().default(0),
+  queries: z.number().default(0),
+  errors: z.array(z.string()).default([]),
+}) satisfies z.ZodType<ScanStatus, unknown>;
 
 // ---- Form input (FormData values are strings; empty means "not set") ----
 

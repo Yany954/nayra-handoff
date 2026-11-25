@@ -169,9 +169,28 @@ export type DiscoveredEvent = {
   id: string;
   name: string;
   municipality: string;
+  department: string;
   dates: string;
+  startDate: string | null;
+  /** festival, concurso, feria, fiestas_patronales, alcaldia_casa_cultura, corporativo, hotel, otro */
+  type: string;
+  contact: string | null;
+  url: string;
+  sourceName: string;
+  openCall: boolean;
+  deadline: string | null;
+  note: string;
   relevance: number;
   status: "pending" | "approved" | "discarded";
+  foundAt: string;
+};
+
+/** Written by functions/src/scan; shown as the banner of «Encontrados automáticamente». */
+export type ScanStatus = {
+  lastRunAt: string | null;
+  added: number;
+  queries: number;
+  errors: string[];
 };
 
 // ---- Pitch (manager only) ----

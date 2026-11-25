@@ -7,6 +7,7 @@ import type {
   Format,
   GalleryPhoto,
   PitchTemplates,
+  ScanStatus,
   Profile,
   PublicSong,
   Show,
@@ -48,7 +49,16 @@ export type NewGalleryPhoto = {
 export interface AdminRepositories {
   listPromoters(): Promise<Promoter[]>;
   listBookingRequests(): Promise<BookingRequest[]>;
+  /** All found events (pending and reviewed), most relevant first. */
   listDiscoveredEvents(): Promise<DiscoveredEvent[]>;
+  getDiscoveredEvent(id: string): Promise<DiscoveredEvent | null>;
+  /** Creates the promoter and marks the event approved in one transaction. */
+  approveDiscoveredEvent(id: string, promoter: Omit<Promoter, "id">): Promise<"ok" | "not_pending">;
+  discardDiscoveredEvent(id: string): Promise<void>;
+  getScanStatus(): Promise<ScanStatus>;
+  /** Manual scan requests since `sinceIso` (for the daily limit). */
+  countScanRequestsSince(sinceIso: string): Promise<number>;
+  requestScan(requestedBy: string): Promise<void>;
 
   listShows(): Promise<Show[]>;
   createShow(input: ShowInput): Promise<string>;

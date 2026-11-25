@@ -7,7 +7,17 @@ import { requireAdmin } from "@/infrastructure/auth/session";
 import { adminRepositories } from "@/infrastructure/container";
 import { PanelHeading } from "@/presentation/components/panel/PanelShell";
 import { PromotersBoard } from "@/presentation/components/panel/PromotersBoard";
-import { deletePromoterAction, publishShowAction, savePromoterAction } from "./actions";
+import { SCAN_EVERY_HOURS } from "@/domain/rules/found";
+import { FoundEvents } from "@/presentation/components/panel/FoundEvents";
+import { timeAgo, timeUntil } from "@/presentation/components/panel/stages";
+import {
+  approveFoundAction,
+  deletePromoterAction,
+  discardFoundAction,
+  publishShowAction,
+  requestScanAction,
+  savePromoterAction,
+} from "./actions";
 
 export const metadata: Metadata = { title: "Promotores" };
 
@@ -20,7 +30,9 @@ export default async function PromotersPage({ searchParams }: PageProps<"/panel/
   await connection();
   const params = await searchParams;
   const repos = adminRepositories();
-  const [promoters, found] = await Promise.all([repos.listPromoters(), repos.listDiscoveredEvents()]);
+  const [promoters, found, scan] = await Promise.all([repos.listPromoters(), repos.listDiscoveredEvents(), repos.getScanStatus()]);
+  const now = new Date();
+  const nextRunAt = scan.lastRunAt ? new Date(Date.parse(scan.lastRunAt) + SCAN_EVERY_HOURS * 3_600_000).toISOString() : null;
   return (
     <>
       <PanelHeading title="Base de datos de shows" eyebrow="Promotores y eventos" />
@@ -29,7 +41,18 @@ export default async function PromotersPage({ searchParams }: PageProps<"/panel/
         stage={isStage(params.etapa) ? params.etapa : null}
         view={params.vista === "encontrados" ? "encontrados" : "promotores"}
         today={toBogotaDateKey(new Date())}
-        pendingFound={found.length}
+        pendingFound={found.filter((e) => e.status === "pending").length}
+        found={
+          <FoundEvents
+            events={found}
+            lastRun={scan.lastRunAt ? timeAgo(scan.lastRunAt, now) : null}
+            nextRun={nextRunAt ? timeUntil(nextRunAt, now) : null}
+            scanErrors={scan.errors}
+            approve={approveFoundAction}
+            discard={discardFoundAction}
+            requestScan={requestScanAction}
+          />
+        }
         save={savePromoterAction}
         remove={deletePromoterAction}
         publish={publishShowAction}

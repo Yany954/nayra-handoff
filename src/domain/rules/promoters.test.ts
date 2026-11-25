@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { Promoter } from "@/domain/entities";
+import type { DiscoveredEvent, Promoter } from "@/domain/entities";
 import { addDays, changeStage, dueFollowUps, summarizePanel } from "@/domain/rules/promoters";
 
 const base: Promoter = {
@@ -17,6 +17,12 @@ const base: Promoter = {
   source: "manual",
   createdAt: "2026-11-01T00:00:00.000Z",
 };
+
+const found = (over: Partial<DiscoveredEvent>): DiscoveredEvent => ({
+  id: "e", name: "Evento", municipality: "X", department: "Cesar", dates: "", startDate: null, type: "festival",
+  contact: null, url: "", sourceName: "", openCall: false, deadline: null, note: "", relevance: 0.5,
+  status: "pending", foundAt: "", ...over,
+});
 
 describe("promoter rules", () => {
   it("adds days across month and year boundaries", () => {
@@ -54,9 +60,9 @@ describe("promoter rules", () => {
           { id: "r2", name: "B", eventType: "Boda", eventDate: "2027-01-01", municipality: "X", status: "revisado" },
         ],
         events: [
-          { id: "e1", name: "Low", municipality: "X", dates: "", relevance: 0.4, status: "pending" },
-          { id: "e2", name: "High", municipality: "X", dates: "", relevance: 0.9, status: "pending" },
-          { id: "e3", name: "Done", municipality: "X", dates: "", relevance: 1, status: "approved" },
+          found({ id: "e1", relevance: 0.4 }),
+          found({ id: "e2", relevance: 0.9 }),
+          found({ id: "e3", relevance: 1, status: "approved" }),
         ],
       },
       "2026-11-25",

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useState, useTransition, type ReactNode } from "react";
 import { PROMOTER_STAGES, type Promoter, type PromoterStage } from "@/domain/entities";
 import { STAGE_LABELS } from "@/domain/rules/promoters";
 import { primaryButton, secondaryButton, type FormState } from "@/presentation/components/panel/form";
@@ -18,7 +18,7 @@ import {
 import { STAGE_STYLES, longDate, shortDate } from "@/presentation/components/panel/stages";
 
 const SOURCE_LABELS: Record<Promoter["source"], string> = { auto: "Auto", manual: "Manual", web_form: "Formulario web" };
-const TYPES = ["Festival", "Feria", "Fiestas patronales", "Alcaldía / Casa de cultura", "Hotel", "Corporativo", "Evento privado", "Colegio", "Otro"];
+const TYPES = ["Festival", "Concurso", "Feria", "Fiestas patronales", "Alcaldía / Casa de cultura", "Hotel", "Corporativo", "Evento privado", "Colegio", "Otro"];
 
 const FIELDS: FieldDef[] = [
   { name: "name", label: "Nombre del lugar o evento", kind: "text", wide: true },
@@ -76,6 +76,7 @@ export function PromotersBoard({
   view,
   today,
   pendingFound,
+  found,
   save,
   remove,
   publish,
@@ -85,6 +86,8 @@ export function PromotersBoard({
   view: View;
   today: string;
   pendingFound: number;
+  /** The «Encontrados automáticamente» tab, rendered by the page. */
+  found: ReactNode;
   save: SaveAction;
   remove: DeleteAction;
   publish: (id: string) => Promise<FormState>;
@@ -184,13 +187,7 @@ export function PromotersBoard({
       </nav>
 
       {view === "encontrados" ? (
-        <div className="flex flex-col gap-2 rounded-[18px] bg-text-dark p-5 text-text-light">
-          <span className="font-semibold">Búsqueda automática: aún no está activa</span>
-          <span className="text-sm leading-normal text-muted-on-dark">
-            Cuando se active, buscará cada 3 días festivales, ferias y fiestas del Cesar y el Caribe, y los dejará aquí para que los
-            apruebes como Prospecto o los descartes. Nada entra a tu base sin tu aprobación.
-          </span>
-        </div>
+        found
       ) : (
         <>
           <div role="group" aria-label="Filtrar por etapa" className="flex flex-wrap gap-2">

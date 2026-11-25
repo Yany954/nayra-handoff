@@ -1,7 +1,7 @@
 "use server";
 
 import { refresh, updateTag } from "next/cache";
-import { publishShowFromPromoter, savePromoter } from "@/application/panel";
+import { approveFoundEvent, publishShowFromPromoter, requestManualScan, savePromoter } from "@/application/panel";
 import { toBogotaDateKey } from "@/domain/rules/shows";
 import { requireAdmin } from "@/infrastructure/auth/session";
 import { CONTENT_TAG, adminRepositories } from "@/infrastructure/container";
@@ -38,4 +38,28 @@ export async function publishShowAction(id: string): Promise<FormState> {
   if (result !== "ok") return { status: "error", message: "Solo se publican los promotores en «Cerrado»." };
   updateTag(CONTENT_TAG);
   return { status: "ok", message: "Publicado como show confirmado. Revísalo en «Shows y fechas»." };
+}
+
+export async function approveFoundAction(id: string): Promise<FormState> {
+  await requireAdmin();
+  if (!isDocId(id)) return { status: "error", message: "Evento inválido." };
+  const result = await approveFoundEvent(adminRepositories(), id, new Date());
+  if (result !== "ok") return { status: "error", message: "Este evento ya fue revisado." };
+  refresh();
+  return { status: "ok", message: "Agregado a Prospectos. Lo encuentras en la pestaña Promotores." };
+}
+
+export async function discardFoundAction(id: string): Promise<FormState> {
+  await requireAdmin();
+  if (!isDocId(id)) return { status: "error", message: "Evento inválido." };
+  await adminRepositories().discardDiscoveredEvent(id);
+  refresh();
+  return { status: "ok", message: "Descartado. No volverá a aparecer en próximas búsquedas." };
+}
+
+export async function requestScanAction(): Promise<FormState> {
+  const admin = await requireAdmin();
+  const check = await requestManualScan(adminRepositories(), admin.email, new Date());
+  if (!check.ok) return { status: "error", message: check.reason };
+  return { status: "ok", message: "Buscando… Los resultados aparecen aquí en uno o dos minutos." };
 }

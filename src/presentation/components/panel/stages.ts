@@ -34,3 +34,23 @@ export function longDate(dateKey: string): string {
 export function daysBetween(from: string, to: string): number {
   return Math.round((Date.parse(`${to}T12:00:00Z`) - Date.parse(`${from}T12:00:00Z`)) / 86_400_000);
 }
+
+/** "hace un momento", "hace 3 horas", "ayer", "hace 4 días". */
+export function timeAgo(iso: string, now: Date): string {
+  const minutes = Math.round((now.getTime() - Date.parse(iso)) / 60_000);
+  if (minutes < 2) return "hace un momento";
+  if (minutes < 60) return `hace ${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return hours === 1 ? "hace 1 hora" : `hace ${hours} horas`;
+  const days = Math.round(hours / 24);
+  return days === 1 ? "ayer" : `hace ${days} días`;
+}
+
+/** "en 2 días", "en 5 horas", "pronto". */
+export function timeUntil(iso: string, now: Date): string {
+  const hours = Math.round((Date.parse(iso) - now.getTime()) / 3_600_000);
+  if (hours <= 1) return "pronto";
+  if (hours < 24) return `en ${hours} horas`;
+  const days = Math.round(hours / 24);
+  return days === 1 ? "mañana" : `en ${days} días`;
+}

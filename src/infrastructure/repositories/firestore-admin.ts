@@ -17,6 +17,7 @@ import {
   discoveredEventSchema,
   pitchSchema,
   promoterSchema,
+  scanStatusSchema,
 } from "@/infrastructure/schemas/panel";
 
 const EXTENSIONS: Record<NewGalleryPhoto["contentType"], string> = {
@@ -56,7 +57,30 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
     listPromoters: async () => parseAll(promoterSchema, await db.collection("promoters").get()),
     listBookingRequests: async () => parseAll(bookingRequestSchema, await db.collection("bookingRequests").get()),
     listDiscoveredEvents: async () =>
-      parseAll(discoveredEventSchema, await db.collection("discoveredEvents").where("status", "==", "pending").get()),
+      parseAll(discoveredEventSchema, await db.collection("discoveredEvents").orderBy("relevance", "desc").limit(200).get()),
+    getDiscoveredEvent: async (id) => {
+      const snapshot = await db.collection("discoveredEvents").doc(id).get();
+      return snapshot.exists ? discoveredEventSchema.parse({ ...snapshot.data(), id }) : null;
+    },
+    approveDiscoveredEvent: (id, promoter) =>
+      db.runTransaction(async (tx) => {
+        const ref = db.collection("discoveredEvents").doc(id);
+        const snapshot = await tx.get(ref);
+        if (!snapshot.exists || snapshot.get("status") !== "pending") return "not_pending" as const;
+        const promoterRef = db.collection("promoters").doc();
+        tx.create(promoterRef, promoter);
+        tx.update(ref, { status: "approved", promoterId: promoterRef.id, reviewedAt: new Date().toISOString() });
+        return "ok" as const;
+      }),
+    discardDiscoveredEvent: async (id) => {
+      await db.collection("discoveredEvents").doc(id).update({ status: "discarded", reviewedAt: new Date().toISOString() });
+    },
+    getScanStatus: async () => scanStatusSchema.parse((await db.doc("scans/state").get()).data() ?? {}),
+    countScanRequestsSince: async (sinceIso) =>
+      (await db.collection("scanRequests").where("requestedAt", ">=", sinceIso).count().get()).data().count,
+    requestScan: async (requestedBy) => {
+      await db.collection("scanRequests").add({ requestedAt: new Date().toISOString(), requestedBy, status: "queued" });
+    },
 
     listShows: () => content.listShows(),
     createShow: async (input: ShowInput) => (await db.collection("shows").add(withoutUndefined(input))).id,

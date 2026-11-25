@@ -50,7 +50,7 @@ describe("panel access guard", () => {
       for (const [, name, firstLine] of actions) {
         // signOut is the one action that must work for anyone holding a cookie.
         if (name === "signOut") continue;
-        expect(firstLine, name).toBe("await requireAdmin();");
+        expect(firstLine, name).toMatch(/^(const \w+ = )?await requireAdmin\(\);$/);
       }
     },
   );

@@ -1,5 +1,6 @@
 import type { GalleryPhoto, Promoter, Show } from "@/domain/entities";
 import type { AdminRepositories, NewGalleryPhoto, PromoterInput, ShowInput } from "@/domain/repositories";
+import { canRequestScan, promoterFromFound } from "@/domain/rules/found";
 import { changeStage, summarizePanel, type PanelSummary } from "@/domain/rules/promoters";
 import { latestPastShow, publicUpcomingShows } from "@/domain/rules/shows";
 
@@ -140,4 +141,18 @@ export async function markPitchSent(repos: AdminRepositories, id: string, today:
   const contacted = changeStage(promoter, "contactado", today);
   await repos.updatePromoter(contacted);
   return contacted;
+}
+
+export async function approveFoundEvent(repos: AdminRepositories, id: string, now: Date): Promise<"ok" | "not_pending"> {
+  const event = await repos.getDiscoveredEvent(id);
+  if (!event || event.status !== "pending") return "not_pending";
+  return repos.approveDiscoveredEvent(id, promoterFromFound(event, now));
+}
+
+export async function requestManualScan(repos: AdminRepositories, requestedBy: string, now: Date) {
+  const startOfDay = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+  const [status, today] = await Promise.all([repos.getScanStatus(), repos.countScanRequestsSince(startOfDay)]);
+  const check = canRequestScan(status.lastRunAt, today, now);
+  if (check.ok) await repos.requestScan(requestedBy);
+  return check;
 }
