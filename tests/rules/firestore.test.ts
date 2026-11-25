@@ -72,6 +72,24 @@ describe("private content", () => {
   });
 });
 
+describe("event scan", () => {
+  it("only the admin can request a scan or read its status; nobody edits them from a client", async () => {
+    await assertFails(anon().collection("scanRequests").add({ at: 1 }));
+    await assertFails(stranger().collection("scanRequests").add({ at: 1 }));
+    await assertSucceeds(admin().doc("scanRequests/x").set({ at: 1 }));
+    // Status updates come only from the function (Admin SDK), never from a browser.
+    await assertFails(admin().doc("scanRequests/x").update({ status: "done" }));
+    await assertFails(admin().doc("scanRequests/x").delete());
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await ctx.firestore().doc("scans/state").set({ added: 3 });
+    });
+    await assertFails(anon().doc("scans/state").get());
+    await assertFails(stranger().doc("scans/state").get());
+    await assertSucceeds(admin().doc("scans/state").get());
+    await assertFails(admin().doc("scans/state").set({ added: 99 }));
+  });
+});
+
 describe("bookingRequests", () => {
   it("accepts a valid request from anyone", async () => {
     await assertSucceeds(anon().collection("bookingRequests").add(validBooking()));

@@ -78,6 +78,13 @@ service cloud.firestore {
     match /discoveredEvents/{docId} {
       allow read, write: if isAdmin();
     }
+    // "Buscar ahora" requests and the scan status: the function writes with the Admin SDK.
+    match /scanRequests/{docId} {
+      allow read, create: if isAdmin();
+    }
+    match /scans/{docId} {
+      allow read: if isAdmin();
+    }
 
     // Public contact form: create only.
     match /bookingRequests/{docId} {
