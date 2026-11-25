@@ -102,6 +102,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Design handoff is reference material, not source.
     "design/**",
+    // Compiled Cloud Functions output.
+    "functions/lib/**",
   ]),
 ]);
 

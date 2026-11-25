@@ -10,7 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "emulators": "firebase emulators:start --import ./emulator-data --export-on-exit",
+    "emulators": "npm --prefix functions run build && firebase emulators:start --import ./emulator-data --export-on-exit",
     "seed": "tsx --env-file-if-exists=.env.local scripts/seed-emulator.ts",
     "test:rules": "vitest run -c vitest.rules.config.mts",
     "test:rules:ci": "firebase emulators:exec --only firestore,storage \"npm run test:rules\""
