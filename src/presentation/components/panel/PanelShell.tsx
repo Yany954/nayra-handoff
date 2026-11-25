@@ -28,12 +28,52 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    href: "/panel/promotores",
+    label: "Promotores",
+    icon: (
+      <svg {...iconProps}>
+        <ellipse cx="12" cy="6" rx="8" ry="3" />
+        <path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" />
+      </svg>
+    ),
+  },
+  {
+    href: "/panel/logros",
+    label: "Logros",
+    icon: (
+      <svg {...iconProps} strokeLinecap="round">
+        <path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z" />
+        <path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3" />
+      </svg>
+    ),
+  },
+  {
+    href: "/panel/repertorio",
+    label: "Repertorio",
+    icon: (
+      <svg {...iconProps}>
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    ),
+  },
+  {
     href: "/panel/shows",
     label: "Shows y fechas",
     icon: (
       <svg {...iconProps}>
         <rect x="3" y="5" width="18" height="16" rx="2" />
         <path d="M3 10h18M8 3v4M16 3v4" />
+      </svg>
+    ),
+  },
+  {
+    href: "/panel/formatos",
+    label: "Formatos",
+    icon: (
+      <svg {...iconProps} strokeLinecap="round">
+        <path d="M4 6h16M4 12h16M4 18h10" />
       </svg>
     ),
   },

@@ -136,13 +136,15 @@ export function ShowsManager({ rows, save, remove }: { rows: ShowRow[]; save: Sa
           El sitio muestra como «Último show» el más reciente que ya pasó (o el que no tiene fecha, si no hay otro). En «Próximas
           fechas» solo aparecen las confirmadas.
         </p>
-        <button type="button" onClick={() => open(null)} className={primaryButton}>
-          + Agregar show
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <p role="status" className="m-0 text-sm text-[#1F5130]">
+            {notice}
+          </p>
+          <button type="button" onClick={() => open(null)} className={primaryButton}>
+            + Agregar show
+          </button>
+        </div>
       </div>
-      <p role="status" className="m-0 min-h-[1.25em] text-sm text-[#1F5130]">
-        {notice}
-      </p>
 
       {rows.length === 0 ? (
         <p className="m-0 rounded-[20px] border border-line-light bg-white p-6 text-muted-on-light">Todavía no hay shows.</p>

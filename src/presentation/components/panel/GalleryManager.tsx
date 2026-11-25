@@ -184,10 +184,10 @@ export function GalleryManager({
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h2 className="m-0 font-display text-[22px] font-bold tracking-[-0.02em]">{photos.length} fotos en el sitio</h2>
         <p className="m-0 text-sm text-muted-on-light">Las primeras {homeCount} se ven en el inicio. Usa las flechas para cambiar el orden.</p>
+        <p role="status" className="m-0 w-full text-sm text-[#1F5130]">
+          {notice}
+        </p>
       </div>
-      <p role="status" className="m-0 min-h-[1.25em] text-sm text-[#1F5130]">
-        {notice}
-      </p>
       <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 sm:gap-4 lg:grid-cols-4">
         {photos.map((photo, index) => (
           <PhotoCard
