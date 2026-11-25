@@ -16,6 +16,7 @@ import {
   type FormState,
 } from "@/presentation/components/panel/form";
 import { longDate } from "@/presentation/components/panel/stages";
+import { submitKeepingValues } from "@/presentation/components/panel/submit";
 
 type SaveAction = (prev: FormState, formData: FormData) => Promise<FormState>;
 type DeleteAction = (id: string) => Promise<FormState>;
@@ -43,7 +44,7 @@ function ShowForm({ show, save, onDone }: { show: ShowRow | null; save: SaveActi
   }, [state, onDone]);
 
   return (
-    <form ref={formRef} action={action} className="flex flex-col gap-4" noValidate>
+    <form ref={formRef} onSubmit={submitKeepingValues(action)} className="flex flex-col gap-4" noValidate>
       {show && <input type="hidden" name="id" value={show.id} />}
       <Field label="Lugar o evento" name="venue" error={errors.venue}>
         <input {...describedBy("venue", errors.venue)} defaultValue={show?.venue} className={inputClass} autoComplete="off" required />

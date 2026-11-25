@@ -93,3 +93,21 @@ test.describe("panel", () => {
     await expect(dialog.getByRole("alert")).toContainText("Revisa los campos marcados");
   });
 });
+
+test.describe("panel forms", () => {
+  test.use({ storageState: "tests/e2e/.auth/admin.json" });
+
+  test("a validation error keeps what the manager typed (ISO 9241-110 error robustness)", async ({ page }) => {
+    await page.goto("/panel/videos");
+    await page.getByRole("button", { name: "+ Agregar video" }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.locator("#title").fill("Título que no se debe perder");
+    await dialog.locator("#context").fill("Instagram");
+    await dialog.locator("#url").fill("sin-https");
+    await dialog.getByRole("button", { name: "Guardar" }).click();
+    await expect(dialog.locator("#url")).toHaveAttribute("aria-invalid", "true");
+    await expect(dialog.locator("#title")).toHaveValue("Título que no se debe perder");
+    await expect(dialog.locator("#context")).toHaveValue("Instagram");
+    await expect(dialog.locator("#url")).toHaveValue("sin-https");
+  });
+});

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useState, useTransition } from "react";
+import { useActionState, useRef, useState, useTransition } from "react";
 import type { GalleryPhoto } from "@/domain/entities";
 import {
   Field,
@@ -14,6 +14,7 @@ import {
   secondaryButton,
   type FormState,
 } from "@/presentation/components/panel/form";
+import { submitKeepingValues } from "@/presentation/components/panel/submit";
 
 type UploadAction = (prev: FormState, formData: FormData) => Promise<FormState>;
 type IdAction = (id: string) => Promise<FormState>;
@@ -29,16 +30,20 @@ function UploadForm({ upload }: { upload: UploadAction }) {
       if (old) URL.revokeObjectURL(old);
       return file ? URL.createObjectURL(file) : null;
     });
-  // React resets the form after a successful action; the preview is cleared alongside it.
+  const formRef = useRef<HTMLFormElement>(null);
+  // Only a successful upload clears the form; after an error the chosen photo and text stay.
   const [state, action, pending] = useActionState(async (prev: FormState, formData: FormData) => {
     const result = await upload(prev, formData);
-    if (result.status === "ok") showPreview(undefined);
+    if (result.status === "ok") {
+      formRef.current?.reset();
+      showPreview(undefined);
+    }
     return result;
   }, initialFormState);
   const errors = state.fieldErrors ?? {};
 
   return (
-    <form action={action} className="flex flex-col gap-4 rounded-[20px] border border-line-light bg-white p-5 sm:p-6">
+    <form ref={formRef} onSubmit={submitKeepingValues(action)} className="flex flex-col gap-4 rounded-[20px] border border-line-light bg-white p-5 sm:p-6">
       <h2 className="m-0 font-display text-[22px] font-bold tracking-[-0.02em]">Subir foto</h2>
       <div className="flex flex-wrap gap-5">
         <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-4">

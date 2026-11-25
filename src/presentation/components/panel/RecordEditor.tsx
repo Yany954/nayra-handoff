@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState, useTransition, type ReactNode, type RefObject } from "react";
 import { CloseIcon } from "@/presentation/ui/icons";
+import { submitKeepingValues } from "@/presentation/components/panel/submit";
 import {
   Field,
   FormMessage,
@@ -108,7 +109,7 @@ export function RecordForm({
   return (
     <form
       ref={formRef}
-      action={action}
+      onSubmit={submitKeepingValues(action)}
       noValidate
       onInput={() => setDirty(true)}
       className="grid grid-cols-1 gap-4 sm:grid-cols-2"
