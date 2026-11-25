@@ -7,15 +7,15 @@
 | `profile/main` (doc) | pública | admin | `name, heroBadge, tagline, bioShort, bioLong[], origin ("Bogotá"), base ("Curumaní, Cesar"), coverage, socials[] {network (instagram/tiktok/youtube/facebook), handle, url}, bookingEmail?, whatsapp?` |
 | `achievements` | pública | admin | `title, subtitle, kind (ganadora/finalista/participante/tarima/reconocimiento), label, epkLine, date?, featured: bool, order` |
 | `shows` | pública (el sitio solo muestra fechas `confirmado`) | admin | `venue, city, date? (YYYY-MM-DD), status (confirmado/por_confirmar), description?, videoUrl?, photos[]`. Pasado/próximo se **deriva** de `date` (hora de Bogotá), no se guarda. |
-| `songs` | pública (sin `key`) | admin | `title, artist, genre (Vallenato/Rancheras/Baladas/Celebraciones/Tambora), inMainShow: bool, key (privado), order` |
+| `songs` | pública (sin `key`) | admin | `title, artist, genre (Vallenato/Rancheras/Baladas/Celebraciones/Tambora), inMainShow: bool, order`. La tonalidad es **opcional** y vive en `songs/{id}/private/meta {key}` (la manager solo la da si se la piden). |
 | `formats` | pública | admin | `name, shortName, durationMin, durationMax, membersLabel ("Voz + guitarra"), membersCount, idealFor, order` |
 | `videos` | pública | admin | `title, context ("YouTube · @NAYRA-Lan"), url, featured: bool, order`. Los de YouTube se incrustan con `youtube-nocookie.com` al tocar play. |
 | `gallery` | pública | admin | `storagePath (public/gallery/<archivo> en Storage), alt, caption?, order`. La URL pública se arma en el repo. |
 | `epk/main` (doc) | admin | admin | datos del EPK: `eyebrow, intro, rate, technicalRider[], hospitalityRider[], coverageStat` |
 | `pitch/main` (doc) | admin | admin | plantillas privadas del generador (ver §4) |
-| `promoters` | admin | admin | `type, name, city, contact, socialOrWeb, stage, lastContactAt, nextFollowUpAt, eventDate?, notes, source (auto/manual/web_form), createdAt` |
+| `promoters` | admin | admin | `type, name, city, contact, socialOrWeb, stage, lastContactAt, nextFollowUpAt, eventDate?, notes, source (auto/manual/web_form), createdAt`. Fechas como `YYYY-MM-DD` (Bogotá). |
 | `discoveredEvents` | admin | functions + admin | `name, municipality, department, dates, type, contact?, url, sourceName, relevance (0–1), openCall: bool, deadline?, status (pending/approved/discarded), hash` |
-| `bookingRequests` | create pública (validada) | admin | lo que llega del formulario de contacto |
+| `bookingRequests` | create pública (validada) | admin | lo que llega del formulario de contacto + `status (nuevo/revisado)`; sin `status` cuenta como nuevo |
 
 **`key` privado**: guárdalo en una subcolección `songs/{id}/private/meta` (admin) para que la lectura pública de `songs` no lo exponga. Las rules no filtran campos.
 
@@ -63,7 +63,7 @@ Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). C
 1. **Setup**: Next + TS + Tailwind + tokens + fuentes; Firebase project, emuladores, Auth, rules base, CI de lint/typecheck.
 2. **Sitio público estático** fiel a los mockups (`/`, `/repertorio`, `/galeria`; EPK en `/panel/epk`) con datos de un seed local.
 3. **Firestore**: modelo, seed, repos, rules + tests; el sitio lee de Firestore.
-4. **Panel**: login admin, CRUD de logros, repertorio, formatos, shows; tabla de promotores con filtro por etapa (mockup `Panel.dc.html`).
+4. **Panel** (hecho): login con Google solo para cuentas en `ADMIN_EMAILS` (blocking functions + session cookie + `requireAdmin()` + rules); `/panel` = inicio con resumen (pendientes, solicitudes, encontrados, analytics en Fase 7); CRUD de shows (incluye el último show), galería (subir/borrar/ordenar), logros, repertorio (tonalidad opcional), formatos, datos del EPK (`/panel/epk/editar`); promotores como `Panel.dc.html` en `/panel/promotores` (filtro en la URL, exportar CSV para Excel, publicar «Cerrado» como show). Todo el panel funciona en celular.
 5. **Pitch**: editor de `pitch/main`, generador, EPK privado y PDF.
 6. **scanEvents** + pestaña "Encontrados automáticamente" + aprobación.
 7. **Formulario de contratación**, SEO (metadata, OG image), analítica, deploy, dominio.

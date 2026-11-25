@@ -63,7 +63,7 @@ functions/         # Cloud Functions (scanEvents programada, triggers)
 | `/panel/epk` | `EPK.dc.html` (sin la sección "Generador de pitch") | solo admin |
 | `/panel/login` | — (mismo estilo del panel) | público (solo cuentas en `ADMIN_EMAILS` pasan) |
 | `/panel` | inicio con resumen (tarjetas de etapa de `Panel.dc.html`) | solo admin |
-| `/panel/shows`, `/panel/galeria` | estilo de `Panel.dc.html` | solo admin |
+| `/panel/shows`, `/panel/galeria`, `/panel/logros`, `/panel/repertorio`, `/panel/formatos`, `/panel/epk/editar` | estilo de `Panel.dc.html` | solo admin |
 | `/panel/promotores` | `Panel.dc.html` | solo admin |
 | `/panel/pitch` | sección "Generador de pitch" de `EPK.dc.html` | solo admin |
 
