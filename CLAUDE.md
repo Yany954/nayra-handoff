@@ -65,13 +65,15 @@ functions/         # Cloud Functions (scanEvents programada, triggers)
 | `/panel` | inicio con resumen (tarjetas de etapa de `Panel.dc.html`) | solo admin |
 | `/panel/shows`, `/panel/galeria`, `/panel/logros`, `/panel/repertorio`, `/panel/formatos`, `/panel/epk/editar` | estilo de `Panel.dc.html` | solo admin |
 | `/panel/promotores` | `Panel.dc.html` | solo admin |
-| `/panel/pitch` | sección "Generador de pitch" de `EPK.dc.html` | solo admin |
+| `/panel/pitch` | sección "Generador de pitch" de `EPK.dc.html` (+ pestaña Plantillas) | solo admin |
+| `/panel/epk/pdf` | PDF del EPK (descarga) | solo admin |
 
 ## Reglas que no se rompen
 - **Las tonalidades (`key`) del repertorio nunca se muestran en el sitio público.**
 - Los datos marcados `[ejemplo]` en los mockups son falsos: en producción sale de Firestore, nunca hardcodeado.
 - Nada que encuentre la búsqueda automática entra a `promoters` sin aprobación manual en el panel.
 - Escritura en Firestore solo para el admin (custom claim `admin: true`). Lectura pública solo en colecciones públicas.
+- Accesibilidad: WCAG 2.2 AA es requisito. `npm run test:e2e` debe pasar y `docs/accessibility/AUDIT.md` se actualiza al agregar pantallas.
 - Toda página y Server Action bajo `src/app/panel/(admin)` llama `await requireAdmin()` primero y tiene su `loading.tsx` (lo verifica `panel-guard.test.ts`). Los datos privados nunca van en `"use cache"`.
 - Nunca commitear `.env*`, service accounts ni API keys.
 
@@ -84,5 +86,6 @@ npm run seed           # carga el contenido de src/infrastructure/seed (solo emu
 npm run dev            # terminal 2: Next en local, lee de Firestore
 npm run lint && npm run typecheck && npm test
 npm run test:rules     # tests de rules (con los emuladores corriendo)
+npm run test:e2e       # accesibilidad (axe, WCAG 2.2 AA) + teclado + pitch; emuladores + seed + dev corriendo
 npm run test:rules:ci  # igual, pero levanta sus propios emuladores
 ```

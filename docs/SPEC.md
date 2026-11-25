@@ -39,8 +39,13 @@ El EPK (privado, solo admin en `/panel/epk`) se arma con `profile/main` + `epk/m
 nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa · videos en vivo · géneros · formatos · rider técnico · rider de hospitalidad · logros · prensa · redes · contacto de booking · ciudad base · tarifa ("a convenir" o rango) · disponibilidad.
 `pitch/main` (solo admin) guarda únicamente las plantillas del correo por tipo de destinatario. Texto base aportado por la manager: `docs/content/pitch-base.md`.
 
-**Generador**: el admin elige destinatario (`festival | corporativo | hotel | privado`) → plantilla base + párrafo adaptado (puede ser plantilla fija o Gemini) → asunto + cuerpo. Botones: copiar, abrir en Gmail (`mailto:`), y al enviar: el promotor pasa a `contactado`, `lastContactAt = now`, `nextFollowUpAt = now + 7d`.
-**EPK privado** (`/panel/epk`) + PDF generado desde los mismos datos, que la manager adjunta en sus correos. El sitio público no enlaza al EPK.
+**Generador** (`/panel/pitch`, hecho en Fase 5): el admin elige un promotor de la base (o escribe los datos) y el tipo de destinatario (`festival | corporativo | hotel | privado`, sugerido por el tipo del promotor).
+- `pitch/main` = `{ body, signature, kinds: { <tipo>: { subject, paragraph } } }`. Cuerpo y firma comunes (texto de la manager); cada tipo aporta asunto y párrafo. Variables `{saludo} {nombre} {evento} {ciudad} {fecha} {formatos} {parrafo_evento} {firma} {whatsapp} {correo} {instagram} {tiktok} {facebook} {youtube}`; una variable sin dato queda visible como aviso. Editables en la pestaña «Plantillas».
+- El borrador es editable. Botones: copiar, abrir en Gmail web (`authuser` = correo de booking), abrir en la app de correo (`mailto:`), descargar el EPK en PDF.
+- «Ya lo envié: marcar «Contactado»» → `stage = contactado`, `lastContactAt = hoy`, `nextFollowUpAt = hoy + 7` (es explícito porque la app no ve el envío).
+- La IA (Gemini, «Adaptar con IA») queda para la Fase 6, junto con la búsqueda de eventos.
+
+**EPK privado** (`/panel/epk`) + **PDF** (`GET /panel/epk/pdf`, `@react-pdf/renderer`, solo admin) generado desde los mismos datos: portada; bio y logros; formatos y rider; contacto, videos y fotos. Texto real con metadatos (título, idioma `es`); no es PDF etiquetado (ver `docs/accessibility/AUDIT.md`). El sitio público no enlaza al EPK.
 
 ## 5. Búsqueda automática de eventos (`functions/scanEvents`)
 - `onSchedule("every 72 hours")`, región cercana (ej. `us-east1`), timeout generoso.
@@ -64,6 +69,6 @@ Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). C
 2. **Sitio público estático** fiel a los mockups (`/`, `/repertorio`, `/galeria`; EPK en `/panel/epk`) con datos de un seed local.
 3. **Firestore**: modelo, seed, repos, rules + tests; el sitio lee de Firestore.
 4. **Panel** (hecho): login con Google solo para cuentas en `ADMIN_EMAILS` (blocking functions + session cookie + `requireAdmin()` + rules); `/panel` = inicio con resumen (pendientes, solicitudes, encontrados, analytics en Fase 7); CRUD de shows (incluye el último show), galería (subir/borrar/ordenar), logros, repertorio (tonalidad opcional), formatos, datos del EPK (`/panel/epk/editar`); promotores como `Panel.dc.html` en `/panel/promotores` (filtro en la URL, exportar CSV para Excel, publicar «Cerrado» como show). Todo el panel funciona en celular.
-5. **Pitch**: editor de `pitch/main`, generador, EPK privado y PDF.
+5. **Pitch** (hecho): editor de `pitch/main`, generador, PDF del EPK; auditoría de accesibilidad WCAG 2.2 AA + ISO 9241-110 con tests e2e en CI.
 6. **scanEvents** + pestaña "Encontrados automáticamente" + aprobación.
 7. **Formulario de contratación**, SEO (metadata, OG image), analítica, deploy, dominio.

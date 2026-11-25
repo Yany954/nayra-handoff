@@ -1,7 +1,7 @@
 # Auditoría de accesibilidad y usabilidad
 
 **Alcance:** sitio público (`/`, `/repertorio`, `/galeria`) y panel de la manager (`/panel/**`, incluido el login).
-**Fecha:** 2026-11-25 · **Estado del código:** rama `feat/phase-1-2-public-site` (Fase 5, Parte A).
+**Fecha:** 2026-11-25 · **Estado del código:** rama `feat/phase-1-2-public-site` (Fase 5 completa: incluye el generador de pitch y el PDF del EPK).
 **Se actualiza en cada fase.** Los tests de `tests/e2e/` impiden que lo corregido vuelva a romperse.
 
 ## 1. Normas de referencia
@@ -24,13 +24,15 @@
 
 ## 3. Método
 
-1. **Automático (axe-core 4, reglas `wcag2a/aa`, `wcag21a/aa`, `wcag22aa`)**: `tests/e2e/a11y.spec.ts` recorre **14 páginas × 3 anchos** (320, 390 y 1440 px) = 42 escaneos. También verifica que no haya scroll horizontal (1.4.10). Corre en CI.
+1. **Automático (axe-core 4, reglas `wcag2a/aa`, `wcag21a/aa`, `wcag22aa`)**: `tests/e2e/a11y.spec.ts` recorre **16 páginas × 3 anchos** (320, 390 y 1440 px) = 48 escaneos, incluidos el generador de pitch y sus plantillas. También verifica que no haya scroll horizontal (1.4.10). Corre en CI.
 2. **Manual automatizado**: `tests/e2e/keyboard.spec.ts` cubre lo que axe no ve: teclado, foco, movimiento, espaciado de texto y errores.
 3. **Contraste**: cálculo del ratio WCAG de cada par texto/fondo de los tokens (§6).
 4. **Revisión de código** contra *Vercel Web Interface Guidelines* (skill `web-design-guidelines`) en cada pantalla nueva.
 5. **Reglas *best-practice* de axe** (no WCAG): 0 hallazgos en 11 páginas.
 
-**Resultado actual:** 42/42 escaneos sin violaciones A/AA · 7/7 pruebas de teclado y foco · 0 hallazgos *best-practice*.
+**Resultado actual:** 48/48 escaneos sin violaciones A/AA · 7/7 pruebas de teclado y foco · 4/4 pruebas del pitch y el PDF · 0 hallazgos *best-practice*.
+
+**Pitch (Fase 5):** controles con etiqueta visible (De, Para, Asunto, Cuerpo); tipo de destinatario con `aria-pressed`; «Abrir en Gmail» anuncia que abre otra pestaña; la confirmación de copiar y de «Contactado» va en `role="status"`; el botón para marcar está deshabilitado con explicación visible si no hay promotor; aviso visible de variables sin dato antes de enviar (robustez ante errores, ISO 9241-110).
 
 ## 4. Criterios WCAG 2.2 A/AA
 
@@ -116,7 +118,7 @@ Estado: ✅ cumple · 🔧 corregido en esta auditoría · ⚠️ cumple con lim
 ## 7. Limitaciones conocidas
 
 - **Subtítulos de video (1.2.x):** dependen de YouTube. Recomendación: subir la letra o activar los subtítulos.
-- **PDF del EPK (Fase 5):** `@react-pdf/renderer` produce texto real, seleccionable y con metadatos de idioma y título, pero **no PDF etiquetado (PDF/UA)**. La versión web del EPK es la alternativa accesible.
+- **PDF del EPK:** `@react-pdf/renderer` produce texto real, seleccionable y con metadatos (título «EPK — Nayra Lancheros», idioma `es`), y enlaces clicables, pero **no PDF etiquetado (PDF/UA)**: un lector de pantalla lo lee como texto plano, sin estructura de encabezados, y las fotos no tienen texto alternativo. La versión web del EPK es la alternativa accesible. Si un festival exige PDF/UA, la opción es exportarlo desde una herramienta que etiquete (p. ej. Chrome con impresión etiquetada).
 - **Lectores de pantalla:** la estructura está verificada por código y axe, pero no se ha probado aún con VoiceOver/TalkBack en un dispositivo real. Pendiente antes del deploy (Fase 7).
 - **Formulario de contacto público:** su envío se activa en la Fase 7; entonces se auditan sus errores y confirmaciones.
 
@@ -126,5 +128,5 @@ Estado: ✅ cumple · 🔧 corregido en esta auditoría · ⚠️ cumple con lim
 npm run emulators          # terminal 1
 npm run seed && npm run dev  # terminal 2
 npx playwright install chromium   # una vez
-npm run test:e2e           # axe (42 escaneos) + teclado y foco (7 pruebas)
+npm run test:e2e           # axe (48 escaneos) + teclado y foco (7) + pitch y PDF (4)
 ```
