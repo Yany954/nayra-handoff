@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { getEpkPage } from "@/application/public-site";
 import { requireAdmin } from "@/infrastructure/auth/session";
 import { repositories } from "@/infrastructure/container";
@@ -23,7 +24,7 @@ export default async function EpkPage() {
   ];
   const facts = [
     { label: "Ciudad base", value: profile.base },
-    { label: "Géneros", value: "Vallenato, ranchera, balada, tambora" },
+    { label: "Géneros", value: profile.genresSummary },
     { label: "Formatos", value: formatsSummary.names },
     { label: "Duración", value: formatsSummary.durations },
     { label: "Integrantes", value: formatsSummary.members },
@@ -40,14 +41,22 @@ export default async function EpkPage() {
     <div className="-mx-5 -mb-16 -mt-7 flex-1 bg-ink pb-20 text-text-light lg:-mx-10 lg:-mt-9 lg:pb-[120px]">
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap items-center justify-between gap-3 px-3.5 pt-4 lg:px-10 lg:pt-6">
         <span className="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Vista previa del EPK · privado</span>
-        <button
-          type="button"
-          disabled
-          title="Disponible en la fase de pitch"
-          className="hit-44 cursor-not-allowed rounded-full border-0 bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink opacity-60"
-        >
-          Descargar PDF
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/panel/epk/editar"
+            className="hit-44 rounded-full border border-white/18 px-[18px] py-[11px] text-sm font-medium text-text-light no-underline hover:border-white/40"
+          >
+            Editar datos del EPK
+          </Link>
+          <button
+            type="button"
+            disabled
+            title="Disponible en la fase de pitch"
+            className="hit-44 cursor-not-allowed rounded-full border-0 bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink opacity-60"
+          >
+            Descargar PDF
+          </button>
+        </div>
       </div>
       <section className="mx-auto box-border max-w-[1360px] px-3.5 pt-4 lg:px-10 lg:pt-6">
         <div className="relative flex min-h-[460px] items-end overflow-hidden rounded-hero">
