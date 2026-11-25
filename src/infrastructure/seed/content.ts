@@ -50,7 +50,7 @@ export const profileSeed = {
       url: "https://www.facebook.com/share/1PrAMnQBS4/",
     },
   ],
-  bookingEmail: null,
+  bookingEmail: "contacto.nayra.lancheros@gmail.com",
   whatsapp: "+57 317 470 3402",
 };
 

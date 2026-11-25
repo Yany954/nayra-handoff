@@ -24,7 +24,7 @@ describe("seed repositories", () => {
     expect(home.secondaryVideos).toHaveLength(2);
     expect(home.galleryPreview).toHaveLength(8);
     expect(home.galleryTotal).toBe(23);
-    expect(home.profile.bookingEmail).toBeNull();
+    expect(home.profile.bookingEmail).toBe("contacto.nayra.lancheros@gmail.com");
   });
 
   it("lists every gallery photo with unique ids and alt text", async () => {
