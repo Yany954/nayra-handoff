@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
     // The Storage emulator runs on 127.0.0.1, which Next blocks by default. Never set in production.
     dangerouslyAllowLocalIP: Boolean(process.env.FIREBASE_STORAGE_EMULATOR_HOST),
   },
+  experimental: {
+    // Gallery uploads accept photos up to 10 MB (validated again in the Server Action);
+    // the extra 1 MB covers multipart overhead. The proxy buffers the body, so it needs the same room.
+    serverActions: { bodySizeLimit: "11mb" },
+    proxyClientMaxBodySize: "11mb",
+  },
   turbopack: {
     rules: {
       "*.css": {
