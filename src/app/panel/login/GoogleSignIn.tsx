@@ -41,7 +41,7 @@ export function GoogleSignIn() {
         type="button"
         onClick={signIn}
         disabled={pending}
-        className="flex min-h-[52px] cursor-pointer items-center justify-center gap-3 rounded-full border-0 bg-text-dark px-6 text-base font-semibold text-text-light disabled:cursor-wait disabled:opacity-70"
+        className="flex min-h-[52px] cursor-pointer items-center justify-center gap-3 rounded-full border-0 bg-text-dark px-6 text-base font-semibold text-text-light hover:bg-[#3A302C] disabled:cursor-wait disabled:opacity-70"
       >
         <GoogleMark />
         {pending ? "Entrando…" : "Entrar con Google"}

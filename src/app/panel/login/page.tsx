@@ -18,7 +18,7 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="m-0 font-display text-[36px] font-bold leading-none tracking-[-0.03em]">Entrar al panel</h1>
+          <h1 className="m-0 text-balance font-display text-[36px] font-bold leading-none tracking-[-0.03em]">Entrar al panel</h1>
           <p className="m-0 text-[15px] leading-normal text-muted-on-light">
             Solo las cuentas de Google autorizadas pueden entrar.
           </p>

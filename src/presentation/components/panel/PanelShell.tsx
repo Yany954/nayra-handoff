@@ -148,7 +148,7 @@ export function PanelShell({
         <Footer bookingEmail={bookingEmail} signOut={signOut} />
       </aside>
 
-      <header className="sticky top-0 z-20 flex items-center justify-between bg-ink px-3 py-2.5 text-text-light lg:hidden">
+      <header className="sticky top-0 z-20 flex items-center justify-between bg-ink px-3 py-2.5 pt-[max(10px,env(safe-area-inset-top))] text-text-light lg:hidden">
         <Brand />
         <button
           type="button"
@@ -164,7 +164,7 @@ export function PanelShell({
       <dialog
         ref={menuRef}
         aria-label="Menú del panel"
-        className="m-0 h-dvh max-h-none w-full max-w-none border-0 bg-ink p-0 text-text-light backdrop:bg-ink open:flex open:flex-col lg:hidden"
+        className="m-0 h-dvh max-h-none w-full max-w-none overscroll-contain border-0 bg-ink p-0 text-text-light backdrop:bg-ink open:flex open:flex-col lg:hidden"
       >
         <div className="flex flex-1 flex-col gap-7 px-4 py-4">
           <div className="flex items-center justify-between">
@@ -195,7 +195,7 @@ export function PanelHeading({ eyebrow, title, actions }: { eyebrow?: ReactNode;
     <div className="flex flex-wrap items-end justify-between gap-4">
       <div className="flex flex-col gap-1.5">
         {eyebrow && <span className="text-[13px] text-muted-on-light">{eyebrow}</span>}
-        <h1 className="m-0 font-display text-[36px] font-bold leading-none tracking-[-0.03em] lg:text-[48px]">{title}</h1>
+        <h1 className="m-0 text-balance font-display text-[36px] font-bold leading-none tracking-[-0.03em] lg:text-[48px]">{title}</h1>
       </div>
       {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>

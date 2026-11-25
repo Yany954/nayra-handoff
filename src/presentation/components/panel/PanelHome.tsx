@@ -11,7 +11,7 @@ function Card({ title, count, children }: { title: string; count: number; childr
     <section aria-label={title} className={card}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="m-0 font-display text-[22px] font-bold tracking-[-0.02em]">{title}</h2>
-        <span className="rounded-full bg-cream-soft px-2.5 py-1 text-xs font-semibold text-text-body">{count}</span>
+        <span className="rounded-full bg-cream-soft px-2.5 py-1 text-xs font-semibold tabular-nums text-text-body">{count}</span>
       </div>
       {children}
     </section>
@@ -42,7 +42,7 @@ export function PanelHome({ summary, adminName, today }: { summary: PanelSummary
               <span className="size-2.5 rounded-full" style={{ background: STAGE_STYLES[stage].dot }} />
               <span className="text-[13px] font-medium text-text-body">{label}</span>
             </div>
-            <span className="font-display text-[34px] font-bold">{count}</span>
+            <span className="font-display text-[34px] font-bold tabular-nums">{count}</span>
           </div>
         ))}
       </div>

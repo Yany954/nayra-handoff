@@ -15,7 +15,7 @@ import {
   secondaryButton,
   type FormState,
 } from "@/presentation/components/panel/form";
-import { shortDate } from "@/presentation/components/panel/stages";
+import { longDate } from "@/presentation/components/panel/stages";
 
 type SaveAction = (prev: FormState, formData: FormData) => Promise<FormState>;
 type DeleteAction = (id: string) => Promise<FormState>;
@@ -28,25 +28,28 @@ const ROLES: Record<ShowRow["publicRole"], { label: string; className: string }>
 };
 
 function formatDate(date: string | null) {
-  return date ? `${shortDate(date)} ${date.slice(0, 4)}` : "Sin fecha";
+  return date ? longDate(date) : "Sin fecha";
 }
 
 function ShowForm({ show, save, onDone }: { show: ShowRow | null; save: SaveAction; onDone: () => void }) {
   const [state, action, pending] = useActionState(save, initialFormState);
   const errors = state.fieldErrors ?? {};
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (state.status === "ok") onDone();
+    // Move focus to the first invalid field so keyboard and screen-reader users land on it.
+    if (state.status === "error") formRef.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   }, [state, onDone]);
 
   return (
-    <form action={action} className="flex flex-col gap-4" noValidate>
+    <form ref={formRef} action={action} className="flex flex-col gap-4" noValidate>
       {show && <input type="hidden" name="id" value={show.id} />}
       <Field label="Lugar o evento" name="venue" error={errors.venue}>
         <input {...describedBy("venue", errors.venue)} defaultValue={show?.venue} className={inputClass} autoComplete="off" required />
       </Field>
       <Field label="Ciudad" name="city" error={errors.city}>
-        <input {...describedBy("city", errors.city)} defaultValue={show?.city} placeholder="Ej. Curumaní, Cesar" className={inputClass} required />
+        <input {...describedBy("city", errors.city)} defaultValue={show?.city} placeholder="Ej. Curumaní, Cesar…" autoComplete="off" className={inputClass} required />
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Fecha" name="date" hint="Déjala vacía si no la recuerdas." error={errors.date}>
@@ -173,11 +176,11 @@ export function ShowsManager({ rows, save, remove }: { rows: ShowRow[]; save: Sa
         ref={dialogRef}
         aria-labelledby="show-dialog-title"
         onClose={() => setEditing(null)}
-        className="m-0 box-border h-dvh max-h-none w-full max-w-none border-0 bg-cream p-0 text-text-dark backdrop:bg-ink/60 sm:m-auto sm:h-auto sm:max-h-[90dvh] sm:max-w-[560px] sm:rounded-card"
+        className="m-0 box-border h-dvh max-h-none w-full max-w-none overscroll-contain border-0 bg-cream p-0 text-text-dark backdrop:bg-ink/60 sm:m-auto sm:h-auto sm:max-h-[90dvh] sm:max-w-[560px] sm:rounded-card"
       >
         <div className="flex flex-col gap-5 p-5 sm:p-7">
           <div className="flex items-center justify-between gap-3">
-            <h2 id="show-dialog-title" className="m-0 font-display text-2xl font-bold">
+            <h2 id="show-dialog-title" className="m-0 text-balance font-display text-2xl font-bold">
               {editing?.show ? "Editar show" : "Agregar show"}
             </h2>
             <button type="button" aria-label="Cerrar" onClick={close} className="flex size-11 cursor-pointer items-center justify-center rounded-full border-0 bg-cream-deep text-text-dark">

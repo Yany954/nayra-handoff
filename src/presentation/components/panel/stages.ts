@@ -9,12 +9,25 @@ export const STAGE_STYLES: Record<PromoterStage, { dot: string; bg: string; fg: 
   descartado: { dot: "#8E847B", bg: "#EFEAE3", fg: "#5A504A" },
 };
 
-const MONTHS = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+// Calendar keys are read at noon UTC so the day never shifts with the viewer's timezone.
+const parts = new Intl.DateTimeFormat("es-CO", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+
+function dateParts(dateKey: string) {
+  const all = parts.formatToParts(new Date(`${dateKey}T12:00:00Z`));
+  const get = (type: Intl.DateTimeFormatPartTypes) => all.find((p) => p.type === type)?.value.replace(".", "") ?? "";
+  return { day: get("day"), month: get("month"), year: get("year") };
+}
 
 /** "2026-11-25" → "25 nov". */
 export function shortDate(dateKey: string): string {
-  const [, month, day] = dateKey.split("-");
-  return `${Number(day)} ${MONTHS[Number(month) - 1] ?? ""}`;
+  const { day, month } = dateParts(dateKey);
+  return `${day} ${month}`;
+}
+
+/** "2026-11-25" → "25 nov 2026". */
+export function longDate(dateKey: string): string {
+  const { day, month, year } = dateParts(dateKey);
+  return `${day} ${month} ${year}`;
 }
 
 /** Whole days between two YYYY-MM-DD keys. */

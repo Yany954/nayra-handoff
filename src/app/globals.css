@@ -74,3 +74,6 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Removes the 300 ms double-tap delay on touch screens for every control. */
+a, button, input, select, textarea, label { touch-action: manipulation; }

@@ -15,11 +15,11 @@ export const fieldClass =
 export const inputClass = `${fieldClass} min-h-12`;
 
 export const primaryButton =
-  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border-0 bg-text-dark px-[18px] text-sm font-semibold text-text-light no-underline disabled:cursor-wait disabled:opacity-60";
+  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border-0 bg-text-dark px-[18px] text-sm font-semibold text-text-light no-underline hover:bg-[#3A302C] disabled:cursor-wait disabled:opacity-60";
 export const secondaryButton =
-  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-line-strong bg-white px-[18px] text-sm font-medium text-text-dark no-underline disabled:cursor-wait disabled:opacity-60";
+  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-line-strong bg-white px-[18px] text-sm font-medium text-text-dark no-underline hover:border-text-dark disabled:cursor-not-allowed disabled:opacity-50";
 export const dangerButton =
-  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border-0 bg-[#8F2D1F] px-[18px] text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-60";
+  "inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border-0 bg-[#8F2D1F] px-[18px] text-sm font-semibold text-white hover:bg-[#6E2216] disabled:cursor-wait disabled:opacity-60";
 
 export function Field({
   label,
