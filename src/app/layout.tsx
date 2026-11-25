@@ -25,6 +25,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
+      data-scroll-behavior="smooth"
       lang="es"
       className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
     >

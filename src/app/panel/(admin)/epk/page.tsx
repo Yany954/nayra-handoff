@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getEpkPage } from "@/application/public-site";
+import { requireAdmin } from "@/infrastructure/auth/session";
 import { repositories } from "@/infrastructure/container";
 import { Eyebrow, Section, cardDark, displayHeading } from "@/presentation/ui/primitives";
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 const riderList = "m-0 flex list-disc flex-col gap-2.5 pl-5 text-[15px] leading-normal text-text-soft";
 
 export default async function EpkPage() {
+  await requireAdmin();
   const { profile, epk, achievements, formatsSummary } = await getEpkPage(repositories);
 
   const stats = [
@@ -34,7 +36,19 @@ export default async function EpkPage() {
   ].filter((fact) => fact !== null);
 
   return (
-    <main className="flex-1 pb-20 lg:pb-[120px]">
+    // Full-bleed dark preview inside the cream panel, as the EPK looks when sent.
+    <div className="-mx-5 -mb-16 -mt-7 flex-1 bg-ink pb-20 text-text-light lg:-mx-10 lg:-mt-9 lg:pb-[120px]">
+      <div className="mx-auto box-border flex max-w-[1360px] flex-wrap items-center justify-between gap-3 px-3.5 pt-4 lg:px-10 lg:pt-6">
+        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Vista previa del EPK · privado</span>
+        <button
+          type="button"
+          disabled
+          title="Disponible en la fase de pitch"
+          className="hit-44 cursor-not-allowed rounded-full border-0 bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink opacity-60"
+        >
+          Descargar PDF
+        </button>
+      </div>
       <section className="mx-auto box-border max-w-[1360px] px-3.5 pt-4 lg:px-10 lg:pt-6">
         <div className="relative flex min-h-[460px] items-end overflow-hidden rounded-hero">
           <Image
@@ -115,6 +129,6 @@ export default async function EpkPage() {
           </div>
         </div>
       </Section>
-    </main>
+    </div>
   );
 }
