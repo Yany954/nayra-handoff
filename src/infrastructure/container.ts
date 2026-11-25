@@ -1,7 +1,8 @@
 import { cacheLife, cacheTag } from "next/cache";
-import type { ContentRepositories } from "@/domain/repositories";
-import { db } from "@/infrastructure/firebase/admin";
+import type { AdminRepositories, ContentRepositories } from "@/domain/repositories";
+import { bucket, db } from "@/infrastructure/firebase/admin";
 import { createFirestoreRepositories } from "@/infrastructure/repositories/firestore";
+import { createAdminRepositories } from "@/infrastructure/repositories/firestore-admin";
 
 /**
  * Tag shared by every cached content read. Panel Server Actions (phase 4) call
@@ -72,3 +73,8 @@ export const repositories: ContentRepositories = {
   listVideos,
   listGallery,
 };
+
+/** Manager-only data, uncached. Call only after `requireAdmin()`. */
+export function adminRepositories(): AdminRepositories {
+  return createAdminRepositories(db(), bucket());
+}

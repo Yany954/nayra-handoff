@@ -118,3 +118,58 @@ export type EpkPublic = {
   technicalRider: string[];
   hospitalityRider: string[];
 };
+
+// ---- Manager panel (private data, never rendered on the public site) ----
+
+export type AdminUser = {
+  uid: string;
+  email: string;
+  name: string;
+};
+
+export const PROMOTER_STAGES = [
+  "prospecto",
+  "contactado",
+  "en_negociacion",
+  "cerrado",
+  "descartado",
+] as const;
+export type PromoterStage = (typeof PROMOTER_STAGES)[number];
+
+export const PROMOTER_SOURCES = ["auto", "manual", "web_form"] as const;
+export type PromoterSource = (typeof PROMOTER_SOURCES)[number];
+
+export type Promoter = {
+  id: string;
+  type: string;
+  name: string;
+  city: string;
+  contact: string;
+  socialOrWeb: string;
+  stage: PromoterStage;
+  /** Calendar days (YYYY-MM-DD, Bogotá) so they compare as strings. */
+  lastContactAt: string | null;
+  nextFollowUpAt: string | null;
+  eventDate: string | null;
+  notes: string;
+  source: PromoterSource;
+  createdAt: string;
+};
+
+export type BookingRequest = {
+  id: string;
+  name: string;
+  eventType: string;
+  eventDate: string;
+  municipality: string;
+  status: "nuevo" | "revisado";
+};
+
+export type DiscoveredEvent = {
+  id: string;
+  name: string;
+  municipality: string;
+  dates: string;
+  relevance: number;
+  status: "pending" | "approved" | "discarded";
+};
