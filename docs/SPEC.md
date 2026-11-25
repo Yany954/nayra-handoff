@@ -10,7 +10,7 @@
 | `songs` | pública (sin `key`) | admin | `title, artist, genre (Vallenato/Rancheras/Baladas/Celebraciones/Tambora), inMainShow: bool, key (privado), order` |
 | `formats` | pública | admin | `name, shortName, durationMin, durationMax, membersLabel ("Voz + guitarra"), membersCount, idealFor, order` |
 | `videos` | pública | admin | `title, context ("YouTube · @NAYRA-Lan"), url, featured: bool, order`. Los de YouTube se incrustan con `youtube-nocookie.com` al tocar play. |
-| `gallery` | pública | admin | `src (Storage), alt, caption?, order` |
+| `gallery` | pública | admin | `storagePath (public/gallery/<archivo> en Storage), alt, caption?, order`. La URL pública se arma en el repo. |
 | `epk/main` (doc) | admin | admin | datos del EPK: `eyebrow, intro, rate, technicalRider[], hospitalityRider[], coverageStat` |
 | `pitch/main` (doc) | admin | admin | plantillas privadas del generador (ver §4) |
 | `promoters` | admin | admin | `type, name, city, contact, socialOrWeb, stage, lastContactAt, nextFollowUpAt, eventDate?, notes, source (auto/manual/web_form), createdAt` |
@@ -28,8 +28,11 @@
 - `bookingRequests`: `allow create` con validación de campos/tamaño; nunca `read` público.
 - Tests de rules con el emulador.
 
-## 3. Actualización en vivo
-- El sitio público lee Firestore. Para que un logro nuevo aparezca "de una": `onSnapshot` en el cliente para secciones dinámicas (logros, próximas fechas), **o** render en servidor + `revalidateTag` disparado por un trigger de Firestore. Explícame el trade-off (SEO vs simplicidad) antes de elegir.
+## 3. Actualización en vivo (decidido en Fase 3)
+- El sitio lee Firestore **en el servidor** (Admin SDK) y cachea cada lectura con `"use cache"` + `cacheTag("content")` + `cacheLife("days")` (`src/infrastructure/container.ts`). Los promotores reciben HTML completo: mejor SEO y menos JS.
+- Las escrituras pasan por Server Actions del panel, que llaman `updateTag("content")`: el cambio se ve en la siguiente carga. No hace falta trigger de Firestore.
+- Trade-off: un cambio hecho a mano en la consola de Firebase tarda hasta que caduque la caché (≤1 día). En dev, una recarga forzada lo muestra.
+- `songs/{id}/private/meta` nunca se lee desde el sitio público.
 
 ## 4. Pitch / EPK
 El EPK (privado, solo admin en `/panel/epk`) se arma con `profile/main` + `epk/main` + `achievements` + `formats` + `videos` + `gallery` (todo editable en el panel):

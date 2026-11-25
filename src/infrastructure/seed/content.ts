@@ -1,5 +1,5 @@
 /**
- * Local seed until Phase 3 moves it to Firestore.
+ * Initial site content. `npm run seed` loads it into the emulators; unit tests read it directly.
  *
  * Sources: bios, contact, Facebook, Caribe Canta, Mejor Voz, Tawanty and
  * Rondas Infantiles come from the manager (2026-11-23); the repertoire is

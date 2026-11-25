@@ -73,7 +73,11 @@ functions/         # Cloud Functions (scanEvents programada, triggers)
 
 ## Comandos
 ```
-npm run dev            # Next en local
+cp .env.example .env.local   # una vez: apunta Next y los scripts a los emuladores
+npm run emulators      # terminal 1: Auth/Firestore/Storage locales (datos en ./emulator-data)
+npm run seed           # carga el contenido de src/infrastructure/seed (solo emuladores)
+npm run dev            # terminal 2: Next en local, lee de Firestore
 npm run lint && npm run typecheck && npm test
-firebase emulators:start   # Firestore/Auth/Functions locales — úsalos para desarrollar
+npm run test:rules     # tests de rules (con los emuladores corriendo)
+npm run test:rules:ci  # igual, pero levanta sus propios emuladores
 ```
