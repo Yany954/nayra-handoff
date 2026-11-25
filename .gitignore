@@ -53,3 +53,4 @@ emulator-data/
 *service-account*.json
 *serviceAccount*.json
 *-adminsdk-*.json
+!.env.example
