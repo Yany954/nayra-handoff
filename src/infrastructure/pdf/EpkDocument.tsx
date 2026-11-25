@@ -68,7 +68,7 @@ const s = StyleSheet.create({
   formatRow: { paddingVertical: 6, borderTopWidth: 1, borderColor: C.line },
   link: { color: C.dark, textDecoration: "underline" },
   photos: { flexDirection: "row", gap: 12, marginTop: 4 },
-  photo: { flex: 1, height: 300, borderRadius: 12, objectFit: "cover" },
+  photo: { flex: 1, height: 260, borderRadius: 12, objectFit: "cover" },
   footer: { position: "absolute", bottom: 22, left: 40, right: 40, flexDirection: "row", justifyContent: "space-between", fontSize: 8, color: C.mutedLight },
 });
 
@@ -103,6 +103,10 @@ export function EpkDocument({ data, heroPhoto, photos }: { data: EpkDocumentData
     profile.whatsapp && { label: "WhatsApp", value: profile.whatsapp, href: `https://wa.me/${profile.whatsapp.replace(/\D/g, "")}` },
     ...profile.socials.map((s) => ({ label: NETWORK_NAMES[s.network], value: s.handle, href: s.url })),
   ].filter((c): c is { label: string; value: string; href: string } => Boolean(c));
+  // Where the rest of her videos live (the PDF cannot list every post).
+  const channels = profile.socials
+    .filter((social) => social.network !== "facebook")
+    .map((social) => ({ label: NETWORK_NAMES[social.network], handle: social.handle, href: social.url }));
   const facts = [
     ["Ciudad base", profile.base],
     ["Géneros", profile.genresSummary],
@@ -194,29 +198,45 @@ export function EpkDocument({ data, heroPhoto, photos }: { data: EpkDocumentData
       {/* 4. Videos, booking contact and press photos */}
       <Page size="A4" style={s.page}>
         <Text style={s.h2}>Contacto y material</Text>
-        <View style={[s.columns, s.section]}>
-          <View style={s.col}>
-            <Text style={s.h3}>Videos en vivo</Text>
-            {videos.map((v) => (
-              <Text key={v.id} style={{ marginBottom: 4 }}>
+        {/* Full width: long addresses (the booking email) never overflow the card. */}
+        <View style={[s.card, s.section]}>
+          <Text style={s.h3}>Booking</Text>
+          {contact.map((c) => (
+            <View key={c.label} style={s.factRow}>
+              <Text style={[s.factLabel, { width: 90 }]}>{c.label}</Text>
+              <Link src={c.href} style={[s.factValue, s.link]}>
+                {c.value}
+              </Link>
+            </View>
+          ))}
+        </View>
+        <View style={s.section}>
+          <Text style={s.h3}>Videos en vivo</Text>
+          {videos.map((v) => (
+            <View key={v.id} style={s.bullet} wrap={false}>
+              <Text style={s.dot}>•</Text>
+              <Text style={{ flex: 1 }}>
                 <Link src={v.url} style={s.link}>
                   {v.title}
                 </Link>
                 <Text style={{ color: C.mutedLight }}> · {v.context}</Text>
               </Text>
-            ))}
-          </View>
-          <View style={[s.col, s.card]}>
-            <Text style={s.h3}>Booking</Text>
-            {contact.map((c) => (
-              <View key={c.label} style={s.factRow}>
-                <Text style={s.factLabel}>{c.label}</Text>
-                <Link src={c.href} style={[s.factValue, s.link]}>
-                  {c.value}
-                </Link>
-              </View>
-            ))}
-          </View>
+            </View>
+          ))}
+          {channels.length > 0 && (
+            <Text style={{ marginTop: 6, color: C.mutedLight }}>
+              Más videos en{" "}
+              {channels.map((c, i) => (
+                <Text key={c.href}>
+                  {i > 0 && (i === channels.length - 1 ? " y " : ", ")}
+                  <Link src={c.href} style={s.link}>
+                    {c.label} {c.handle}
+                  </Link>
+                </Text>
+              ))}
+              .
+            </Text>
+          )}
         </View>
         {photos.length > 0 && (
           <View style={s.photos}>

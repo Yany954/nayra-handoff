@@ -4,6 +4,8 @@ import { latestPastShow, publicUpcomingShows } from "@/domain/rules/shows";
 import { countMainShowSongs } from "@/domain/rules/songs";
 
 export const HOME_GALLERY_SIZE = 8;
+/** The home shows one featured video plus a few more; the EPK PDF lists them all. */
+export const HOME_SECONDARY_VIDEOS = 4;
 
 const byOrder = <T extends { order: number }>(items: readonly T[]): T[] =>
   [...items].sort((a, b) => a.order - b.order);
@@ -32,7 +34,7 @@ export async function getHomePage(repos: ContentRepositories, today: string) {
     latestShow: latestPastShow(shows, today),
     formats: byOrder(formats),
     featuredVideo: byOrder(videos).find((v) => v.featured) ?? null,
-    secondaryVideos: byOrder(videos).filter((v) => !v.featured),
+    secondaryVideos: byOrder(videos).filter((v) => !v.featured).slice(0, HOME_SECONDARY_VIDEOS),
     galleryPreview: byOrder(gallery).slice(0, HOME_GALLERY_SIZE),
     galleryTotal: gallery.length,
   };

@@ -10,6 +10,7 @@ import {
   epkSchema,
   galleryDocSchema,
   publicSongSchema,
+  videoSchema,
 } from "@/infrastructure/schemas/content";
 import {
   bookingRequestSchema,
@@ -116,6 +117,12 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
     saveAchievement: (id, input) => saveDoc("achievements", id, achievementSchema.omit({ id: true }).parse(input)),
     deleteAchievement: async (id) => {
       await db.collection("achievements").doc(id).delete();
+    },
+
+    listVideos: () => content.listVideos(),
+    saveVideo: (id, input) => saveDoc("videos", id, videoSchema.omit({ id: true }).parse(input)),
+    deleteVideo: async (id) => {
+      await db.collection("videos").doc(id).delete();
     },
 
     listFormats: () => content.listFormats(),

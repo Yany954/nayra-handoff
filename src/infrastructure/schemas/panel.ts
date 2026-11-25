@@ -18,6 +18,7 @@ import type {
   PromoterInput,
   ShowInput,
   SongInput,
+  VideoInput,
 } from "@/domain/repositories";
 
 const text = z.string().min(1);
@@ -141,6 +142,17 @@ export const formatFormSchema = z
     message: "Debe ser mayor o igual a la duración mínima.",
     path: ["durationMax"],
   }) satisfies z.ZodType<FormatInput, unknown>;
+
+export const videoFormSchema = z.object({
+  title: required("el título", 120),
+  context: required("dónde está", 80),
+  url: z
+    .string()
+    .trim()
+    .refine((v) => z.url({ protocol: /^https$/ }).safeParse(v).success, "Pega el enlace completo, empieza por https://"),
+  featured: checkbox,
+  order: position,
+}) satisfies z.ZodType<VideoInput, unknown>;
 
 export const songFormSchema = z.object({
   title: required("el título", 120),

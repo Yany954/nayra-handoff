@@ -78,6 +78,16 @@ const NAV: NavItem[] = [
     ),
   },
   {
+    href: "/panel/videos",
+    label: "Videos",
+    icon: (
+      <svg {...iconProps} strokeLinejoin="round">
+        <rect x="3" y="5" width="18" height="14" rx="3" />
+        <path d="m10 9 5 3-5 3z" />
+      </svg>
+    ),
+  },
+  {
     href: "/panel/galeria",
     label: "Galería",
     icon: (

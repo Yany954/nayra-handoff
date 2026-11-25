@@ -19,6 +19,7 @@ const PANEL_PAGES = [
   "/panel/shows",
   "/panel/formatos",
   "/panel/galeria",
+  "/panel/videos",
   "/panel/epk",
   "/panel/epk/editar",
   "/panel/pitch",

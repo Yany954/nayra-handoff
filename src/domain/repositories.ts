@@ -26,6 +26,7 @@ export interface ContentRepositories {
 
 export type AchievementInput = Omit<Achievement, "id">;
 export type FormatInput = Omit<Format, "id">;
+export type VideoInput = Omit<Video, "id">;
 /** The key is optional: the manager only shares it when someone asks. */
 export type AdminSong = PublicSong & { key: string | null };
 export type SongInput = Omit<AdminSong, "id">;
@@ -69,6 +70,10 @@ export interface AdminRepositories {
   listAchievements(): Promise<Achievement[]>;
   saveAchievement(id: string | null, input: AchievementInput): Promise<void>;
   deleteAchievement(id: string): Promise<void>;
+
+  listVideos(): Promise<Video[]>;
+  saveVideo(id: string | null, input: VideoInput): Promise<void>;
+  deleteVideo(id: string): Promise<void>;
 
   listFormats(): Promise<Format[]>;
   saveFormat(id: string | null, input: FormatInput): Promise<void>;
