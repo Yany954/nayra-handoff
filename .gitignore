@@ -54,3 +54,8 @@ emulator-data/
 *serviceAccount*.json
 *-adminsdk-*.json
 !.env.example
+
+# Playwright
+/test-results/
+/playwright-report/
+/tests/e2e/.auth/

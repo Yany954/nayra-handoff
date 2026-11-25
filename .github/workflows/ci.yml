@@ -19,6 +19,13 @@ jobs:
       FIREBASE_STORAGE_EMULATOR_HOST: 127.0.0.1:9199
       FIREBASE_STORAGE_BUCKET: demo-nayra.appspot.com
       METADATA_SERVER_DETECTION: none
+      # Test-only admin created by tests/e2e/global-setup.ts in the Auth emulator.
+      ADMIN_EMAILS: e2e-admin@example.com
+      NEXT_PUBLIC_FIREBASE_API_KEY: demo-key
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: demo-nayra.firebaseapp.com
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: demo-nayra
+      NEXT_PUBLIC_FIREBASE_AUTH_EMULATOR_HOST: 127.0.0.1:9099
+      E2E_PORT: 3100
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,7 +43,14 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
-      # Rules tests, then seed + build: the build prerenders pages from Firestore.
+      - run: npx playwright install --with-deps chromium
+      # Rules tests, then seed + build (it prerenders from Firestore), then the
+      # accessibility suite against `next start`.
       - run: >-
-          npx firebase emulators:exec --only firestore,storage
-          "npm run test:rules && npm run seed && npm run build"
+          npx firebase emulators:exec --only auth,firestore,storage
+          "npm run test:rules && npm run seed && npm run build && npm run test:e2e"
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/

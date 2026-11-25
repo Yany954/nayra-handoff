@@ -13,7 +13,8 @@
     "emulators": "npm --prefix functions run build && firebase emulators:start --import ./emulator-data --export-on-exit",
     "seed": "tsx --env-file-if-exists=.env.local scripts/seed-emulator.ts",
     "test:rules": "vitest run -c vitest.rules.config.mts",
-    "test:rules:ci": "firebase emulators:exec --only firestore,storage \"npm run test:rules\""
+    "test:rules:ci": "firebase emulators:exec --only firestore,storage \"npm run test:rules\"",
+    "test:e2e": "node --env-file-if-exists=.env.local ./node_modules/@playwright/test/cli.js test"
   },
   "dependencies": {
     "firebase-admin": "^14.5.1",
@@ -24,7 +25,9 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
     "@firebase/rules-unit-testing": "^5.0.2",
+    "@playwright/test": "^1.65.1",
     "@tailwindcss/turbopack": "4.3.3",
     "@types/node": "^20",
     "@types/react": "^19",
