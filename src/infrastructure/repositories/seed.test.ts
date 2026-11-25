@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   getEpkPage,
@@ -21,7 +23,7 @@ describe("seed repositories", () => {
     expect(home.featuredVideo?.id).toBe("si-no-te-tengo");
     expect(home.secondaryVideos).toHaveLength(2);
     expect(home.galleryPreview).toHaveLength(8);
-    expect(home.galleryTotal).toBe(37);
+    expect(home.galleryTotal).toBe(23);
     expect(home.profile.bookingEmail).toBeNull();
   });
 
@@ -29,6 +31,12 @@ describe("seed repositories", () => {
     const { photos } = await getGalleryPage(repos);
     expect(new Set(photos.map((p) => p.id)).size).toBe(photos.length);
     expect(photos.every((p) => p.alt.length > 10)).toBe(true);
+  });
+
+  it("points every gallery photo at a file that exists", async () => {
+    const { photos } = await getGalleryPage(repos);
+    const missing = photos.filter((p) => !existsSync(join(process.cwd(), "public", p.src)));
+    expect(missing.map((p) => p.src)).toEqual([]);
   });
 
   it("derives the repertoire totals", async () => {
