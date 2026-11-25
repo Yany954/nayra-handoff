@@ -56,8 +56,7 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
     match /epk/{docId} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow read, write: if isAdmin();
     }
     match /songs/{songId} {
       allow read: if true;

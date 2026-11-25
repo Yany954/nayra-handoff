@@ -2,7 +2,7 @@
 
 Sitio de booking para la cantante Nayra Lancheros (vallenato, rancheras, baladas, tambora; nacida en Bogotá, radicada en Curumaní, Cesar, Colombia).
 Tiene dos partes:
-1. **Sitio público**: portafolio y EPK para que promotores la contraten.
+1. **Sitio público**: portafolio para que promotores la contraten (el EPK es privado: la manager lo envía como PDF).
 2. **Panel de la manager** (su mamá): base de datos de promotores/eventos, logros, repertorio, generador de pitch y seguimiento tipo CRM.
 
 Spec completo (modelo de datos, reglas, funciones, fases): **`docs/SPEC.md`**. Léelo antes de planear.
@@ -59,7 +59,8 @@ functions/         # Cloud Functions (scanEvents programada, triggers)
 |---|---|---|
 | `/` | `Main.dc.html` (+ `Mobile.dc.html`) | público |
 | `/repertorio` | `Repertorio.dc.html` | público |
-| `/epk` | `EPK.dc.html` (sin la sección "Generador de pitch") | público |
+| `/galeria` | sin mockup (mismos tokens que `Main.dc.html`) | público |
+| `/panel/epk` | `EPK.dc.html` (sin la sección "Generador de pitch") | solo admin |
 | `/panel` | `Panel.dc.html` | solo admin |
 | `/panel/pitch` | sección "Generador de pitch" de `EPK.dc.html` | solo admin |
 

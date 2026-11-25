@@ -6,12 +6,12 @@
 |---|---|---|---|
 | `profile/main` (doc) | pública | admin | `name, heroBadge, tagline, bioShort, bioLong[], origin ("Bogotá"), base ("Curumaní, Cesar"), coverage, socials[] {network (instagram/tiktok/youtube/facebook), handle, url}, bookingEmail?, whatsapp?` |
 | `achievements` | pública | admin | `title, subtitle, kind (ganadora/finalista/participante/tarima/reconocimiento), label, epkLine, date?, featured: bool, order` |
-| `shows` | pública | admin | `venue, city, date? (YYYY-MM-DD), status (confirmado/por_confirmar), description?, videoUrl?, photos[]`. Pasado/próximo se **deriva** de `date` (hora de Bogotá), no se guarda. |
+| `shows` | pública (el sitio solo muestra fechas `confirmado`) | admin | `venue, city, date? (YYYY-MM-DD), status (confirmado/por_confirmar), description?, videoUrl?, photos[]`. Pasado/próximo se **deriva** de `date` (hora de Bogotá), no se guarda. |
 | `songs` | pública (sin `key`) | admin | `title, artist, genre (Vallenato/Rancheras/Baladas/Celebraciones/Tambora), inMainShow: bool, key (privado), order` |
 | `formats` | pública | admin | `name, shortName, durationMin, durationMax, membersLabel ("Voz + guitarra"), membersCount, idealFor, order` |
 | `videos` | pública | admin | `title, context ("YouTube · @NAYRA-Lan"), url, featured: bool, order`. Los de YouTube se incrustan con `youtube-nocookie.com` al tocar play. |
 | `gallery` | pública | admin | `src (Storage), alt, caption?, order` |
-| `epk/main` (doc) | pública | admin | lo público del EPK: `eyebrow, intro, rate, technicalRider[], hospitalityRider[], coverageStat` |
+| `epk/main` (doc) | admin | admin | datos del EPK: `eyebrow, intro, rate, technicalRider[], hospitalityRider[], coverageStat` |
 | `pitch/main` (doc) | admin | admin | plantillas privadas del generador (ver §4) |
 | `promoters` | admin | admin | `type, name, city, contact, socialOrWeb, stage, lastContactAt, nextFollowUpAt, eventDate?, notes, source (auto/manual/web_form), createdAt` |
 | `discoveredEvents` | admin | functions + admin | `name, municipality, department, dates, type, contact?, url, sourceName, relevance (0–1), openCall: bool, deadline?, status (pending/approved/discarded), hash` |
@@ -32,12 +32,12 @@
 - El sitio público lee Firestore. Para que un logro nuevo aparezca "de una": `onSnapshot` en el cliente para secciones dinámicas (logros, próximas fechas), **o** render en servidor + `revalidateTag` disparado por un trigger de Firestore. Explícame el trade-off (SEO vs simplicidad) antes de elegir.
 
 ## 4. Pitch / EPK
-El EPK público se arma con `profile/main` + `epk/main` + `achievements` + `formats` + `videos` + `gallery` (todo editable en el panel):
+El EPK (privado, solo admin en `/panel/epk`) se arma con `profile/main` + `epk/main` + `achievements` + `formats` + `videos` + `gallery` (todo editable en el panel):
 nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa · videos en vivo · géneros · formatos · rider técnico · rider de hospitalidad · logros · prensa · redes · contacto de booking · ciudad base · tarifa ("a convenir" o rango) · disponibilidad.
 `pitch/main` (solo admin) guarda únicamente las plantillas del correo por tipo de destinatario. Texto base aportado por la manager: `docs/content/pitch-base.md`.
 
 **Generador**: el admin elige destinatario (`festival | corporativo | hotel | privado`) → plantilla base + párrafo adaptado (puede ser plantilla fija o Gemini) → asunto + cuerpo. Botones: copiar, abrir en Gmail (`mailto:`), y al enviar: el promotor pasa a `contactado`, `lastContactAt = now`, `nextFollowUpAt = now + 7d`.
-**EPK público** (`/epk`) + PDF descargable generado desde los mismos datos.
+**EPK privado** (`/panel/epk`) + PDF generado desde los mismos datos, que la manager adjunta en sus correos. El sitio público no enlaza al EPK.
 
 ## 5. Búsqueda automática de eventos (`functions/scanEvents`)
 - `onSchedule("every 72 hours")`, región cercana (ej. `us-east1`), timeout generoso.
@@ -58,9 +58,9 @@ Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). C
 
 ## 7. Fases
 1. **Setup**: Next + TS + Tailwind + tokens + fuentes; Firebase project, emuladores, Auth, rules base, CI de lint/typecheck.
-2. **Sitio público estático** fiel a los mockups (`/`, `/repertorio`, `/epk`) con datos de un seed local.
+2. **Sitio público estático** fiel a los mockups (`/`, `/repertorio`, `/galeria`; EPK en `/panel/epk`) con datos de un seed local.
 3. **Firestore**: modelo, seed, repos, rules + tests; el sitio lee de Firestore.
 4. **Panel**: login admin, CRUD de logros, repertorio, formatos, shows; tabla de promotores con filtro por etapa (mockup `Panel.dc.html`).
-5. **Pitch**: editor de `pitch/main`, generador, EPK público y PDF.
+5. **Pitch**: editor de `pitch/main`, generador, EPK privado y PDF.
 6. **scanEvents** + pestaña "Encontrados automáticamente" + aprobación.
 7. **Formulario de contratación**, SEO (metadata, OG image), analítica, deploy, dominio.

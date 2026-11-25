@@ -9,7 +9,7 @@ const LINKS = [
   { href: "/", label: "Inicio", route: "/" },
   { href: "/repertorio", label: "Repertorio", route: "/repertorio" },
   { href: "/#shows", label: "Shows" },
-  { href: "/epk", label: "EPK", route: "/epk" },
+  { href: "/galeria", label: "Galería", route: "/galeria" },
   { href: "/#contacto", label: "Contacto" },
 ];
 
@@ -37,7 +37,6 @@ export function SiteNav({ name }: { name: string }) {
   const pathname = usePathname();
   const menuRef = useRef<HTMLDialogElement>(null);
   const isHome = pathname === "/";
-  const isEpk = pathname === "/epk";
   const closeMenu = () => menuRef.current?.close();
 
   return (
@@ -68,33 +67,12 @@ export function SiteNav({ name }: { name: string }) {
             );
           })}
         </div>
-        <div className="flex gap-2">
-          {isEpk ? (
-            <button
-              type="button"
-              disabled
-              title="Disponible próximamente"
-              className="hit-44 cursor-not-allowed rounded-full bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink opacity-60"
-            >
-              Descargar PDF
-            </button>
-          ) : (
-            <>
-              <Link
-                href="/epk"
-                className="hit-44 rounded-full border border-white/18 px-4 py-[11px] text-sm font-medium text-text-light no-underline"
-              >
-                Descargar EPK
-              </Link>
-              <Link
-                href="/#contacto"
-                className="hit-44 rounded-full bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink no-underline"
-              >
-                Contrátala
-              </Link>
-            </>
-          )}
-        </div>
+        <Link
+          href="/#contacto"
+          className="hit-44 rounded-full bg-text-light px-[18px] py-[11px] text-sm font-semibold text-ink no-underline"
+        >
+          Contrátala
+        </Link>
       </nav>
 
       <nav
