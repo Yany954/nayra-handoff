@@ -32,6 +32,8 @@
 
 **Resultado actual:** 48/48 escaneos sin violaciones A/AA · 7/7 pruebas de teclado y foco · 4/4 pruebas del pitch y el PDF · 0 hallazgos *best-practice*.
 
+**Formulario, privacidad y cookies (Fase 7b):** etiquetas visibles, `autocomplete` (`name`, `tel`, `email`, `address-level2`, 1.3.5), todos los errores a la vez junto a su campo con foco en el primero (3.3.1, 3.3.3), autorización de datos explícita (casilla, no premarcada), confirmación anunciada y con foco. El aviso de cookies no es modal ni atrapa el foco, y la página le reserva espacio para que no tape el contenido enfocado (2.4.11). `/privacidad` incluida en los escaneos de axe.
+
 **Encontrados y «Adaptar con IA» (Fase 6):** tarjetas con `<h3>`, relevancia en texto, «Convocatoria abierta» como texto y no solo como color, enlaces de fuente que anuncian que abren otra pestaña, avisos de la búsqueda en `<details>` y mensajes de estado y error en regiones vivas. La sugerencia de IA nunca reemplaza el texto sin una acción explícita (controlabilidad, ISO 9241-110).
 
 **Pitch (Fase 5):** controles con etiqueta visible (De, Para, Asunto, Cuerpo); tipo de destinatario con `aria-pressed`; «Abrir en Gmail» anuncia que abre otra pestaña; la confirmación de copiar y de «Contactado» va en `role="status"`; el botón para marcar está deshabilitado con explicación visible si no hay promotor; aviso visible de variables sin dato antes de enviar (robustez ante errores, ISO 9241-110).
@@ -121,8 +123,7 @@ Estado: ✅ cumple · 🔧 corregido en esta auditoría · ⚠️ cumple con lim
 
 - **Subtítulos de video (1.2.x):** dependen de YouTube. Recomendación: subir la letra o activar los subtítulos.
 - **PDF del EPK:** `@react-pdf/renderer` produce texto real, seleccionable y con metadatos (título «EPK — Nayra Lancheros», idioma `es`), y enlaces clicables, pero **no PDF etiquetado (PDF/UA)**: un lector de pantalla lo lee como texto plano, sin estructura de encabezados, y las fotos no tienen texto alternativo. La versión web del EPK es la alternativa accesible. Si un festival exige PDF/UA, la opción es exportarlo desde una herramienta que etiquete (p. ej. Chrome con impresión etiquetada).
-- **Lectores de pantalla:** la estructura está verificada por código y axe, pero no se ha probado aún con VoiceOver/TalkBack en un dispositivo real. Pendiente antes del deploy (Fase 7).
-- **Formulario de contacto público:** su envío se activa en la Fase 7; entonces se auditan sus errores y confirmaciones.
+- **Lectores de pantalla:** la estructura está verificada por código y axe; la prueba manual en un iPhone real sigue la guía [`voiceover-checklist.md`](voiceover-checklist.md) y queda pendiente de hacer por la dev.
 
 ## 8. Cómo correrlo
 

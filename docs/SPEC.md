@@ -66,8 +66,11 @@ nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa ·
 - `relevance` = puntuación por cercanía, género y tipo. Mostrar ordenado.
 - ~~Función que marca seguimientos vencidos~~: no hace falta. El panel los **deriva al leer** (`dueFollowUps`), igual que show pasado/próximo.
 
-## 6. Formulario de contratación
-Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). Crea `bookingRequests` y un `promoter` con `source: web_form`, `stage: prospecto`. Anti-spam: App Check o honeypot.
+## 6. Formulario de contratación (hecho en Fase 7b)
+Campos: nombre, teléfono y/o correo (al menos uno), tipo de evento, fecha (hoy en adelante), municipio, mensaje y **autorización de datos** (Ley 1581, enlace a `/privacidad`). Server Action pública que valida con Zod (todos los errores a la vez) y en **una transacción** crea `bookingRequests` (`status: nuevo`) y un `promoter` (`source: web_form`, `stage: prospecto`).
+- **Anti-spam sin reCAPTCHA:** honeypot, mínimo 3 s en la página (a los bots se les responde «enviado» sin guardar) y máximo 5 envíos por hora por hash de IP (`rateLimits/{hash_hora}`, con TTL de Firestore en `expiresAt`; nunca se guarda la IP).
+- **Aviso por correo:** función `onBookingRequest` (trigger, reintenta) envía un correo de texto plano a la cuenta de booking con `Reply-To` del solicitante. Se activa con `GMAIL_APP_PASSWORD` (`MAIL_ENABLED`).
+- En el panel: «Solicitudes nuevas» con «Ver como prospecto» y «Marcar revisada».
 
 ## 7. Fases
 1. **Setup**: Next + TS + Tailwind + tokens + fuentes; Firebase project, emuladores, Auth, rules base, CI de lint/typecheck.
@@ -76,4 +79,4 @@ Campos: nombre, tipo de evento, fecha, municipio, mensaje (+ teléfono/email). C
 4. **Panel** (hecho): login con Google solo para cuentas en `ADMIN_EMAILS` (blocking functions + session cookie + `requireAdmin()` + rules); `/panel` = inicio con resumen (pendientes, solicitudes, encontrados, analytics en Fase 7); CRUD de shows (incluye el último show), galería (subir/borrar/ordenar), logros, repertorio (tonalidad opcional), formatos, datos del EPK (`/panel/epk/editar`); promotores como `Panel.dc.html` en `/panel/promotores` (filtro en la URL, exportar CSV para Excel, publicar «Cerrado» como show). Todo el panel funciona en celular.
 5. **Pitch** (hecho): editor de `pitch/main`, generador, PDF del EPK; auditoría de accesibilidad WCAG 2.2 AA + ISO 9241-110 con tests e2e en CI.
 6. **scanEvents** (hecho) + pestaña "Encontrados automáticamente" + aprobación + «Adaptar con IA» en el pitch.
-7. **Formulario de contratación**, SEO (metadata, OG image), analítica, deploy, dominio.
+7. **Formulario de contratación**, SEO (metadata, OG image), analítica, deploy (hecho: App Hosting `us-east4`, `main` = producción), fotos WebP para celular. Pendiente: dominio propio.

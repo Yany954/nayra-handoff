@@ -26,7 +26,7 @@ Sitio para que promotores, festivales, hoteles y familias contraten a **Nayra La
 
 ## Qué hace
 
-**Sitio público.** Hero, logros, formatos del show, videos en vivo, galería, historia, próximas fechas (solo las confirmadas) y contacto por WhatsApp y correo. Repertorio con filtros por género. Las **tonalidades nunca se muestran en público**.
+**Sitio público.** Hero, logros, formatos del show, videos en vivo, galería, historia, próximas fechas (solo las confirmadas) y contacto por WhatsApp, correo y **formulario** (crea la solicitud y un prospecto, con anti-spam y aviso por correo). Página de **privacidad** (Ley 1581), **aviso de cookies** con Google Analytics solo si se acepta, vista previa al compartir (Open Graph), JSON-LD, sitemap y robots. Repertorio con filtros por género. Las **tonalidades nunca se muestran en público**.
 
 **Panel de la manager.** Funciona en celular.
 - **Inicio:** seguimientos vencidos, solicitudes nuevas, eventos encontrados y conteo por etapa.
@@ -56,7 +56,10 @@ Todos los servicios que usa el proyecto: para qué sirve cada uno, con qué cuen
 | **GitHub** (`Yany954/nayra-handoff`) | Código, CI (Actions), deploy automático de `main` | Yany | — | Gratis | [github.com/Yany954/nayra-handoff](https://github.com/Yany954/nayra-handoff) |
 | **OpenAI API** | Extraer eventos de los resultados de búsqueda y «Adaptar párrafo con IA» (`gpt-5-mini`) | Yany (llave nueva solo para este proyecto) | Secret Manager (`OPENAI_API_KEY`) | ≈ USD 0,20/mes; **tope duro USD 5** en la cuenta | [platform.openai.com](https://platform.openai.com) |
 | **Tavily** | Buscador web de eventos | Yany | Secret Manager (`TAVILY_API_KEY`) | Gratis (1.000 créditos/mes; se usan ~150) | [tavily.com](https://tavily.com) |
-| **Gmail** (Booking) | Desde donde la manager envía los pitches (el panel abre Gmail con `authuser`) | Booking | — | Gratis | gmail.com |
+| **Gmail** (Booking) | Desde donde la manager envía los pitches (el panel abre Gmail con `authuser`) y **SMTP que envía el aviso de cada solicitud del formulario** (`onBookingRequest`) | Booking | Contraseña de aplicación en Secret Manager (`GMAIL_APP_PASSWORD`) | Gratis | gmail.com |
+| **Google Analytics 4** (`G-F0G61W0NNX`) | Visitas, clics en WhatsApp/«Contrátala», formularios. **Solo se carga si la persona acepta cookies** | Proyecto Firebase | `NEXT_PUBLIC_GA_ID` (pública) | Gratis | analytics.google.com |
+| ↳ **GA4 Data API** | Resumen de 7 días en el inicio del panel | Cuenta de servicio de App Hosting (rol Lector en la propiedad) | Sin llaves; `GA_PROPERTY_ID` | Gratis | Cloud Console → APIs |
+| **sharp** (librería) | Versiones WebP 480/960/1600 de cada foto (App Hosting no redimensiona) | — | — | Gratis | — |
 | **YouTube** `@NAYRA-Lan` | Video principal (embed `youtube-nocookie`, carga solo al tocar play) | Nayra / Manager | — | Gratis | youtube.com |
 | **Instagram / TikTok / Facebook** | Enlaces en el sitio y en el EPK | Nayra / Manager | — | Gratis | — |
 | **WhatsApp** | Contacto (`wa.me/57…`) | Manager | — | Gratis | — |
@@ -82,7 +85,12 @@ Todos los servicios que usa el proyecto: para qué sirve cada uno, con qué cuen
 | `ADMIN_EMAILS` (Functions) | Blocking functions: rechazan cualquier otra cuenta | `functions/.env.local` | Parámetro que pide `firebase deploy` | Yany, al desplegar |
 | `OPENAI_API_KEY` | `scanEvents` + «Adaptar con IA» | `functions/.secret.local` y `.env.local` (opcional) | Secret Manager (Functions) + secreto de App Hosting | Yany: `firebase functions:secrets:set` / `apphosting:secrets:set` |
 | `TAVILY_API_KEY` | `scanEvents` | `functions/.secret.local` (opcional) | Secret Manager | Yany: `firebase functions:secrets:set TAVILY_API_KEY` |
-| `OPENAI_MODEL` | Modelo de extracción (por defecto `gpt-5-mini`) | — | Parámetro de Functions / variable opcional | — |
+| `OPENAI_MODEL` | Modelo de extracción (por defecto `gpt-5-mini`) | — | `functions/.env.nayra-lancheros` | — |
+| `GMAIL_APP_PASSWORD` | Aviso por correo de cada solicitud | — (en local solo registra el correo en el log) | Secret Manager | Yany: `firebase functions:secrets:set GMAIL_APP_PASSWORD` |
+| `SCAN_ENABLED` / `MAIL_ENABLED` | Cargan las funciones de búsqueda / correo solo cuando su secreto existe | — | `functions/.env.nayra-lancheros` y `apphosting.yaml` | Yo, al activar cada una |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics (con consentimiento) | vacío = sin banner ni medición | `apphosting.yaml` | — |
+| `GA_PROPERTY_ID` | Resumen de visitas del panel | opcional | `apphosting.yaml` | Yany (ID numérico de la propiedad GA4) |
+| `SITE_URL` | URL base para metadatos, sitemap y vista previa | `.env.local` | `apphosting.yaml` | — |
 
 Sin llaves de IA, en local todo funciona con **datos de prueba** que solo existen en el emulador. En producción, sin llaves, el panel avisa que falta configurarlas; nunca inventa resultados.
 
