@@ -30,4 +30,13 @@ export const onlyAdminsCanSignIn = beforeUserSignedIn((event) => {
   return { customClaims: { admin: true } };
 });
 
-export { onScanRequested, scanEvents } from "./scan";
+/**
+ * The event scan declares the OPENAI_API_KEY and TAVILY_API_KEY secrets, and Firebase refuses
+ * to deploy anything while a declared secret does not exist. So the scan module is only loaded
+ * when SCAN_ENABLED is not "false" (set it to false in functions/.env.<project> until the keys
+ * are in Secret Manager; see docs/scan-setup.md). The emulator always loads it.
+ */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const scan: typeof import("./scan") | null = process.env.SCAN_ENABLED === "false" ? null : require("./scan");
+export const scanEvents = scan?.scanEvents;
+export const onScanRequested = scan?.onScanRequested;
