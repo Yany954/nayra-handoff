@@ -40,3 +40,8 @@ export const onlyAdminsCanSignIn = beforeUserSignedIn((event) => {
 const scan: typeof import("./scan") | null = process.env.SCAN_ENABLED === "false" ? null : require("./scan");
 export const scanEvents = scan?.scanEvents;
 export const onScanRequested = scan?.onScanRequested;
+
+/** Same pattern for the booking email: MAIL_ENABLED=false until GMAIL_APP_PASSWORD exists. */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const mail: typeof import("./mail") | null = process.env.MAIL_ENABLED === "false" ? null : require("./mail");
+export const onBookingRequest = mail?.onBookingRequest;
