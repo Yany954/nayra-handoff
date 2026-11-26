@@ -17,8 +17,9 @@ async function main() {
   console.log(`${photos.size} photos in ${process.env.GCLOUD_PROJECT} · bucket ${storageBucketName()}`);
   let done = 0;
   for (const doc of photos.docs) {
-    const widths = doc.get("widths") as number[] | undefined;
-    if (widths && widths.length > 0) continue;
+    const widths = (doc.get("widths") as number[] | undefined) ?? [];
+    // Every width the loader may ask for must exist (480 / 960 / 1600).
+    if ([480, 960, 1600].every((w) => widths.includes(w))) continue;
     const storagePath = doc.get("storagePath") as string;
     const [original] = await storage.file(storagePath).download();
     const variants = await makeVariants(original);
