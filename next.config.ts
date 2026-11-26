@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   images: {
+    // App Hosting serves images as-is; the loader picks pre-generated WebP copies instead.
+    loader: "custom",
+    loaderFile: "./src/presentation/ui/image-loader.ts",
     // 90 is reserved for photos of Nayra; 75 stays the default elsewhere.
     qualities: [75, 90],
     // Gallery photos are served from Cloud Storage (or its emulator in development).

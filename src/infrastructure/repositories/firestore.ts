@@ -7,6 +7,7 @@ import {
   epkSchema,
   formatSchema,
   galleryDocSchema,
+  variantFolder,
   profileSchema,
   publicSongSchema,
   showSchema,
@@ -45,9 +46,10 @@ export function createFirestoreRepositories(db: Firestore): ContentRepositories 
     listFormats: async () => parseCollection(formatSchema, await ordered("formats")),
     listVideos: async () => parseCollection(videoSchema, await ordered("videos")),
     listGallery: async () =>
-      parseCollection(galleryDocSchema, await ordered("gallery")).map(({ storagePath, ...photo }) => ({
+      parseCollection(galleryDocSchema, await ordered("gallery")).map(({ storagePath, widths, ...photo }) => ({
         ...photo,
-        src: publicStorageUrl(storagePath),
+        // "__W__" is replaced by the image loader with the best width for each screen.
+        src: widths.length > 0 ? publicStorageUrl(`${variantFolder(storagePath)}/__W__.webp`) : publicStorageUrl(storagePath),
       })),
   };
 }

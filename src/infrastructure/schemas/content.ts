@@ -53,7 +53,14 @@ export const galleryPhotoSchema = z.object({
 /** How a gallery photo is stored: the file lives in Storage under `public/gallery/`. */
 export const galleryDocSchema = galleryPhotoSchema.omit({ src: true }).extend({
   storagePath: z.string().regex(/^public\/gallery\/[\w.-]+$/),
+  /** Widths of the WebP copies in public/gallery/<id>/<width>.webp (empty: only the original). */
+  widths: z.array(z.number().int().positive()).default([]),
 });
+
+/** Folder of a photo's WebP copies: the original path without its extension. */
+export function variantFolder(storagePath: string): string {
+  return storagePath.replace(/\.[a-z]+$/i, "");
+}
 
 export const achievementSchema = z.object({
   id: text,

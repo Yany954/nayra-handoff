@@ -5,7 +5,9 @@
  * Each collection is replaced, so running it twice gives the same result.
  * It refuses to run without the emulator variables, so it can never wipe production.
  */
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { makeVariants } from "@/infrastructure/images/variants";
 import { z } from "zod";
 import { bucket, db } from "@/infrastructure/firebase/admin";
 import { addDays } from "@/domain/rules/promoters";
@@ -20,6 +22,7 @@ import {
   epkSchema,
   formatSchema,
   galleryDocSchema,
+  variantFolder,
   profileSchema,
   publicSongSchema,
   showSchema,
@@ -53,18 +56,19 @@ async function replaceCollection<T extends { id: string }>(name: string, schema:
 }
 
 async function seedGallery() {
-  const docs = gallerySeed.map(({ id, alt, order }) =>
-    galleryDocSchema.parse({ id, alt, order, storagePath: `public/gallery/${id}.jpg` }),
-  );
   const storage = bucket();
   await storage.deleteFiles({ prefix: "public/gallery/" });
-  await Promise.all(
-    docs.map(({ id, storagePath }) =>
-      storage.upload(join(process.cwd(), "public/images/gallery", `${id}.jpg`), {
-        destination: storagePath,
-        contentType: "image/jpeg",
-      }),
-    ),
+  const docs = await Promise.all(
+    gallerySeed.map(async ({ id, alt, order }) => {
+      const storagePath = `public/gallery/${id}.jpg`;
+      const original = await readFile(join(process.cwd(), "public/images/gallery", `${id}.jpg`));
+      await storage.file(storagePath).save(original, { contentType: "image/jpeg", resumable: false });
+      const variants = await makeVariants(original);
+      await Promise.all(
+        variants.map((v) => storage.file(`${variantFolder(storagePath)}/${v.width}.webp`).save(v.data, { contentType: "image/webp", resumable: false })),
+      );
+      return galleryDocSchema.parse({ id, alt, order, storagePath, widths: variants.map((v) => v.width) });
+    }),
   );
   await replaceCollection("gallery", galleryDocSchema, docs);
 }

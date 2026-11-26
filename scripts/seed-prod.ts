@@ -9,6 +9,7 @@
  * emulators, asks you to type the project id, and never loads the dev-only [ejemplo] data.
  */
 import { createInterface } from "node:readline/promises";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { z } from "zod";
 
@@ -73,15 +74,21 @@ async function main() {
     console.log("gallery: has data, skipped");
   } else {
     const storage = bucket();
+    const { makeVariants } = await import("@/infrastructure/images/variants");
     const batch = firestore.batch();
+    const cache = { cacheControl: "public, max-age=31536000, immutable" };
     for (const { id, alt, order } of seed.gallerySeed) {
       const storagePath = `public/gallery/${id}.jpg`;
-      await storage.upload(join(process.cwd(), "public/images/gallery", `${id}.jpg`), {
-        destination: storagePath,
-        contentType: "image/jpeg",
-        metadata: { cacheControl: "public, max-age=31536000, immutable" },
-      });
-      batch.set(firestore.collection("gallery").doc(id), schemas.galleryDocSchema.omit({ id: true }).parse({ alt, order, storagePath }));
+      const original = await readFile(join(process.cwd(), "public/images/gallery", `${id}.jpg`));
+      await storage.file(storagePath).save(original, { contentType: "image/jpeg", resumable: false, metadata: cache });
+      const variants = await makeVariants(original);
+      for (const v of variants) {
+        await storage.file(`${schemas.variantFolder(storagePath)}/${v.width}.webp`).save(v.data, { contentType: "image/webp", resumable: false, metadata: cache });
+      }
+      batch.set(
+        firestore.collection("gallery").doc(id),
+        schemas.galleryDocSchema.omit({ id: true }).parse({ alt, order, storagePath, widths: variants.map((v) => v.width) }),
+      );
     }
     await batch.commit();
     console.log(`gallery: ${seed.gallerySeed.length} photos uploaded`);

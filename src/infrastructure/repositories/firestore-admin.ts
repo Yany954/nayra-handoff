@@ -5,11 +5,13 @@ import { z } from "zod";
 import type { AdminRepositories, AdminSong, BookingRepositories, NewGalleryPhoto, ShowInput } from "@/domain/repositories";
 import type { bucket as storageBucket } from "@/infrastructure/firebase/admin";
 import { createFirestoreRepositories } from "@/infrastructure/repositories/firestore";
+import { makeVariants } from "@/infrastructure/images/variants";
 import {
   achievementSchema,
   epkSchema,
   galleryDocSchema,
   publicSongSchema,
+  variantFolder,
   videoSchema,
 } from "@/infrastructure/schemas/content";
 import {
@@ -111,10 +113,21 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
         resumable: false,
         metadata: { cacheControl: "public, max-age=31536000, immutable" },
       });
+      // Light copies for phones: App Hosting serves images as they are, without resizing.
+      const variants = await makeVariants(bytes);
+      await Promise.all(
+        variants.map((v) =>
+          bucket.file(`${variantFolder(storagePath)}/${v.width}.webp`).save(v.data, {
+            contentType: "image/webp",
+            resumable: false,
+            metadata: { cacheControl: "public, max-age=31536000, immutable" },
+          }),
+        ),
+      );
       // Newest first: a fresh photo shows up in the home preview right away.
       const docs = await galleryDocs();
       const order = (docs[0]?.order ?? 1) - 1;
-      await gallery.doc(id).set(galleryDocSchema.omit({ id: true }).parse({ alt, order, storagePath }));
+      await gallery.doc(id).set(galleryDocSchema.omit({ id: true }).parse({ alt, order, storagePath, widths: variants.map((v) => v.width) }));
       return id;
     },
     updateGalleryAlt: async (id, alt) => {
@@ -126,6 +139,7 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
       const { storagePath } = galleryDocSchema.parse({ ...snapshot.data(), id });
       await gallery.doc(id).delete();
       await bucket.file(storagePath).delete({ ignoreNotFound: true });
+      await bucket.deleteFiles({ prefix: `${variantFolder(storagePath)}/` });
     },
     reorderGallery: async (ids) => {
       const current = (await galleryDocs()).map((d) => d.id);
