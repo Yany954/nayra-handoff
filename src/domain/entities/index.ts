@@ -204,3 +204,15 @@ export type PitchTemplates = {
   signature: string;
   kinds: Record<RecipientKind, { subject: string; paragraph: string }>;
 };
+
+/** Last 7 days of site analytics for the panel home (GA4). */
+export type SiteStats = {
+  visitors: number;
+  visitorsBefore: number;
+  views: number;
+  viewsBefore: number;
+  topPages: { path: string; views: number }[];
+  whatsappClicks: number;
+  contactClicks: number;
+  leads: number;
+};

@@ -29,6 +29,12 @@ env:
     value: G-F0G61W0NNX
     availability: [BUILD, RUNTIME]
 
+  # GA4 property (numeric id) for the panel's visit summary. The App Hosting service account
+  # (firebase-app-hosting-compute@nayra-lancheros.iam.gserviceaccount.com) needs Viewer on it.
+  # - variable: GA_PROPERTY_ID
+  #   value: "000000000"
+  #   availability: [RUNTIME]
+
   # Google accounts allowed into /panel. Secret so the emails never land in the public repo:
   #   firebase apphosting:secrets:set ADMIN_EMAILS
   - variable: ADMIN_EMAILS
