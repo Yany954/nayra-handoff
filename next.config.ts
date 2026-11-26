@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Version skew protection: a browser still on an older deployment gets a full reload instead
+  // of "Failed to find Server Action" when it saves something after a new release.
+  deploymentId: process.env.NODE_ENV === "production" ? process.env.NEXT_DEPLOYMENT_ID || `b${Date.now().toString(36)}` : undefined,
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,

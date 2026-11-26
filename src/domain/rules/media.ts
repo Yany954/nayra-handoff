@@ -29,3 +29,20 @@ export function parseYouTubeId(url: string): string | null {
 export function toWhatsAppNumber(phone: string): string {
   return phone.replace(/\D/g, "");
 }
+
+export type VideoPlatform = "YouTube" | "Instagram" | "TikTok" | "Facebook";
+
+/** Where a video lives, from its URL; null for anything else. */
+export function videoPlatform(url: string): VideoPlatform | null {
+  let host: string;
+  try {
+    host = new URL(url).hostname.replace(/^www\.|^m\./, "");
+  } catch {
+    return null;
+  }
+  if (host === "youtu.be" || host.endsWith("youtube.com")) return "YouTube";
+  if (host.endsWith("instagram.com")) return "Instagram";
+  if (host.endsWith("tiktok.com")) return "TikTok";
+  if (host.endsWith("facebook.com") || host === "fb.watch") return "Facebook";
+  return null;
+}

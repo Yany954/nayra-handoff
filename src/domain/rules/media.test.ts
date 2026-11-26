@@ -27,3 +27,17 @@ describe("toWhatsAppNumber", () => {
     expect(toWhatsAppNumber("+57 317 470 3402")).toBe("573174703402");
   });
 });
+
+import { videoPlatform } from "@/domain/rules/media";
+
+describe("videoPlatform", () => {
+  it("recognizes where a video lives", () => {
+    expect(videoPlatform("https://www.youtube.com/watch?v=B1muLVwUFz8")).toBe("YouTube");
+    expect(videoPlatform("https://youtu.be/A9vZxH2VM-g")).toBe("YouTube");
+    expect(videoPlatform("https://www.instagram.com/reel/abc/")).toBe("Instagram");
+    expect(videoPlatform("https://www.tiktok.com/@nayra..lan/video/1")).toBe("TikTok");
+    expect(videoPlatform("https://fb.watch/xyz")).toBe("Facebook");
+    expect(videoPlatform("https://example.com/v")).toBeNull();
+    expect(videoPlatform("no es url")).toBeNull();
+  });
+});

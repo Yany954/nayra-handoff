@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { nextOrder } from "@/application/panel";
 import { HOME_SECONDARY_VIDEOS } from "@/application/public-site";
+import { videoPlatform } from "@/domain/rules/media";
 import { requireAdmin } from "@/infrastructure/auth/session";
 import { adminRepositories } from "@/infrastructure/container";
 import { PanelHeading } from "@/presentation/components/panel/PanelShell";
@@ -14,7 +15,12 @@ const FIELDS: FieldDef[] = [
   { name: "url", label: "Enlace", kind: "url", wide: true, placeholder: "https://youtu.be/… o https://www.instagram.com/reel/…", hint: "YouTube, Instagram, TikTok o Facebook." },
   { name: "context", label: "Dónde está", kind: "text", placeholder: "Ej. YouTube · @NAYRA-Lan…" },
   { name: "order", label: "Posición", kind: "number" },
-  { name: "featured", label: "Video principal del sitio", kind: "checkbox", hint: "Si es de YouTube, se reproduce en el inicio. Marca solo uno." },
+  {
+    name: "featured",
+    label: "Video principal del sitio",
+    kind: "checkbox",
+    hint: "Solo YouTube: se reproduce dentro del inicio. Al marcar este, el anterior deja de ser principal. Los de Instagram o TikTok se abren en su app.",
+  },
 ];
 
 export default async function VideosPage() {
@@ -35,7 +41,7 @@ export default async function VideosPage() {
           id: v.id,
           title: v.title,
           subtitle: `${v.context} · ${v.url}`,
-          badges: v.featured ? ["Principal"] : [],
+          badges: [videoPlatform(v.url) ?? "Otro", ...(v.featured ? ["Principal"] : [])],
           values: v,
         }))}
       />

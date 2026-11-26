@@ -117,13 +117,28 @@ export function RecordForm({
       {id && <input type="hidden" name="id" value={id} />}
       {fields.map((field) =>
         field.kind === "checkbox" ? (
-          <label key={field.name} className="flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium text-text-body sm:col-span-2">
-            <input type="checkbox" name={field.name} defaultChecked={values[field.name] === true} className="size-5 accent-text-dark" />
-            <span>
-              {field.label}
-              {field.hint && <span className="block text-[13px] font-normal text-muted-on-light">{field.hint}</span>}
-            </span>
-          </label>
+          <div key={field.name} className="flex flex-col gap-1 sm:col-span-2">
+            <label className="flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium text-text-body">
+              <input
+                type="checkbox"
+                id={field.name}
+                name={field.name}
+                defaultChecked={values[field.name] === true}
+                aria-invalid={errors[field.name] ? true : undefined}
+                aria-describedby={errors[field.name] ? `${field.name}-error` : undefined}
+                className="size-5 accent-text-dark"
+              />
+              <span>
+                {field.label}
+                {field.hint && <span className="block text-[13px] font-normal text-muted-on-light">{field.hint}</span>}
+              </span>
+            </label>
+            {errors[field.name] && (
+              <span id={`${field.name}-error`} className="text-[13px] font-medium text-[#8F2D1F]">
+                {errors[field.name]}
+              </span>
+            )}
+          </div>
         ) : (
           <div key={field.name} className={field.wide || field.kind === "textarea" || field.kind === "lines" ? "sm:col-span-2" : ""}>
             <Field label={field.label} name={field.name} hint={field.hint} error={errors[field.name]}>

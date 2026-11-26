@@ -169,7 +169,18 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
     },
 
     listVideos: () => content.listVideos(),
-    saveVideo: (id, input) => saveDoc("videos", id, videoSchema.omit({ id: true }).parse(input)),
+    // Only one principal video: marking one unmarks the rest in the same batch.
+    saveVideo: async (id, input) => {
+      const data = videoSchema.omit({ id: true }).parse(input);
+      const batch = db.batch();
+      const ref = id ? db.collection("videos").doc(id) : db.collection("videos").doc();
+      batch.set(ref, data);
+      if (data.featured) {
+        const others = await db.collection("videos").where("featured", "==", true).get();
+        for (const doc of others.docs) if (doc.id !== ref.id) batch.update(doc.ref, { featured: false });
+      }
+      await batch.commit();
+    },
     deleteVideo: async (id) => {
       await db.collection("videos").doc(id).delete();
     },

@@ -56,3 +56,17 @@ describe("pitch templates", () => {
     expect(pitchFromForm({ ...flat, hotel_subject: "" }).success).toBe(false);
   });
 });
+
+import { videoFormSchema } from "@/infrastructure/schemas/panel";
+
+describe("video form", () => {
+  const base = { title: "Caray / Así fue", context: "YouTube", order: "1" };
+  it("only accepts a YouTube link as the principal video", () => {
+    expect(videoFormSchema.safeParse({ ...base, url: "https://www.youtube.com/watch?v=B1muLVwUFz8", featured: "on" }).success).toBe(true);
+    const insta = videoFormSchema.safeParse({ ...base, url: "https://www.instagram.com/reel/abc/", featured: "on" });
+    expect(insta.success).toBe(false);
+    if (!insta.success) expect(fieldErrorsOf(insta.error).featured).toContain("YouTube");
+    expect(videoFormSchema.safeParse({ ...base, url: "https://www.instagram.com/reel/abc/" }).success).toBe(true);
+    expect(videoFormSchema.safeParse({ ...base, url: "https://example.com/video" }).success).toBe(false);
+  });
+});

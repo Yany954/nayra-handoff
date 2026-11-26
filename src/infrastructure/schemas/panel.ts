@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseYouTubeId, videoPlatform } from "@/domain/rules/media";
 import {
   ACHIEVEMENT_KINDS,
   PROMOTER_SOURCES,
@@ -162,16 +163,23 @@ export const formatFormSchema = z
     path: ["durationMax"],
   }) satisfies z.ZodType<FormatInput, unknown>;
 
-export const videoFormSchema = z.object({
-  title: required("el título", 120),
-  context: required("dónde está", 80),
-  url: z
-    .string()
-    .trim()
-    .refine((v) => z.url({ protocol: /^https$/ }).safeParse(v).success, "Pega el enlace completo, empieza por https://"),
-  featured: checkbox,
-  order: position,
-}) satisfies z.ZodType<VideoInput, unknown>;
+export const videoFormSchema = z
+  .object({
+    title: required("el título", 120),
+    context: required("dónde está", 80),
+    url: z
+      .string()
+      .trim()
+      .refine((v) => z.url({ protocol: /^https$/ }).safeParse(v).success, "Pega el enlace completo, empieza por https://")
+      .refine((v) => videoPlatform(v) !== null, "Usa un enlace de YouTube, Instagram, TikTok o Facebook."),
+    featured: checkbox,
+    order: position,
+  })
+  // Only YouTube can play inside the site; Instagram/TikTok/Facebook open in their own app or tab.
+  .refine((v) => !v.featured || parseYouTubeId(v.url) !== null, {
+    message: "El video principal tiene que ser de YouTube: es el único que se reproduce dentro del sitio.",
+    path: ["featured"],
+  }) satisfies z.ZodType<VideoInput, unknown>;
 
 export const songFormSchema = z.object({
   title: required("el título", 120),

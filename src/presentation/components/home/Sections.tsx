@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { HomePageData } from "@/application/public-site";
 import { formatDuration } from "@/domain/rules/formats";
-import { parseYouTubeId } from "@/domain/rules/media";
+import { parseYouTubeId, videoPlatform } from "@/domain/rules/media";
 import { GalleryGrid } from "@/presentation/components/gallery/GalleryGrid";
 import { YouTubeFacade } from "@/presentation/components/home/YouTubeFacade";
 import { MusicIcon, PlayIcon } from "@/presentation/ui/icons";
@@ -119,15 +119,24 @@ export function LiveVideos({ data }: { data: HomePageData }) {
           </div>
         )}
         <div className="flex flex-[1_1_300px] flex-col gap-4">
-          {secondaryVideos.map((video) => (
-            <div key={video.id} className={`flex min-h-[212px] flex-1 flex-col justify-between rounded-card p-[22px] ${cardDark}`}>
-              <span className="text-xs uppercase tracking-[0.08em] text-muted-on-dark">{video.context}</span>
-              <span className="font-display text-[22px] font-bold">{video.title}</span>
-              <a href={video.url} target="_blank" rel="noopener noreferrer" className="hit-44 self-start text-sm text-text-light underline">
-                Ver clip →
-              </a>
-            </div>
-          ))}
+          {secondaryVideos.map((video) => {
+            const platform = videoPlatform(video.url);
+            return (
+              // The whole card is the link's hit area (the ::after stretch); the link text says where it goes.
+              <div key={video.id} className={`relative flex min-h-[212px] flex-1 flex-col justify-between rounded-card p-[22px] hover:bg-white/[0.08] ${cardDark}`}>
+                <span className="text-xs uppercase tracking-[0.08em] text-muted-on-dark">{video.context}</span>
+                <span className="font-display text-[22px] font-bold">{video.title}</span>
+                <a
+                  href={video.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="self-start text-sm text-text-light underline after:absolute after:inset-0 after:rounded-card after:content-['']"
+                >
+                  Ver en {platform ?? "su sitio"} ↗<span className="sr-only">: {video.title} (se abre en otra pestaña)</span>
+                </a>
+              </div>
+            );
+          })}
         </div>
       </div>
     </Section>
