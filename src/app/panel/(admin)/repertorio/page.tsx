@@ -38,7 +38,7 @@ export default async function RepertoirePage() {
         save={saveSongAction}
         remove={deleteSongAction}
         empty="Todavía no hay canciones."
-        intro={`${songs.length} canciones. Se muestran en /repertorio sin tonalidad.`}
+        intro={`${songs.length} canciones. Solo se ven aquí en el panel (el sitio público no muestra el repertorio).`}
         items={songs.map((song) => ({
           id: song.id,
           title: song.title,

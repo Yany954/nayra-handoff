@@ -3,8 +3,8 @@ import firebase from "firebase/compat/app";
 import { afterAll, beforeAll, beforeEach, describe, it } from "vitest";
 import { createEnv } from "./setup";
 
-const PUBLIC = ["profile", "achievements", "shows", "formats", "videos", "gallery", "songs"];
-const PRIVATE = ["epk", "pitch", "promoters", "discoveredEvents"];
+const PUBLIC = ["profile", "achievements", "shows", "formats", "videos", "gallery"];
+const PRIVATE = ["epk", "pitch", "promoters", "discoveredEvents", "songs"];
 
 let env: RulesTestEnvironment;
 const anon = () => env.unauthenticatedContext().firestore();

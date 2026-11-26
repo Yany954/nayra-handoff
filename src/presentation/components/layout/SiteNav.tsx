@@ -7,7 +7,6 @@ import { CloseIcon, MenuIcon } from "@/presentation/ui/icons";
 
 const LINKS = [
   { href: "/", label: "Inicio", route: "/" },
-  { href: "/repertorio", label: "Repertorio", route: "/repertorio" },
   { href: "/#shows", label: "Shows" },
   { href: "/galeria", label: "Galería", route: "/galeria" },
   { href: "/#contacto", label: "Contacto" },

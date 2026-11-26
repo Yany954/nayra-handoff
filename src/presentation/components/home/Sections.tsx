@@ -87,14 +87,14 @@ export function LiveVideos({ data }: { data: HomePageData }) {
                 videoId={featuredYouTubeId}
                 title={featuredVideo.title}
                 context={featuredVideo.context}
-                posterSrc="/images/nayra-singing.jpg"
+                posterSrc="/images/nayra-stage.jpg"
                 posterAlt="Nayra cantando bajo luces de tarima"
               />
             ) : (
               <>
                 <Image
                   quality={90}
-                  src="/images/nayra-singing.jpg"
+                  src="/images/nayra-stage.jpg"
                   alt="Nayra cantando bajo luces de tarima"
                   fill
                   sizes="(min-width: 1024px) 66vw, 100vw"
@@ -176,11 +176,11 @@ export function History({ data }: { data: HomePageData }) {
         <div className="relative h-[440px] min-w-0 flex-[1_1_100%] overflow-hidden rounded-image lg:h-[640px] lg:flex-[1_1_420px]">
           <Image
             quality={90}
-            src="/images/nayra-singing.jpg"
-            alt="Nayra Lancheros cantando con los ojos cerrados"
+            src="/images/nayra-history.jpg"
+            alt="Nayra canta junto a la banda bajo luz cálida"
             fill
             sizes="(min-width: 1024px) 45vw, 100vw"
-            className="object-cover object-[center_25%]"
+            className="object-cover object-[52%_30%]"
           />
         </div>
         <div className="flex min-w-0 flex-[1_1_100%] flex-col gap-7 lg:flex-[1_1_520px]">

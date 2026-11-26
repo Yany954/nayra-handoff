@@ -20,7 +20,7 @@ test("reduced motion turns off smooth scrolling (2.3.3)", async ({ page }) => {
 
 test("text spacing overrides do not break the layout (1.4.12)", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ["/", "/repertorio", "/panel/login"]) {
+  for (const path of ["/", "/galeria", "/panel/login"]) {
     await page.goto(path);
     await page.addStyleTag({
       content: "* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }",

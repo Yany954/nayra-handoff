@@ -13,7 +13,7 @@ function LatestShowCard({ show }: { show: NonNullable<HomePageData["latestShow"]
       <div className="flex items-center gap-3">
         <Image
           quality={90}
-          src="/images/nayra-singing.jpg"
+          src="/images/nayra-stage.jpg"
           alt=""
           width={56}
           height={56}
@@ -127,10 +127,10 @@ export function Hero({ data }: { data: HomePageData }) {
               </span>
             </Link>
             <Link
-              href="/repertorio"
+              href="/galeria"
               className="flex min-h-[52px] items-center justify-center rounded-full border border-white/22 px-[22px] font-medium text-text-light no-underline lg:min-h-14 lg:border-white/20"
             >
-              Ver repertorio
+              Ver galería
             </Link>
           </div>
           <div className="hidden flex-wrap gap-2 lg:flex">
@@ -144,8 +144,8 @@ export function Hero({ data }: { data: HomePageData }) {
           <div className="absolute inset-x-0 top-0 h-[var(--hero-h)] overflow-hidden lg:inset-0 lg:h-auto">
             <Image
               quality={90}
-              src="/images/nayra-stage.jpg"
-              alt="Nayra Lancheros en tarima con micrófono, sonriendo"
+              src="/images/nayra-singing.jpg"
+              alt="Nayra Lancheros canta con intensidad bajo una luz blanca"
               fill
               preload
               sizes="(min-width: 1024px) 50vw, 100vw"

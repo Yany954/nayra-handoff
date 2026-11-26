@@ -58,8 +58,9 @@ service cloud.firestore {
     match /epk/{docId} {
       allow read, write: if isAdmin();
     }
+    // Repertoire is manager-only (decided 2026-11-25): the public site no longer lists songs.
     match /songs/{songId} {
-      allow read: if true;
+      allow read: if isAdmin();
       allow write: if isAdmin();
 
       // Musical keys live here because rules cannot hide individual fields.

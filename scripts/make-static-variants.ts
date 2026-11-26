@@ -2,7 +2,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import sharp from "sharp";
 
-const NAMES = ["nayra-stage", "nayra-singing"];
+const NAMES = ["nayra-stage", "nayra-singing", "nayra-history"];
 const WIDTHS = [480, 960, 1600];
 
 async function main() {

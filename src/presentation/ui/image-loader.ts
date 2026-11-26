@@ -6,7 +6,7 @@
  */
 const WIDTHS = [480, 960, 1600];
 /** Fixed photos that have WebP siblings in public/images. */
-const STATIC_WITH_VARIANTS = new Set(["nayra-stage", "nayra-singing"]);
+const STATIC_WITH_VARIANTS = new Set(["nayra-stage", "nayra-singing", "nayra-history"]);
 
 function pick(width: number): number {
   return WIDTHS.find((w) => w >= width) ?? WIDTHS[WIDTHS.length - 1];
