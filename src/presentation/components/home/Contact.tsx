@@ -7,6 +7,8 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/presentation/ui/icons";
+import Link from "next/link";
+import { CookiePreferencesButton } from "@/presentation/components/analytics/Analytics";
 import { ContactForm } from "@/presentation/components/home/ContactForm";
 import type { FormState } from "@/presentation/components/panel/form";
 import { SectionHeading } from "@/presentation/ui/primitives";
@@ -92,7 +94,13 @@ export function Footer({ data, year }: { data: HomePageData; year: string }) {
   return (
     <footer className="border-t border-white/10">
       <div className="mx-auto box-border flex max-w-[1360px] flex-wrap justify-between gap-4 px-5 py-8 text-sm text-muted-on-dark lg:px-12">
-        <span>© {year} {profile.name} · {profile.base}</span>
+        <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span>© {year} {profile.name} · {profile.base}</span>
+          <Link href="/privacidad" className="hit-44 no-underline hover:text-text-light">
+            Privacidad
+          </Link>
+          <CookiePreferencesButton />
+        </span>
         <span className="flex flex-wrap gap-1.5">
           {profile.socials.map((link, index) => (
             <span key={link.network} className="flex gap-1.5">

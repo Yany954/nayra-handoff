@@ -24,6 +24,11 @@ env:
     value: https://nayra-web--nayra-lancheros.us-east4.hosted.app
     availability: [BUILD, RUNTIME]
 
+  # Google Analytics 4 (loads only after the visitor accepts cookies).
+  - variable: NEXT_PUBLIC_GA_ID
+    value: G-F0G61W0NNX
+    availability: [BUILD, RUNTIME]
+
   # Google accounts allowed into /panel. Secret so the emails never land in the public repo:
   #   firebase apphosting:secrets:set ADMIN_EMAILS
   - variable: ADMIN_EMAILS

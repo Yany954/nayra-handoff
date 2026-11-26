@@ -1,5 +1,7 @@
 "use client";
 
+import { track } from "@/presentation/components/analytics/track";
+
 import Image from "next/image";
 import { useLayoutEffect, useState } from "react";
 import { PlayIcon } from "@/presentation/ui/icons";
@@ -49,7 +51,10 @@ export function YouTubeFacade({ videoId, title, context, posterSrc, posterAlt }:
       <div className="absolute inset-0 bg-[rgba(15,12,14,0.35)]" />
       <button
         type="button"
-        onClick={() => setPlaying(true)}
+        onClick={() => {
+          setPlaying(true);
+          track("video_play", { video_id: videoId });
+        }}
         aria-label={`Reproducir video: ${title}`}
         className="absolute left-1/2 top-1/2 flex size-[84px] -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-0 bg-text-light text-ink"
       >

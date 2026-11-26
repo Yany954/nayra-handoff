@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { startTransition, useActionState, useEffect, useRef, type FormEvent } from "react";
 import { BOOKING_EVENT_TYPES } from "@/domain/rules/booking";
+import { track } from "@/presentation/components/analytics/track";
 import { EventDateInput } from "@/presentation/components/home/EventDateInput";
 import { cardDark } from "@/presentation/ui/primitives";
 import type { FormState } from "@/presentation/components/panel/form";
@@ -45,7 +46,10 @@ export function ContactForm({ submit, whatsappHref }: { submit: SubmitAction; wh
   }, []);
 
   useEffect(() => {
-    if (state.status === "ok") doneRef.current?.focus();
+    if (state.status === "ok") {
+      doneRef.current?.focus();
+      track("generate_lead");
+    }
     if (state.status === "error") formRef.current?.querySelector<HTMLElement>("[aria-invalid=true]")?.focus();
   }, [state]);
 
