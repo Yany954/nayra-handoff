@@ -120,8 +120,8 @@ export function PanelHome({ summary, adminName, today }: { summary: PanelSummary
       <section aria-label="Visitas del sitio" className="flex flex-col gap-2 rounded-[20px] bg-text-dark p-5 text-text-light sm:p-6">
         <h2 className="m-0 font-display text-[22px] font-bold tracking-[-0.02em]">Visitas del sitio</h2>
         <p className="m-0 max-w-[640px] text-sm leading-normal text-muted-on-dark">
-          Cuando el sitio esté publicado, aquí verás las visitas de la semana, las páginas más vistas y cuántas personas tocaron
-          WhatsApp o «Contrátala».
+          El sitio ya está publicado. Las estadísticas se están conectando: pronto verás aquí las visitas de la semana, las
+          páginas más vistas y cuántas personas tocaron WhatsApp o «Contrátala».
         </p>
       </section>
     </>

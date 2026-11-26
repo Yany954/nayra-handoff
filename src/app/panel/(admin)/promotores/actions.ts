@@ -59,6 +59,10 @@ export async function discardFoundAction(id: string): Promise<FormState> {
 
 export async function requestScanAction(): Promise<FormState> {
   const admin = await requireAdmin();
+  // Production turns this on once the OpenAI and Tavily keys exist (docs/scan-setup.md).
+  if (process.env.SCAN_ENABLED === "false") {
+    return { status: "error", message: "La búsqueda automática todavía no está activada: faltan las llaves de OpenAI y Tavily." };
+  }
   const check = await requestManualScan(adminRepositories(), admin.email, new Date());
   if (!check.ok) return { status: "error", message: check.reason };
   return { status: "ok", message: "Buscando… Los resultados aparecen aquí en uno o dos minutos." };
