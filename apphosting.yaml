@@ -10,7 +10,7 @@ runConfig:
 env:
   # Browser Firebase config: public by design (it identifies the project, it grants nothing).
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
-    value: REPLACE_WITH_WEB_API_KEY
+    value: AIzaSyC7WqgFKWPGfU0Vc6lOJFw0-ls114-WzAs
     availability: [BUILD, RUNTIME]
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
     value: nayra-lancheros.firebaseapp.com
