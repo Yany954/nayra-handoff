@@ -13,6 +13,8 @@ describe("scan rules", () => {
     const queries = allQueries(2027);
     expect(queries.length).toBeGreaterThan(100);
     expect(new Set(queries).size).toBe(queries.length);
+    expect(queries).toContain("festival Riohacha 2027");
+    expect(queries).toContain("fiestas patronales Maicao 2027");
     const first = rotateQueries(queries, 0, 15);
     expect(first.batch).toHaveLength(15);
     const last = rotateQueries(queries, queries.length - 5, 15);
@@ -33,6 +35,8 @@ describe("scan rules", () => {
   it("scores closer, on-genre festivals higher", () => {
     expect(proximity("Valledupar", "")).toBe(1);
     expect(proximity("El Banco", "Magdalena")).toBe(0.7);
+    expect(proximity("Riohacha", "")).toBe(0.7);
+    expect(proximity("Un pueblo nuevo", "La Guajira")).toBe(0.7);
     expect(proximity("Barranquilla", "Atlántico")).toBe(0.4);
     expect(proximity("Medellín", "Antioquia")).toBe(0.1);
     const near = relevance(base);

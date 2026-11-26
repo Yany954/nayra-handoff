@@ -35,7 +35,7 @@ describe("runScan", () => {
     const second = await runScan(deps, new Date("2026-11-28T15:00:00Z"), "schedule");
     expect(second.added).toBe(0);
     expect(store.events.size).toBe(4);
-    expect(second.nextQueryOffset).toBe(30); // rotation moves on: 15 queries per run
+    expect(second.nextQueryOffset).toBe(40); // rotation moves on: 20 queries per run
   });
 
   it("records provider errors without stopping the run", async () => {

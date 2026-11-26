@@ -1,16 +1,17 @@
 import { createHash } from "node:crypto";
-import { CARIBBEAN, CESAR, CESAR_MUNICIPALITIES, SECOND, normalize } from "./places";
+import { CARIBBEAN, CESAR, CESAR_MUNICIPALITIES, GUAJIRA_MUNICIPALITIES, SECOND, normalize } from "./places";
 import type { EventType, ExtractedEvent } from "./schema";
 
 // ---- Queries ----
 
 const TYPES = ["festival", "feria", "fiestas patronales", "concurso de voces", "convocatoria artistas"];
 const GENRES = ["vallenato", "tambora", "ranchera"];
-const REGIONS = ["sur de La Guajira", "El Banco Magdalena", "sur de Bolívar"];
+const REGIONS = ["La Guajira", "El Banco Magdalena", "sur de Bolívar"];
 
 /** Every query the scan can run, in a fixed order so rotation is deterministic. */
 export function allQueries(year: number): string[] {
-  const places = [...CESAR_MUNICIPALITIES, ...REGIONS];
+  // Cesar and La Guajira town by town; the rest of the second circle as regions.
+  const places = [...new Set([...CESAR_MUNICIPALITIES, ...GUAJIRA_MUNICIPALITIES, ...REGIONS])];
   const out: string[] = [];
   for (const place of places) {
     for (const type of TYPES) out.push(`${type} ${place} ${year}`);
@@ -51,7 +52,7 @@ export function proximity(municipality: string, department: string): number {
   const m = normalize(municipality);
   const d = normalize(department);
   if (CESAR.has(m) || d === "cesar") return 1;
-  if (SECOND.has(m)) return 0.7;
+  if (SECOND.has(m) || d === "la guajira") return 0.7;
   if (CARIBBEAN.has(d)) return 0.4;
   return 0.1;
 }

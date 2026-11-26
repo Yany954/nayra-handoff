@@ -4,7 +4,8 @@ import type { DiscoveredEventDoc, ExtractedEvent } from "./schema";
 
 /** Spend guards per run (SPEC §5), on top of the OpenAI account limit. */
 export const LIMITS = {
-  queries: 15,
+  // 211 queries (Cesar + all of La Guajira + regions) / 20 per run ≈ a full pass every ~month.
+  queries: 20,
   resultsPerQuery: 5,
   resultsPerExtraction: 10,
   maxInputTokens: 60_000,

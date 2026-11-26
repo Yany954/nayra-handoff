@@ -5,9 +5,15 @@ export const CESAR_MUNICIPALITIES = [
   "La Paz", "Astrea", "Pueblo Bello", "San Martín", "San Alberto", "La Gloria", "Río de Oro", "Manaure", "El Copey",
 ];
 
-/** Second circle: south of La Guajira, El Banco (Magdalena) and south of Bolívar. */
+/** All of La Guajira (the manager asked for it: close and with a strong vallenato scene). */
+export const GUAJIRA_MUNICIPALITIES = [
+  "Riohacha", "Maicao", "Uribia", "Manaure", "Dibulla", "Albania", "Hatonuevo", "Barrancas", "Distracción",
+  "Fonseca", "San Juan del Cesar", "El Molino", "Villanueva", "Urumita", "La Jagua del Pilar",
+];
+
+/** Second circle: La Guajira, El Banco (Magdalena) and south of Bolívar. */
 export const SECOND_CIRCLE = [
-  "San Juan del Cesar", "Fonseca", "Villanueva", "Urumita", "El Molino", "Barrancas", "Distracción", "La Jagua del Pilar",
+  ...GUAJIRA_MUNICIPALITIES,
   "El Banco", "Mompox", "Mompós", "Magangué", "Simití", "Morales", "Santa Rosa del Sur", "San Pablo",
 ];
 

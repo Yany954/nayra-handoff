@@ -27,10 +27,10 @@ env:
 
   # "false" until the scan functions are deployed with their keys (docs/scan-setup.md).
   - variable: SCAN_ENABLED
-    value: "false"
+    value: "true"
     availability: [RUNTIME]
 
-  # «Adaptar párrafo con IA». Uncomment after: firebase apphosting:secrets:set OPENAI_API_KEY
-  # - variable: OPENAI_API_KEY
-  #   secret: OPENAI_API_KEY
-  #   availability: [RUNTIME]
+  # «Adaptar párrafo con IA» (firebase apphosting:secrets:set OPENAI_API_KEY).
+  - variable: OPENAI_API_KEY
+    secret: OPENAI_API_KEY
+    availability: [RUNTIME]

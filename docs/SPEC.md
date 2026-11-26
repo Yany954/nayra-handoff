@@ -54,7 +54,7 @@ nombre artístico · bio corta (~50 palabras) · bio larga · fotos de prensa ·
 - Flujo `runScan`: 15 queries rotando (todas en ~2 semanas) → Tavily (5 resultados c/u, solo `https`) → dedupe por URL → OpenAI con Structured Outputs (JSON schema estricto) en grupos de 10 → Zod por evento (lo inválido se descarta) → solo URLs que estaban en los resultados → ventana de fechas → relevancia → `hash = sha256(normalize(nombre sin año ni edición) + año)` como id del doc → solo nuevos (`create`) → `scans/state`.
 - **Topes por ejecución:** 15 búsquedas, 60k tokens de entrada, 25 eventos nuevos. Más el tope de la cuenta de OpenAI.
 - **Seguridad:** los resultados web son texto no confiable; el modelo solo extrae datos y nada se aprueba solo (regla de `CLAUDE.md`).
-- **Relevancia (código, no IA):** `0,5·cercanía + 0,25·género + 0,25·tipo (+0,1 si hay convocatoria)`; cercanía Cesar 1 · segundo círculo 0,7 · resto del Caribe 0,4 · otro 0,1.
+- **Relevancia (código, no IA):** `0,5·cercanía + 0,25·género + 0,25·tipo (+0,1 si hay convocatoria)`; cercanía Cesar 1 · La Guajira (toda) y segundo círculo 0,7 · resto del Caribe 0,4 · otro 0,1.
 - `discoveredEvents/{hash}`: `name, municipality, department, startDate?, endDate?, dates, type, genres[], contact?, url, sourceName, openCall, deadline?, note, relevance, status, hash, foundAt` (+ `promoterId`, `reviewedAt` al revisar). `scans/state`: última ejecución (búsquedas, resultados, nuevos, descartados, tokens, errores).
 - **Filtros / queries**:
   - Geografía 1: municipios del Cesar (Curumaní, Chimichagua, Tamalameque, Pailitas, Pelaya, Chiriguaná, La Jagua de Ibirico, Agustín Codazzi, Valledupar, Aguachica, Gamarra, El Paso, Bosconia…). Geografía 2: sur de La Guajira, El Banco (Magdalena), sur de Bolívar.
