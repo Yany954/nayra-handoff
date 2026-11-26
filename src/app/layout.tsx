@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Inter } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "./site-url";
 
 const bricolage = Bricolage_Grotesque({
   variable: "--font-bricolage",
@@ -14,6 +15,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "./" },
+  openGraph: {
+    type: "website",
+    locale: "es_CO",
+    siteName: "Nayra Lancheros",
+    title: "Nayra Lancheros — cantante para tu evento",
+    description: "Vallenato, rancheras, baladas y tambora desde Curumaní, Cesar. Festivales, bodas, hoteles y eventos corporativos.",
+  },
+  twitter: { card: "summary_large_image" },
   title: {
     default: "Nayra Lancheros",
     template: "%s · Nayra Lancheros",

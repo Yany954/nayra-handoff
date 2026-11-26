@@ -4,6 +4,8 @@ import { toBogotaDateKey } from "@/domain/rules/shows";
 import { repositories } from "@/infrastructure/container";
 import { Contact, Footer } from "@/presentation/components/home/Contact";
 import { Hero } from "@/presentation/components/home/Hero";
+import { PersonJsonLd } from "@/presentation/components/home/JsonLd";
+import { SITE_URL } from "../site-url";
 import { submitBookingAction } from "./actions";
 import {
   Achievements,
@@ -26,6 +28,7 @@ export default async function HomePage() {
   return (
     <>
       <main id="contenido" tabIndex={-1} className="flex-1">
+        <PersonJsonLd profile={data.profile} siteUrl={SITE_URL} />
         <Hero data={data} />
         <Achievements data={data} />
         <Formats data={data} />
