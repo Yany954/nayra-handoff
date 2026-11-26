@@ -254,7 +254,7 @@ export function EpkDocument({ data, heroPhoto, photos }: { data: EpkDocumentData
 
 /** Renders the EPK to PDF bytes. Photos are fetched here so a slow image never breaks the layout. */
 export async function renderEpkPdf(data: EpkDocumentData): Promise<Buffer> {
-  const heroPhoto = readFileSync(join(process.cwd(), "public/images/nayra-singing.jpg"));
+  const heroPhoto = readFileSync(join(ASSETS, "images", "epk-cover.jpg"));
   const photos = (
     await Promise.all(
       data.photos.map(async (p) => {

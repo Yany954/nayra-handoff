@@ -15,9 +15,10 @@ const nextConfig: NextConfig = {
     // The Storage emulator runs on 127.0.0.1, which Next blocks by default. Never set in production.
     dangerouslyAllowLocalIP: Boolean(process.env.FIREBASE_STORAGE_EMULATOR_HOST),
   },
-  // The EPK PDF route reads fonts and the cover photo from disk at request time.
+  // The EPK PDF route reads fonts and its cover photo from disk at request time. They live in
+  // src/assets, never public/: tracing a public/ file makes App Hosting skip copying public/.
   outputFileTracingIncludes: {
-    "/panel/epk/pdf": ["./src/assets/fonts/**", "./public/images/nayra-singing.jpg"],
+    "/panel/epk/pdf": ["./src/assets/fonts/**", "./src/assets/images/**"],
   },
   experimental: {
     // Gallery uploads accept photos up to 10 MB (validated again in the Server Action);
