@@ -77,7 +77,10 @@ Reglas:
 - Usa solo información que aparezca en los resultados. No inventes fechas, contactos ni URLs; si no está, usa null.
 - "url" debe ser exactamente la URL del resultado donde aparece el evento.
 - Un evento por festival; si varios resultados hablan del mismo, combínalos.
-- Omite eventos ya pasados respecto a la fecha de hoy, eventos fuera de Colombia y lo que no sea un evento.`;
+- Omite eventos ya pasados respecto a la fecha de hoy y lo que no sea un evento.
+- SOLO eventos en la región Caribe de Colombia: Cesar, La Guajira, Magdalena, Bolívar, Atlántico, Sucre o Córdoba. Omite el resto del país.
+- Omite portales, buscadores o listados generales de convocatorias (p. ej. el sistema de convocatorias del Ministerio): solo un evento o convocatoria concreta con nombre propio.
+- Siempre llena "municipality" y "department" con el lugar real del evento; si no aparece, omite el evento.`;
 
 export class OpenAIExtractor implements EventExtractor {
   private readonly client: OpenAI;

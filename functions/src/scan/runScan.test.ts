@@ -38,6 +38,23 @@ describe("runScan", () => {
     expect(second.nextQueryOffset).toBe(40); // rotation moves on: 20 queries per run
   });
 
+  it("drops events outside the Caribbean region even if the model returns them", async () => {
+    const store = memoryStore();
+    const farAway: EventExtractor = {
+      extract: async (results) => ({
+        events: results.slice(0, 1).map((r) => ({
+          name: "Concurso de Canto Voces Nuevas", municipality: "Yumbo", department: "Valle del Cauca",
+          startDate: null, endDate: null, datesText: "", type: "concurso" as const, genres: [], contact: null,
+          url: r.url, sourceName: "IMCY", openCall: true, deadline: null, summary: "",
+        })),
+        dropped: 0, inputTokens: 0, outputTokens: 0,
+      }),
+    };
+    const state = await runScan({ search: new FixtureSearch(), extractor: farAway, store }, now, "manual");
+    expect(state.added).toBe(0);
+    expect(state.dropped).toBe(1);
+  });
+
   it("records provider errors without stopping the run", async () => {
     const store = memoryStore();
     const failing: SearchProvider = { search: async () => { throw new Error("429 Too Many Requests"); } };

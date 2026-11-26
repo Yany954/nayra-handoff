@@ -1,6 +1,9 @@
-import { allQueries, eventHash, inWindow, relevance, rotateQueries } from "./rules";
+import { allQueries, eventHash, inWindow, proximity, relevance, rotateQueries } from "./rules";
 import type { EventExtractor, SearchProvider, SearchResult } from "./providers";
 import type { DiscoveredEventDoc, ExtractedEvent } from "./schema";
+
+/** Below this, the event is outside the Caribbean region the manager works in (see proximity()). */
+export const MIN_PROXIMITY = 0.4;
 
 /** Spend guards per run (SPEC §5), on top of the OpenAI account limit. */
 export const LIMITS = {
@@ -91,6 +94,11 @@ export async function runScan(deps: ScanDeps, now: Date, trigger: ScanState["las
   const candidates = new Map<string, ExtractedEvent>();
   for (const event of extracted) {
     if (!inWindow(event, today)) continue;
+    // First real run (2026-11-25) returned Nariño, Yumbo and national portals: never keep those.
+    if (proximity(event.municipality, event.department) < MIN_PROXIMITY) {
+      dropped++;
+      continue;
+    }
     const hash = eventHash(event, fallbackYear);
     if (!candidates.has(hash)) candidates.set(hash, event);
   }
