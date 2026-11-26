@@ -34,7 +34,19 @@ function dueLabel(date: string, today: string) {
   return late === 1 ? "Venció ayer" : `Venció hace ${late} días`;
 }
 
-export function PanelHome({ summary, adminName, today }: { summary: PanelSummary; adminName: string; today: string }) {
+export function PanelHome({
+  summary,
+  adminName,
+  today,
+  markReviewed,
+  analytics,
+}: {
+  summary: PanelSummary;
+  adminName: string;
+  today: string;
+  markReviewed: (id: string) => Promise<void>;
+  analytics: ReactNode;
+}) {
   const firstName = adminName.split(" ")[0];
 
   return (
@@ -87,11 +99,21 @@ export function PanelHome({ summary, adminName, today }: { summary: PanelSummary
           ) : (
             <ul className="m-0 flex list-none flex-col p-0">
               {summary.newRequests.slice(0, 6).map((r) => (
-                <li key={r.id} className="flex flex-col gap-0.5 border-t border-[#EFE7DB] py-3 first:border-t-0 first:pt-0">
+                <li key={r.id} className="flex flex-col gap-1 border-t border-[#EFE7DB] py-3 first:border-t-0 first:pt-0">
                   <span className="font-semibold">{r.name}</span>
                   <span className="text-[13px] text-muted-on-light">
                     {r.eventType} · {r.municipality}
                     {r.eventDate && ` · ${shortDate(r.eventDate)}`}
+                  </span>
+                  <span className="flex flex-wrap gap-3 pt-1">
+                    <Link href="/panel/promotores?etapa=prospecto" className="hit-44 text-sm font-medium text-text-dark underline underline-offset-4">
+                      Ver como prospecto
+                    </Link>
+                    <form action={markReviewed.bind(null, r.id)}>
+                      <button type="submit" className="hit-44 cursor-pointer border-0 bg-transparent p-0 text-sm font-medium text-text-body underline underline-offset-4">
+                        Marcar revisada<span className="sr-only">: {r.name}</span>
+                      </button>
+                    </form>
                   </span>
                 </li>
               ))}
@@ -117,13 +139,7 @@ export function PanelHome({ summary, adminName, today }: { summary: PanelSummary
         </Card>
       </div>
 
-      <section aria-label="Visitas del sitio" className="flex flex-col gap-2 rounded-[20px] bg-text-dark p-5 text-text-light sm:p-6">
-        <h2 className="m-0 font-display text-[22px] font-bold tracking-[-0.02em]">Visitas del sitio</h2>
-        <p className="m-0 max-w-[640px] text-sm leading-normal text-muted-on-dark">
-          El sitio ya está publicado. Las estadísticas se están conectando: pronto verás aquí las visitas de la semana, las
-          páginas más vistas y cuántas personas tocaron WhatsApp o «Contrátala».
-        </p>
-      </section>
+      {analytics}
     </>
   );
 }

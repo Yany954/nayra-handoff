@@ -4,6 +4,7 @@ import { toBogotaDateKey } from "@/domain/rules/shows";
 import { repositories } from "@/infrastructure/container";
 import { Contact, Footer } from "@/presentation/components/home/Contact";
 import { Hero } from "@/presentation/components/home/Hero";
+import { submitBookingAction } from "./actions";
 import {
   Achievements,
   Formats,
@@ -31,7 +32,7 @@ export default async function HomePage() {
         <LiveVideos data={data} />
         <Gallery data={data} />
         <History data={data} />
-        <Contact data={data} />
+        <Contact data={data} submit={submitBookingAction} />
       </main>
       <Footer data={data} year={year} />
     </>

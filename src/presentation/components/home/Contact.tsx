@@ -7,13 +7,10 @@ import {
   TikTokIcon,
   YouTubeIcon,
 } from "@/presentation/ui/icons";
-import { EventDateInput } from "@/presentation/components/home/EventDateInput";
-import { SectionHeading, cardDark } from "@/presentation/ui/primitives";
+import { ContactForm } from "@/presentation/components/home/ContactForm";
+import type { FormState } from "@/presentation/components/panel/form";
+import { SectionHeading } from "@/presentation/ui/primitives";
 
-const labelClass = "flex flex-col gap-2 text-[13px] text-muted-on-dark";
-const fieldClass =
-  "rounded-xl border border-white/45 bg-field text-base text-text-light [color-scheme:dark] placeholder:text-muted-on-dark lg:text-[15px]";
-const inputClass = `${fieldClass} min-h-12 px-3.5`;
 
 export const SOCIAL_META: Record<SocialNetwork, { name: string; Icon: (props: { size?: number }) => React.JSX.Element }> = {
   instagram: { name: "Instagram", Icon: InstagramIcon },
@@ -38,7 +35,7 @@ function ContactChannel({ label, href, value }: { label: string; href: string; v
   );
 }
 
-export function Contact({ data }: { data: HomePageData }) {
+export function Contact({ data, submit }: { data: HomePageData; submit: (prev: FormState, formData: FormData) => Promise<FormState> }) {
   const { profile } = data;
 
   return (
@@ -82,41 +79,10 @@ export function Contact({ data }: { data: HomePageData }) {
         </div>
       </div>
 
-      <form className={`grid min-w-0 flex-[1_1_100%] grid-cols-1 gap-4 rounded-image p-5 sm:grid-cols-2 sm:p-8 lg:flex-[1_1_520px] ${cardDark}`}>
-        <label className={labelClass}>
-          Nombre
-          <input type="text" name="name" autoComplete="name" placeholder="Tu nombre" className={inputClass} />
-        </label>
-        <label className={labelClass}>
-          Tipo de evento
-          <select name="eventType" className={`${fieldClass} min-h-12 px-3`}>
-            <option>Festival / feria</option>
-            <option>Evento corporativo</option>
-            <option>Hotel / restaurante</option>
-            <option>Boda / 15 años / cumpleaños</option>
-          </select>
-        </label>
-        <label className={labelClass}>
-          Fecha
-          <EventDateInput className={`${inputClass} min-w-0`} />
-        </label>
-        <label className={labelClass}>
-          Municipio
-          <input type="text" name="municipality" placeholder="Ej. Valledupar" className={inputClass} />
-        </label>
-        <label className={`${labelClass} sm:col-span-2`}>
-          Mensaje
-          <textarea name="message" rows={4} placeholder="Cuéntanos del evento" className={`${fieldClass} resize-y px-3.5 py-3`} />
-        </label>
-        <button
-          type="button"
-          aria-disabled="true"
-          title="El envío se activa en una fase posterior"
-          className="min-h-[52px] cursor-not-allowed rounded-full border-0 bg-accent text-base font-semibold text-ink sm:col-span-2"
-        >
-          Enviar solicitud
-        </button>
-      </form>
+      <ContactForm
+        submit={submit}
+        whatsappHref={profile.whatsapp ? `https://wa.me/${toWhatsAppNumber(profile.whatsapp)}` : null}
+      />
     </section>
   );
 }

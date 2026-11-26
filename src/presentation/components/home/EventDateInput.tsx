@@ -11,11 +11,14 @@ function todayKey(): string {
  * Past dates make no sense for a booking. The minimum is set in the browser,
  * because the page is cached and a server-rendered `min` could be a day old.
  */
-export function EventDateInput({ className }: { className: string }) {
+export function EventDateInput({ className, invalid = false }: { className: string; invalid?: boolean }) {
   return (
     <input
       type="date"
+      id="eventDate"
       name="eventDate"
+      aria-invalid={invalid || undefined}
+      aria-describedby={invalid ? "eventDate-error" : undefined}
       className={className}
       ref={(input) => {
         if (input) input.min = todayKey();

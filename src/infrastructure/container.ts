@@ -1,9 +1,9 @@
 import "server-only";
 import { cacheLife, cacheTag } from "next/cache";
-import type { AdminRepositories, ContentRepositories } from "@/domain/repositories";
+import type { AdminRepositories, BookingRepositories, ContentRepositories } from "@/domain/repositories";
 import { bucket, db } from "@/infrastructure/firebase/admin";
 import { createFirestoreRepositories } from "@/infrastructure/repositories/firestore";
-import { createAdminRepositories } from "@/infrastructure/repositories/firestore-admin";
+import { createAdminRepositories, createBookingRepositories } from "@/infrastructure/repositories/firestore-admin";
 
 /**
  * Tag shared by every cached content read. Panel Server Actions (phase 4) call
@@ -78,4 +78,9 @@ export const repositories: ContentRepositories = {
 /** Manager-only data, uncached. Call only after `requireAdmin()`. */
 export function adminRepositories(): AdminRepositories {
   return createAdminRepositories(db(), bucket());
+}
+
+/** Public contact form writes (validated, rate limited). */
+export function bookingRepositories(): BookingRepositories {
+  return createBookingRepositories(db());
 }

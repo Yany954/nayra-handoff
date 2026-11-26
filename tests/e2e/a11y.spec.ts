@@ -9,7 +9,7 @@ const VIEWPORTS = [
   { name: "1440", width: 1440, height: 900 },
 ];
 
-const PUBLIC_PAGES = ["/", "/repertorio", "/galeria", "/panel/login"];
+const PUBLIC_PAGES = ["/", "/repertorio", "/galeria", "/privacidad", "/panel/login"];
 const PANEL_PAGES = [
   "/panel",
   "/panel/promotores",

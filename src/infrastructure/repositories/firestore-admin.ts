@@ -2,7 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type { Firestore, QuerySnapshot } from "firebase-admin/firestore";
 import { z } from "zod";
-import type { AdminRepositories, AdminSong, NewGalleryPhoto, ShowInput } from "@/domain/repositories";
+import type { AdminRepositories, AdminSong, BookingRepositories, NewGalleryPhoto, ShowInput } from "@/domain/repositories";
 import type { bucket as storageBucket } from "@/infrastructure/firebase/admin";
 import { createFirestoreRepositories } from "@/infrastructure/repositories/firestore";
 import {
@@ -85,6 +85,9 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
         tx.set(ref, { calls: calls + 1 }, { merge: true });
         return calls + 1;
       });
+    },
+    markBookingRequestReviewed: async (id) => {
+      await db.collection("bookingRequests").doc(id).update({ status: "revisado", reviewedAt: new Date().toISOString() });
     },
     requestScan: async (requestedBy) => {
       await db.collection("scanRequests").add({ requestedAt: new Date().toISOString(), requestedBy, status: "queued" });
@@ -202,5 +205,27 @@ export function createAdminRepositories(db: Firestore, bucket: Bucket): AdminRep
       batch.update(db.doc("profile/main"), profile);
       await batch.commit();
     },
+  };
+}
+
+/** Public form writes. The Admin SDK bypasses rules, so every input is validated before this. */
+export function createBookingRepositories(db: Firestore): BookingRepositories {
+  return {
+    createBookingRequest: (request, promoter) =>
+      db.runTransaction(async (tx) => {
+        const requestRef = db.collection("bookingRequests").doc();
+        const promoterRef = db.collection("promoters").doc();
+        tx.create(promoterRef, promoter);
+        tx.create(requestRef, { ...request, promoterId: promoterRef.id });
+        return requestRef.id;
+      }),
+    hitRateLimit: (key, now) =>
+      db.runTransaction(async (tx) => {
+        const ref = db.collection("rateLimits").doc(`${key}_${now.toISOString().slice(0, 13)}`);
+        const hits = ((await tx.get(ref)).get("hits") as number | undefined) ?? 0;
+        // expiresAt lets a Firestore TTL policy clean these up.
+        tx.set(ref, { hits: hits + 1, expiresAt: new Date(now.getTime() + 2 * 3_600_000) }, { merge: true });
+        return hits + 1;
+      }),
   };
 }

@@ -71,6 +71,8 @@ test.describe("panel", () => {
     await page.locator("main button[type=submit]").focus();
     for (let i = 0; i < 12; i++) {
       await page.keyboard.press("Shift+Tab");
+      // Let the browser finish scrolling the field into view before measuring (flaky under load otherwise).
+      await page.waitForTimeout(150);
       const box = await page.evaluate(() => {
         const el = document.activeElement;
         // Controls that live in the bar itself are exempt.

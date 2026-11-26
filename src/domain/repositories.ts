@@ -45,6 +45,14 @@ export type NewGalleryPhoto = {
   alt: string;
 };
 
+/** Writes the public contact form needs; reached only through its validated Server Action. */
+export interface BookingRepositories {
+  /** Creates the request and its prospect atomically; returns the request id. */
+  createBookingRequest(request: import("@/domain/rules/booking").NewBookingRequest, promoter: Omit<Promoter, "id">): Promise<string>;
+  /** Counts one hit for this key in the current hour and returns the new total. */
+  hitRateLimit(key: string, now: Date): Promise<number>;
+}
+
 /** Manager-only reads and writes. Implementations must only be reached after an admin check. */
 export interface AdminRepositories {
   listPromoters(): Promise<Promoter[]>;
@@ -59,6 +67,7 @@ export interface AdminRepositories {
   /** Manual scan requests since `sinceIso` (for the daily limit). */
   countScanRequestsSince(sinceIso: string): Promise<number>;
   requestScan(requestedBy: string): Promise<void>;
+  markBookingRequestReviewed(id: string): Promise<void>;
   /** Counts one AI call in the current hour and returns the new total (rate limit). */
   countAiCallThisHour(now: Date): Promise<number>;
 
